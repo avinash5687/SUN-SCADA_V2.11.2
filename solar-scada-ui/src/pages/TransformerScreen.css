@@ -1,0 +1,44 @@
+.transformer-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .transformer-card {
+    border: 2px solid black;
+    border-radius: 20px;
+    width: 400px;
+    background: white;
+    overflow: hidden;
+  }
+  
+  .card-header {
+    background-color: #128686;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  .card-table {
+    padding: 20px;
+  }
+  
+  .table-header,
+  .table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+    font-family: sans-serif;
+  }
+  
+  .table-header {
+    font-weight: bold;
+    background-color: #222;
+    color: white;
+    padding: 8px 10px;
+  }
+  

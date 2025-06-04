@@ -1,0 +1,24 @@
+.app-container {
+  display: flex;
+}
+
+.sidebar {
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.main-content {
+  flex-grow: 1;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-closed {
+  margin-left: 0;
+}
+
+.main-content.sidebar-open {
+  margin-left: 150px;
+}

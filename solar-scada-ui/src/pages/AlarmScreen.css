@@ -1,0 +1,108 @@
+.alarm-container {
+    max-width: 100%;
+    text-align: center;
+    background-color: black;
+    padding: 20px;
+    height: calc(100vh - 50px);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ✅ Restrict Table Height & Enable Scroll */
+.table-wrapper {
+    flex-grow: 1;
+    max-height: 75vh;
+    overflow-y: auto;
+    border: 1px solid white;
+}
+
+/* ✅ Table Styling */
+.alarm-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: black;
+    color: white;
+}
+
+/* ✅ Sticky Header */
+.alarm-table th {
+    background-color: gray;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.alarm-table th,
+.alarm-table td {
+    padding: 8px;
+    border: 1px solid white;
+    text-align: center;
+}
+
+/* ✅ Highlight Active Alarms */
+.active-alarm td {
+    color: red;
+    font-weight: bold;
+}
+
+/* ✅ Status Column */
+.status {
+    color: red;
+}
+
+/* ✅ Action Buttons Below Table */
+.button-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: black;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* ✅ Buttons Styling */
+.ack-button,
+.clear-button {
+    padding: 10px 15px;
+    font-size: 16px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.ack-button {
+    background-color: gray;
+    color: white;
+}
+
+.clear-button {
+    background-color: red;
+    color: white;
+}
+
+/* ✅ Popup Styles */
+.popup {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.popup textarea {
+    width: 100%;
+    height: 80px;
+    margin: 10px 0;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+}

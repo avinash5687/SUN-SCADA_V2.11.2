@@ -1,0 +1,54 @@
+.login-container {
+  background-image: url("/assets/BACKGROUND.jpeg"); /* ✅ Correct path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  /* Styling for the login box */
+  .login-box {
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+    width: 300px;
+  }
+  
+  .login-box h2 {
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  
+  /* Input fields */
+  .login-box input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background: transparent;
+    color: #fff;
+    outline: none;
+  }
+  
+  /* Login button */
+  .login-box button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #28a745;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .login-box button:hover {
+    background: #218838;
+  }
+  

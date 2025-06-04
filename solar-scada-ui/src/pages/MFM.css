@@ -1,0 +1,117 @@
+/* MFM Container */
+.mfm-container {
+  width: 90vw;
+  height: 90vh;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Title */
+.mfm-title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+/* Table Styling */
+.mfm-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.mfm-table th,
+.mfm-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  white-space: nowrap;
+  visibility: visible;
+}
+
+/* Header Styling */
+.mfm-table th {
+  background-color: #222; /* Black Header */
+  color: white;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Parameter Column */
+.mfm-table tbody tr td:first-child {
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Alternate Row Background */
+.mfm-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+/* Hover Effect */
+.mfm-table tr:hover {
+  background-color: #ddd;
+  transition: 0.3s ease-in-out;
+}
+
+/* Communication Status Cell */
+.status-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+/* Status Indicators */
+.status-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid black;
+}
+
+.status-green {
+  background-color: green;
+}
+
+.status-red {
+  background-color: red;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .mfm-container {
+    width: 100%;
+  }
+
+  .mfm-table th,
+  .mfm-table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mfm-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .mfm-table {
+    font-size: 12px;
+    min-width: 900px;
+  }
+
+  .mfm-table th,
+  .mfm-table td {
+    padding: 6px;
+  }
+}

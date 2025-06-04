@@ -1,0 +1,110 @@
+/* ✅ Ensure Full Page Uses Flexbox to Prevent Scrolling */
+.trend-container {
+  max-width: 100%;
+  height: calc(100vh - 50px); /* Ensure full page minus header */
+  margin: auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute content properly */
+  overflow: hidden; /* ✅ Prevent scrolling */
+  font-weight: bold;
+}
+
+/* ✅ Ensure Form Fields are Visible */
+.input-group {
+  margin: 2px 0;
+  text-align: left;
+}
+
+/* ✅ Restrict Input and Select Width */
+.input-group select, 
+.input-group input {
+  width: 100%;
+  padding: 2px;
+  margin-top: 2px;
+  border-radius: 4px;
+  border: 1px solid #222;
+  font-weight: bold;
+}
+
+/* ✅ Keep Buttons Organized */
+.button-group {
+  margin: 5px 0;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.button-group button {
+  padding: 10px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  background: #1f77b4;
+  color: white;
+  transition: 0.3s ease-in-out;
+}
+
+.button-group button:hover {
+  background: #0056b3;
+}
+
+/* ✅ Restrict Chart Size */
+.chart-container {
+  flex-grow: 1; /* Allow chart to expand inside the container */
+  width: 100%;
+  max-height: 50vh; /* ✅ Prevent overflow and unnecessary scrolling */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+/* ✅ Prevent Scrolling Globally */
+html, body {
+  overflow: hidden; /* ✅ Ensure no scrolling */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ Responsive Adjustments */
+@media (max-width: 1024px) {
+  .trend-container {
+      padding: 15px;
+  }
+
+  .chart-container {
+      max-height: 45vh; /* ✅ Keep chart size smaller on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .trend-container {
+      padding: 10px;
+  }
+
+  .button-group {
+      flex-direction: column;
+      gap: 5px;
+  }
+
+  .chart-container {
+      max-height: 40vh; /* ✅ Reduce height further for mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .trend-container {
+      padding: 8px;
+  }
+
+  .chart-container {
+      max-height: 35vh; /* ✅ Reduce height for smaller screens */
+  }
+}

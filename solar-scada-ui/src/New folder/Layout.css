@@ -1,0 +1,207 @@
+.layout-container {
+    display: flex;
+}
+  
+.header {
+    background-color: #333;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: white;
+}
+  
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+  
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+  
+.project-name {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+  
+.header-title {
+    flex-grow: 1;
+    text-align: center;
+}
+  
+.header-title h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+  
+.header-right {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    gap: 10px;
+    font-weight: bold;
+}
+  
+.header-logo {
+    height: 60px;
+}
+  
+.sidebar {
+    width: 150px;
+    height: calc(100vh - 30px);
+    background: #444;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    transition: width 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-weight: bold;
+    z-index: 999;
+    overflow: hidden;
+}
+  
+.sidebar.collapsed {
+    width: 45px;
+}
+  
+.menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+  
+.menu li {
+    display: flex;
+    align-items: center;
+    padding: 15px 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    position: relative; /* For positioning the bottom border */
+    border-bottom: 1px solid #555; /* Add a line after each menu item */
+}
+  
+.menu li.active {
+    background-color: teal;
+}
+  
+.menu li:hover {
+    background-color: #007575;
+} 
+  
+.menu-text {
+    margin-left: 10px;
+    display: inline-block;
+    transition: opacity 0.3s ease, width 0.3s ease;
+    white-space: nowrap;
+}
+
+
+.sidebar.collapsed .menu-text {
+    opacity: 0;
+    width: 0;
+    position: absolute;
+    left: -9999px;
+}
+  
+/* .sidebar.collapsed .header-title h2 {
+    
+} */
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    background-color: red;
+    color: white;
+    text-align: center;
+    padding: 15px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    width: auto;
+    transition: all 0.3s ease-in-out;
+}
+  
+.sidebar.collapsed .menu li svg,
+.sidebar.collapsed .logout-btn svg {
+    font-size: 1.25rem;
+}
+  
+.sidebar.collapsed .logout-btn {
+    padding: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: width 0.3s ease, padding 0.3s ease;
+}
+  
+.sidebar.collapsed .logout-btn span {
+    display: none;
+    opacity: 0;
+    width: 0;
+    position: absolute;
+    left: -9999px;
+}
+  
+.logout-btn:hover {
+    background-color: darkred;
+}
+  
+.main-content {
+    flex-grow: 1;
+    transition: margin-left 0.3s ease;
+    margin-left: 150px;
+    padding: 55px 15px 10px 15px;
+    overflow-y: auto;
+}
+  
+.main-content.sidebar-collapsed {
+    margin-left: 45px;
+}
+
+.alarm-icon {
+    font-size: 2rem;
+    color: red;
+    margin-right: 5px;
+    cursor: pointer;  /* Makes it look clickable */
+    transition: transform 0.2s ease-in-out;
+}
+
+.alarm-icon:hover {
+    transform: scale(1.2); /* Slightly enlarges on hover */
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .shake {
+    animation: shake 0.5s ease-in-out infinite;
+  }
+  
+
