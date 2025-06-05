@@ -152,23 +152,11 @@ const SLDScreen = () => {
           <img src={sldImage} alt="Single Line Diagram" style={{ maxWidth: '100%', height: 'auto', border: '1px solid #ccc' }} />
 
           {/* Buttons */}
-          <button onClick={handleSACUClick} style={{ position: 'absolute', top: '69%', left: '41%', width: '40px', height: '15px', opacity: 0, cursor: 'pointer', zIndex: 10 }} title="PLOT1-SACU1" />
-          <button onClick={() => handleICRClick(1)} style={{ ...buttonStyle(1), top: '84.4%', left: '14.9%' }} title="ICR 1-INV 1" />
-          <button onClick={() => handleICRClick(2)} style={{ ...buttonStyle(2), top: '59%', left: '3.8%' }} title="ICR 1-INV 2" />
-          <button onClick={() => handleICRClick(3)} style={{ ...buttonStyle(3), top: '59%', left: '5.4%' }} title="ICR 2-INV 1" />
-          <button onClick={() => handleICRClick(4)} style={{ ...buttonStyle(4), top: '59%', left: '7.2%' }} title="ICR 2-INV 2" />
+          <button onClick={() => handleICRClick(1)} style={{ ...buttonStyle(1), top: '84.3%', left: '14.9%' }} title="ICR 1-INV 1" />
+          <button onClick={() => handleICRClick(2)} style={{ ...buttonStyle(2), top: '84.3%', left: '29.6%' }} title="ICR 1-INV 2" />
+          <button onClick={() => handleICRClick(3)} style={{ ...buttonStyle(3), top: '84.3%', left: '50.8%' }} title="ICR 2-INV 1" />
+          <button onClick={() => handleICRClick(4)} style={{ ...buttonStyle(4), top: '84.3%', left: '65.5%' }} title="ICR 2-INV 2" />
         </div>
-
-        {/* Popups */}
-        {showSACUPopup && (
-          <div style={popupStyle}>
-            <div style={popupBoxStyle}>
-              <h3>SACU Info</h3>
-              <p>This is a popup triggered by clicking SACU.</p>
-              <button onClick={handleClose} style={closeBtnStyle}>Close</button>
-            </div>
-          </div>
-        )}
         {[1, 2, 3, 4].map(id => showICRPopups[id] && inverterData[id] && renderPopup(inverterData[id]))}
       </div>
     </Layout>
