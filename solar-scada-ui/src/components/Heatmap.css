@@ -1,102 +1,43 @@
-.heatmap-wrapper {
+.heatmap-root {
+  width: 90vw;
+  height: 100vh;
   display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  justify-content: space-around;
-  position: relative;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #fafbfc;
+  overflow: hidden;
 }
 
-.heatmap-section {
-  margin: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 5px;
-  background-color: #f9f9f9;
-  width: fit-content;
-}
-
-.heatmap-container {
+/* Legend at the top, horizontal */
+.heatmap-legend-row {
+  width: 90vw;
   display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  padding: 5px;
-  min-height: 100px;
-  justify-content: start;
-  position: relative;
-  overflow: hidden; /* Prevent scroll */
+  justify-content: center;
+  align-items: center;
+  padding: 12px 0 0 0;
+  background: #fff;
+  z-index: 2;
+  position: sticky;
+  top: 0;
 }
 
-.heatmap-cell {
-  width: 50px;
-  height: 50px;
-  margin: 1px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: transform 0.2s ease;
-}
-
-.heatmap-cell:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.container {
-  position: relative;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f5f5f5;
-}
-
-.tooltip {
-  position: absolute;
-  background-color: rgba(15, 8, 8, 0.8);
-  color: #fff;
-  padding: 5px;
-  border-radius: 4px;
-  font-size: 12px;
-  z-index: 10;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.10s ease;
-  white-space: nowrap;
-}
-
-.tooltip.visible {
-  visibility: visible;
-  opacity: 1;
-}
-
-.tooltip::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px;
-  border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
-  top: 10%; /* Arrow pointing down */
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Legend Styling */
-.legend {
-  position: fixed;
-  bottom: 5px;
-  right: 25px;
-  background-color: #f5f5f5;
+.legend.legend-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: static;
+  box-shadow: none;
   border: 1px solid #ddd;
-  padding: 1px;
+  background: #f5f5f5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  height: 120px;
-  width: 180px;
+  padding: 6px 16px;
+  height: auto;
+  width: auto;
+  margin: 0;
 }
 
 .legend h4 {
-  margin: 0;
-  margin-bottom: 8px;
+  margin: 0 12px 0 0;
   font-size: 16px;
   font-weight: bold;
 }
@@ -104,7 +45,7 @@
 .legend-item {
   display: flex;
   align-items: center;
-  margin: 2px 0;
+  margin: 0 12px 0 0;
   font-size: 12px;
   font-weight: bold;
 }
@@ -116,19 +57,129 @@
   border-radius: 4px;
 }
 
-@media (max-width: 768px) {
+/* Main grid: 4 rows (row-wise) */
+.heatmap-main-grid-rowwise {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  background: #fafbfc;
+  overflow: hidden;
+}
+
+/* Each row = category */
+.heatmap-grid-row {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 0;
+  border-bottom: 1px solid #eee;
+}
+.heatmap-grid-row:last-child {
+  border-bottom: none;
+}
+
+.heatmap-row-title {
+  width: 140px;
+  min-width: 120px;
+  text-align: center;
+  padding-right: 10px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+}
+
+.heatmap-row-cells {
+  flex: 1 1 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+  align-items: center;
+  height: 100%;
+  padding: 24px 0;
+}
+
+/* Heatmap cells fill the available grid cell */
+.heatmap-cell {
+  width: 100%;
+  height: 100px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heatmap-cell:hover {
+  transform: scale(1.07);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Tooltip styling */
+.tooltip {
+  background-color: rgba(15, 8, 8, 0.95);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 15px;
+  min-width: 220px;
+  max-width: 320px;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  white-space: normal;
+  pointer-events: none;
+  position: fixed;
+}
+.tooltip.visible {
+  visibility: visible;
+  opacity: 1;
+}
+.tooltip::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 0 8px;
+  border-color: rgba(15, 8, 8, 0.95) transparent transparent transparent;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+}
+
+/* Responsive: stack on mobile */
+@media (max-width: 900px) {
+  .heatmap-row-title {
+    width: 100%;
+    text-align: left;
+    padding: 8px 0 0 8px;
+    font-size: 16px;
+  }
+  .heatmap-row-cells {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 12px 0;
+  }
   .heatmap-cell {
-    width: 40px;
-    height: 40px;
+    height: 60px;
   }
-
-  .tooltip {
-    font-size: 10px;
-  }
-
-  .legend {
-    bottom: 5px;
-    right: 5px;
+  .legend.legend-horizontal {
+    flex-wrap: wrap;
     padding: 8px;
+  }
+  .tooltip {
+    font-size: 13px;
+    min-width: 140px;
+    max-width: 220px;
   }
 }
