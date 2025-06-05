@@ -15,9 +15,10 @@ const FormulaBox = ({ title, text, formula }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
+        gap: "30px",
       }}
     >
-      <h3 style={{ color: "#FFFFFF", marginBottom: "10px" }}>{title}</h3>
+      <h2 style={{ color: "#FFFFFF", fontWeight: "bold",}}>{title}</h2>
 
       {text && (
         <p
