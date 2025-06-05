@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
-import sldImage from '../assets/sld.png';
+import sldImage from '../assets/Plant_SLD_21MWp.png';
 import axios from 'axios';
 
 const SLDScreen = () => {
@@ -13,7 +13,7 @@ const SLDScreen = () => {
 
   const fetchStatuses = async () => {
     try {
-      const statusPromises = [1, 2, 3, 4, 5].map(id =>
+      const statusPromises = [1, 2, 3, 4].map(id =>
         axios.get(`http://localhost:5000/api/inverter?id=${id}`)
       );
       const responses = await Promise.all(statusPromises);
@@ -47,7 +47,7 @@ const SLDScreen = () => {
 
   useEffect(() => {
     const intervalIds = [];
-    [1, 2, 3, 4, 5].forEach(id => {
+    [1, 2, 3, 4].forEach(id => {
       const intervalId = setInterval(() => fetchInverterData(id), 30000);
       intervalIds.push(intervalId);
     });
@@ -135,8 +135,8 @@ const SLDScreen = () => {
 
   const buttonStyle = (id) => ({
     position: 'absolute',
-    width: '10px',
-    height: '65px',
+    width: '120px',
+    height: '40px',
     opacity: 1,
     border: `3px solid ${inverterStatus[id] === 0 ? 'lime' : 'red'}`,
     background: 'transparent',
@@ -153,11 +153,10 @@ const SLDScreen = () => {
 
           {/* Buttons */}
           <button onClick={handleSACUClick} style={{ position: 'absolute', top: '69%', left: '41%', width: '40px', height: '15px', opacity: 0, cursor: 'pointer', zIndex: 10 }} title="PLOT1-SACU1" />
-          <button onClick={() => handleICRClick(1)} style={{ ...buttonStyle(1), top: '59%', left: '1.8%' }} title="PLOT1-INV1" />
-          <button onClick={() => handleICRClick(2)} style={{ ...buttonStyle(2), top: '59%', left: '3.8%' }} title="PLOT1-INV2" />
-          <button onClick={() => handleICRClick(3)} style={{ ...buttonStyle(3), top: '59%', left: '5.4%' }} title="PLOT1-INV3" />
-          <button onClick={() => handleICRClick(4)} style={{ ...buttonStyle(4), top: '59%', left: '7.2%' }} title="PLOT1-INV4" />
-          <button onClick={() => handleICRClick(5)} style={{ ...buttonStyle(5), top: '59%', left: '9%'   }} title="PLOT1-INV5" />
+          <button onClick={() => handleICRClick(1)} style={{ ...buttonStyle(1), top: '84.4%', left: '14.9%' }} title="ICR 1-INV 1" />
+          <button onClick={() => handleICRClick(2)} style={{ ...buttonStyle(2), top: '59%', left: '3.8%' }} title="ICR 1-INV 2" />
+          <button onClick={() => handleICRClick(3)} style={{ ...buttonStyle(3), top: '59%', left: '5.4%' }} title="ICR 2-INV 1" />
+          <button onClick={() => handleICRClick(4)} style={{ ...buttonStyle(4), top: '59%', left: '7.2%' }} title="ICR 2-INV 2" />
         </div>
 
         {/* Popups */}
@@ -170,7 +169,7 @@ const SLDScreen = () => {
             </div>
           </div>
         )}
-        {[1, 2, 3, 4, 5].map(id => showICRPopups[id] && inverterData[id] && renderPopup(inverterData[id]))}
+        {[1, 2, 3, 4].map(id => showICRPopups[id] && inverterData[id] && renderPopup(inverterData[id]))}
       </div>
     </Layout>
   );
