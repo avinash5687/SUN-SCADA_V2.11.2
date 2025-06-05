@@ -74,7 +74,7 @@ html, body, #root {
 .chart {
   flex: 1;
   background: white;
-  padding: 50px;
+  padding: 10px;
   border-radius: 5px;
   max-height: 300px;
   overflow: hidden;
@@ -128,7 +128,7 @@ html, body, #root {
   
 /* ✅ Center Align WMS Values */
 .wms-data table td:nth-child(2), .wms-data table td:nth-child(4) {
-  text-align: center;
+  text-align: left;
 }
   
 /* ✅ Center Align "Value" Headings (2nd & 4th Columns) */

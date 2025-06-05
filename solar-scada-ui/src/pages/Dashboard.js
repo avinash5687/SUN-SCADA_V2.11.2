@@ -203,7 +203,7 @@ const Dashboard = () => {
     </thead>
     <tbody>
       <tr>
-        <td>POA-1</td>
+        <td>POA</td>
         <td className="center-align">{wmsData.POA1 || 0}</td>
         <td className="center-align">W/m²</td>
         <td>GHI</td>
@@ -211,28 +211,28 @@ const Dashboard = () => {
         <td className="center-align">W/m²</td>
       </tr>
       <tr>
-        <td>CUM-POA-1</td>
+        <td>Cumulative POA</td>
         <td className="center-align">{wmsData.CUM_POA1 || 0}</td>
         <td className="center-align">kWh/m²</td>
-        <td>CUM-GHI</td>
+        <td>Cumulative GHI</td>
         <td className="center-align">{wmsData.CUM_GHI || 0}</td>
         <td className="center-align">kWh/m²</td>
       </tr>
       <tr>
-        <td>POA-2</td>
-        <td className="center-align">{wmsData.POA2 || 0}</td>
-        <td className="center-align">W/m²</td>
-        <td>Module Temp</td>
-        <td className="center-align">{wmsData.MOD_TEMP || 0}</td>
+        <td>Module Temperature 1</td>
+        <td className="center-align">{wmsData.MOD_TEMP1 || 0}</td>
+        <td className="center-align">°C</td>
+        <td>Module Temperature 2</td>
+        <td className="center-align">{wmsData.MOD_TEMP2 || 0}</td>
         <td className="center-align">°C</td>
       </tr>
       <tr>
-        <td>CUM-POA-2</td>
-        <td className="center-align">{wmsData.CUM_POA2 || 0}</td>
-        <td className="center-align">kWh/m²</td>
-        <td>Ambient Temp</td>
+        <td>Ambient Temperature</td>
         <td className="center-align">{wmsData.AMB_TEMP || 0}</td>
         <td className="center-align">°C</td>
+        <td>Rain</td>
+        <td className="center-align">{wmsData.RAIN || 0}</td>
+        <td className="center-align">mm</td>
       </tr>
     </tbody>
   </table>
