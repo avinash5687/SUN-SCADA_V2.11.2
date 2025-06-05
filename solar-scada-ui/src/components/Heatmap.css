@@ -1,5 +1,5 @@
 .heatmap-root {
-  width: 90vw;
+  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -10,7 +10,7 @@
 
 /* Legend at the top, horizontal */
 .heatmap-legend-row {
-  width: 90vw;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +89,7 @@
   min-width: 120px;
   text-align: center;
   padding-right: 10px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: #222;
   white-space: nowrap;
@@ -99,7 +99,7 @@
   flex: 1 1 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 18px;
+  gap: 15px;
   align-items: center;
   height: 100%;
   padding: 24px 0;
@@ -107,7 +107,7 @@
 
 /* Heatmap cells fill the available grid cell */
 .heatmap-cell {
-  width: 100%;
+  width: 90%;
   height: 100px;
   cursor: pointer;
   border-radius: 8px;
