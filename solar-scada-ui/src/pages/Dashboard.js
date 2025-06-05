@@ -249,7 +249,7 @@ const Dashboard = () => {
         <KIPCard title="Start Time" value={plantKPI.P_START || "00:00"} unit="Hrs" />
         <KIPCard title="Stop Time" value={plantKPI.P_STOP || "00:00"} unit="Hrs" />
         <KIPCard title="Running Time" value={plantKPI.P_RUN || "00:00"} unit="Hrs" />
-        <KIPCard title="Downtime" value={plantKPI.P_DOWN || "00:00"} unit="Hrs" />
+        <KIPCard title="Grid Downtime" value={plantKPI.P_DOWN || "00:00"} unit="Hrs" />
       </div>
     </div>
   );
