@@ -1,8 +1,8 @@
 .alarm-container {
     max-width: 100%;
     text-align: center;
-    background-color: black;
-    padding: 20px;
+    background-color: rgb(10, 7, 7);
+    padding: 18px;
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@
 .alarm-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: black;
+    background-color: rgb(10, 7, 7);
     color: white;
 }
 
@@ -55,7 +55,7 @@
     display: flex;
     justify-content: center;
     padding: 10px;
-    background-color: black;
+    background-color: rgb(10, 7, 7);
     position: sticky;
     bottom: 0;
     left: 0;

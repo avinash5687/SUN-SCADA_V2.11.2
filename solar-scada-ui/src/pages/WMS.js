@@ -94,18 +94,23 @@ const WMS = () => {
 
             {[
               { name: "GHI", key: "GHI", unit: "W/m²" },
-              { name: "CUM-GHI", key: "CUM_GHI", unit: "kWh/m²" },
-              { name: "POA-1", key: "POA1", unit: "W/m²" },
-              { name: "CUM-POA-1", key: "CUM_POA1", unit: "kWh/m²" },
-              { name: "POA-2", key: "POA2", unit: "W/m²" },
-              { name: "CUM-POA-2", key: "CUM_POA2", unit: "kWh/m²" },
-              { name: "Module Temperature", key: "MOD_TEMP", unit: "°C" },
+              { name: "GHI Cumulative", key: "CUM_GHI", unit: "kWh/m²" },
+              { name: "POA", key: "POA1", unit: "W/m²" },
+              { name: "POA Cumulative", key: "CUM_POA1", unit: "kWh/m²" },
+              { name: "DHI", key: "DHI", unit: "W/m²" },
+              { name: "DHI Cumulative", key: "DHI_CUMM", unit: "kWh/m²" },
+              { name: "Module Temperature 1", key: "MOD_TEMP1", unit: "°C" },
+              { name: "Module Temperature 2", key: "MOD_TEMP2", unit: "°C" },
               { name: "Ambient Temperature", key: "AMB_TEMP", unit: "°C" },
               { name: "Humidity", key: "RH", unit: "%" },
               { name: "Wind Speed", key: "WND_SPD", unit: "m/s" },
               { name: "Wind Direction", key: "WND_DIR", unit: "°" },
               { name: "Rainfall", key: "RAIN", unit: "mm" },
-            ].map((param, idx) => (
+              { name: "Soiling 1", key: "SOI1", unit: "%" },
+              { name: "Transmission Loss 1", key: "SOI_LS1", unit: "%" },
+              { name: "Soiling 2", key: "SOI2", unit: "%" },
+              { name: "Transmission Loss 2", key: "SOI_LS1", unit: "%" },
+            ].map((param, idx)  => (
               <tr key={idx}>
                 <td>{param.name}</td>
                 {wmsData.map((sensor, index) => (

@@ -56,12 +56,13 @@ const MFM = () => {
 
           {/* Other Parameter Rows */}
           {[
-            { name: "R Phase Voltage", key: "R_PH_VLT", unit: "V" },
-            { name: "Y Phase Voltage", key: "Y_PH_VLT", unit: "V" },
-            { name: "B Phase Voltage", key: "B_PH_VLT", unit: "V" },
-            { name: "R Phase Current", key: "R_PH_CRNT", unit: "A" },
-            { name: "Y Phase Current", key: "Y_PH_CRNT", unit: "A" },
-            { name: "B Phase Current", key: "B_PH_CRNT", unit: "A" },
+            { name: "Timestamp", key: "Date_Time", unit: "" },
+            { name: "R Phase Voltage", key: "RY_VLT", unit: "V" },
+            { name: "Y Phase Voltage", key: "YB_VLT", unit: "V" },
+            { name: "B Phase Voltage", key: "BR_VLT", unit: "V" },
+            { name: "R Phase Current", key: "R_L_CRNT", unit: "A" },
+            { name: "Y Phase Current", key: "Y_L_CRNT", unit: "A" },
+            { name: "B Phase Current", key: "B_L_CRNT", unit: "A" },
             { name: "Active Power", key: "AC_PWR", unit: "kW" },
             { name: "Reactive Power", key: "RCT_PWR", unit: "kVAr" },
             { name: "Apparent Power", key: "APP_PWR", unit: "kVA" },

@@ -2,12 +2,20 @@ import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
 const PerformanceRatioGauge = ({ value }) => {
-  const segments = 20; // Number of segments in the circle
+  const segments = 20;
   const filledSegments = Math.round((value / 100) * segments);
-  
+
+  // Determine fill color based on value
+  let fillColor = "#008000"; // Green by default
+  if (value < 70) {
+    fillColor = "#dd112f"; // Red
+  } else if (value >= 70 && value <= 80) {
+    fillColor = "#fbd202"; // Yellow
+  }
+
   const data = Array.from({ length: segments }, (_, index) => ({
-    value: 1, // Equal size for all segments
-    color: index < filledSegments ? "#1f77b4" : "#c6ddf3", // Blue for filled, Light blue for empty
+    value: 1,
+    color: index < filledSegments ? fillColor : "#e0e0e0", // Gray for empty segments
   }));
 
   return (
@@ -21,7 +29,7 @@ const PerformanceRatioGauge = ({ value }) => {
           innerRadius={35}
           outerRadius={60}
           startAngle={90}
-          endAngle={-270} // Full Circle
+          endAngle={-270}
           paddingAngle={2}
         >
           {data.map((entry, index) => (
@@ -30,16 +38,18 @@ const PerformanceRatioGauge = ({ value }) => {
         </Pie>
       </PieChart>
 
-      {/* Centered Text (PR Value) */}
-      <div style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#333"
-      }}>
+      {/* Centered Text */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          fontSize: "18px",
+          fontWeight: "bold",
+          color: "#333",
+        }}
+      >
         {value}%
       </div>
     </div>

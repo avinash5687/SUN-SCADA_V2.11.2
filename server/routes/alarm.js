@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   console.log("🔍 API hit: GET /api/alarm");
   try {
     const pool = await getDbPool();
-    const result = await pool.request().query("SELECT id, description, activeAt, ackAt, timeOff, status, ackComment FROM Alarms ORDER BY activeAt DESC");
+    const result = await pool.request().query("SELECT id, description, FORMAT(activeAt, 'yyyy-MM-dd HH:mm') as activeAt, FORMAT(ackAt, 'yyyy-MM-dd HH:mm') as ackAt, FORMAT(timeOff, 'yyyy-MM-dd HH:mm') as timeOff, status, ackComment FROM Alarms ORDER BY activeAt DESC");
 
     // ✅ Format Duration (hh:mm:ss)
     const formattedData = result.recordset.map((alarm) => {

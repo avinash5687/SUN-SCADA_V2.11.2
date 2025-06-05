@@ -107,11 +107,11 @@ const AlarmScreen = () => {
             <tr>
               <th>Alarm Description</th>
               <th>Active At</th>
-              <th>Ack At</th>
+              <th>Acknowledged At</th>
               <th>Time OFF</th>
               <th>Status</th>
               <th>Duration</th>
-              <th>Ack Comment</th>
+              <th>Acknowledgement Comment</th>
               <th>Actions</th>
             </tr>
           </thead>

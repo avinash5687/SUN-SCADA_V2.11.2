@@ -1,13 +1,21 @@
 import React from "react";
 import { PieChart, Pie, Cell } from "recharts";
 
-const PerformanceRatioGauge = ({ value }) => {
-  const segments = 20; // Number of segments in the circle
-  const filledSegments = Math.round((value / 20) * segments);
-  
+const CUFGauge = ({ value }) => {
+  const segments = 20;
+  const filledSegments = Math.round((value / 25) * segments); // Adjust max as needed (25 if 100% = 25 CUF)
+
+  // Determine color based on value
+  let fillColor = "#008000"; // Default: green
+  if (value < 15) {
+    fillColor = "#dd112f"; // Red
+  } else if (value >= 15 && value <= 20) {
+    fillColor = "#fbd202"; // Yellow
+  }
+
   const data = Array.from({ length: segments }, (_, index) => ({
-    value: 1, // Equal size for all segments
-    color: index < filledSegments ? "#387908" : "#def5ce", // Blue for filled, Light blue for empty
+    value: 1,
+    color: index < filledSegments ? fillColor : "#f0f0f0", // Light gray for unfilled
   }));
 
   return (
@@ -21,7 +29,7 @@ const PerformanceRatioGauge = ({ value }) => {
           innerRadius={35}
           outerRadius={60}
           startAngle={90}
-          endAngle={-270} // Full Circle
+          endAngle={-270}
           paddingAngle={2}
         >
           {data.map((entry, index) => (
@@ -30,20 +38,22 @@ const PerformanceRatioGauge = ({ value }) => {
         </Pie>
       </PieChart>
 
-      {/* Centered Text (PR Value) */}
-      <div style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        fontSize: "16px",
-        fontWeight: "bold",
-        color: "#333g"
-      }}>
+      {/* Centered Text */}
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          fontSize: "16px",
+          fontWeight: "bold",
+          color: "#333",
+        }}
+      >
         {value}%
       </div>
     </div>
   );
 };
 
-export default PerformanceRatioGauge;
+export default CUFGauge;

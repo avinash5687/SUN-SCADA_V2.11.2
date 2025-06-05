@@ -1,59 +1,41 @@
-.inverter {
+/* Container */
+.inverter-container {
+  width: 90vw;
+  height: 90vh;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh; /* Full height */
 }
 
+/* Title */
 .inverter-title {
-  margin-top: 5px;
-  margin-bottom: 10px;
-  font-size: 18px;
   font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 22px;
 }
 
-/* ✅ Move Table to the Top */
-.table-container {
-  width: 85vw;
-  height: auto;
-  max-height: 80vh; /* Prevents overflow */
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-  overflow-x: auto; /* ✅ Allow horizontal scrolling */
-  overflow-y: auto; /* ✅ Allow vertical scrolling */
-  position: absolute;
-  top: 100px; /* Moves table closer to the top */
-  left: 50%;
-  transform: translateX(-50%); /* Centers horizontally */
-  transition: width 0.3s ease;
-}
-
-.table-container.sidebar-collapsed {
-  width: 100vw;
-}
-
-/* ✅ Inverter Table */
+/* Table Styling */
 .inverter-table {
   width: 100%;
-  min-width: 600px; /* ✅ Prevents table from becoming too small */
-  table-layout: auto;
   border-collapse: collapse;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
-/* ✅ Table Headers & Cells */
 .inverter-table th,
 .inverter-table td {
   border: 1px solid #ddd;
-  padding: 8px;
-  white-space: nowrap; /* ✅ Prevents content from wrapping */
-  overflow: hidden; /* ✅ Prevents overflow */
-  text-overflow: ellipsis; /* ✅ Adds "..." if content overflows */
+  padding: 12px;
+  white-space: nowrap;
 }
 
+/* Header Styling */
 .inverter-table th {
   background-color: #222;
   color: white;
@@ -61,29 +43,74 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  white-space: nowrap;
 }
 
-/* ✅ Allow scrolling on small screens */
-@media (max-width: 768px) {
-  .table-container {
+/* Parameter Column */
+.inverter-table tbody tr td:first-child {
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Alternate Row Background */
+.inverter-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+/* Hover Effect */
+.inverter-table tr:hover {
+  background-color: #ddd;
+  transition: 0.3s ease-in-out;
+}
+
+/* Status Cell */
+.status-cell {
+  text-align: center;
+  padding: 8px;
+}
+
+/* Status Indicator */
+.status-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid black;
+}
+
+.status-green {
+  background-color: green;
+}
+
+.status-red {
+  background-color: red;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .inverter-container {
     width: 100%;
-    max-height: 95vh;
+  }
+
+  .inverter-table th,
+  .inverter-table td {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .inverter-container {
+    width: 100%;
+    overflow-x: auto;
   }
 
   .inverter-table {
-    min-width: 700px; /* ✅ Prevents table from shrinking too much */
+    font-size: 12px;
+    min-width: 900px;
   }
 
   .inverter-table th,
   .inverter-table td {
     padding: 6px;
-    white-space: normal; /* ✅ Allow text wrapping */
-    word-break: break-word; /* ✅ Prevents text from overflowing */
-  }
-
-  /* ✅ Enable horizontal scrolling */
-  .table-container {
-    overflow-x: auto;
   }
 }

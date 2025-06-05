@@ -164,12 +164,12 @@ const Dashboard = () => {
             <tbody>
               <tr>
                 <td>Inverter</td>
-                <td className="center-align">42</td>
+                <td className="center-align">4</td>
                 <td className="center-align">{plantKPI.INV_CNT || 0}</td>
               </tr>
               <tr>
                 <td>MFM</td>
-                <td className="center-align">3</td>
+                <td className="center-align">8</td>
                 <td className="center-align">{plantKPI.MFM_CNT || 0}</td>
               </tr>
               <tr>
@@ -179,7 +179,7 @@ const Dashboard = () => {
               </tr>
               <tr>
                 <td>WMS</td>
-                <td className="center-align">2</td>
+                <td className="center-align">1</td>
                 <td className="center-align">{plantKPI.WMS_CNT || 0}</td>
               </tr>
             </tbody>
