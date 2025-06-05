@@ -1,3 +1,4 @@
+// src/screens/FormulaScreen.jsx
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import FormulaBox from "../components/FormulaBox";
@@ -8,36 +9,50 @@ const FormulaScreen = () => {
 
   useEffect(() => {
     const fetchData = () => {
-      axios.get("http://localhost:5000/api/dashboard/plant-kpi")
-        .then(response => {
-          setData(response.data[0]); // extract the first object from array
+      axios
+        .get("http://localhost:5000/api/dashboard/plant-kpi")
+        .then((response) => {
+          setData(response.data[0]);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Failed to fetch formula data:", error);
         });
     };
-  
-    fetchData(); // fetch once on mount
-  
-    const intervalId = setInterval(fetchData, 30000); // fetch every 30 seconds
-  
-    return () => clearInterval(intervalId); // clear interval on unmount
-  }, []);
-  
- 
-  if (!data) return <Layout><p>Loading...</p></Layout>;
 
-  // Calculate formulas using actual fetched values
+    fetchData();
+    const intervalId = setInterval(fetchData, 30000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  if (!data)
+    return (
+      <Layout>
+        <p>Loading...</p>
+      </Layout>
+    );
+
+  // Calculations
   const poaResult = ((data.AVG_POA / 1000) * parseFloat(data.P_RUN)).toFixed(2);
-  const plantAvailability = (1 - (data.INV_DOWN / data.OP_COUNT)) * 100;
-  const GA = (1 - (data.OG_DOWN / data.PLANT_AVAIL)) * 100;
+  const plantAvailability = (1 - data.INV_DOWN / data.OP_COUNT) * 100;
+  const GA = (1 - data.OG_DOWN / data.PLANT_AVAIL) * 100;
   const pr = ((data.P_EXP / (data.POA * data.DC_CAP)) * 100).toFixed(2);
   const acCuf = ((data.P_EXP / (24 * data.AC_CAP)) * 100).toFixed(2);
   const dcCuf = ((data.P_EXP / (24 * data.DC_CAP)) * 100).toFixed(2);
 
   return (
     <Layout>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateRows: "repeat(2, 1fr)",
+          gap: "16px",
+          height: "calc(100vh - 50px)", // adjust if you have header/footer
+          width: "90vw",
+          padding: "16px",
+          boxSizing: "border-box",
+        }}
+      >
         <FormulaBox
           title="SOLAR Average Irradiation"
           text="POA = (Average Radiation(Tilted)/1000) * Today Operation Hrs"
@@ -45,7 +60,7 @@ const FormulaScreen = () => {
         />
         <FormulaBox
           title="Plant Availability (%)"
-          text="PA(%) = 1 - (Breakdown Min / (Today Operation Min * No of Inverter) * 100"
+          text="PA(%) = 1 - (Breakdown Min / (Today Operation Min * No of Inverter)) * 100"
           formula={`PA(%) = 1 - (${data.INV_DOWN} / ${data.OP_COUNT}) * 100 = ${plantAvailability.toFixed(2)}%`}
         />
         <FormulaBox
