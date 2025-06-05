@@ -74,7 +74,7 @@ html, body, #root {
 .chart {
   flex: 1;
   background: white;
-  padding: 50px;
+  padding: 10px;
   border-radius: 5px;
   max-height: 300px;
   overflow: hidden;
