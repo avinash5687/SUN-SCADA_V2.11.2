@@ -9,80 +9,61 @@ const heatmapCategories = [
 ];
 
 const Heatmap = ({ data }) => {
-const tooltipRef = useRef(null);
-const [tooltipVisible, setTooltipVisible] = useState(false);
-const [tooltipContent, setTooltipContent] = useState("");
+  const tooltipRef = useRef(null);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState("");
+  const [tooltipStyle, setTooltipStyle] = useState({ left: 0, top: 0 });
 
-const getStatus = (deviation) => {
-  if (deviation < 25) return "Good";
-  if (deviation < 50) return "Average";
-  if (deviation < 75) return "Poor";
-  return "Critical";
-};
+  const getStatus = (deviation) => {
+    if (deviation < 25) return "Good";
+    if (deviation < 50) return "Average";
+    if (deviation < 75) return "Poor";
+    return "Critical";
+  };
 
-const handleMouseOver = (event, item, category) => {
-  const tooltip = tooltipRef.current;
-  if (tooltip) {
+  const handleMouseOver = (event, item, category) => {
     const deviation = item[category.deviationKey];
     const status = getStatus(deviation);
-
-    // Calculate the maximum value in the data for the current category
     const maxValue = Math.max(...data.map(d => d[category.key]));
 
     setTooltipVisible(true);
     setTooltipContent(`
-      Device: ${item.Inverter_Name} <br>
-      ${category.label}: ${item[category.key]} <br>
-      Max Value: ${maxValue} <br>
-      Deviation: ${deviation}% <br>
-      Status: ${status}
+      <strong>Device:</strong> ${item.Inverter_Name} <br>
+      <strong>${category.label}:</strong> ${item[category.key]} <br>
+      <strong>Max Value:</strong> ${maxValue} <br>
+      <strong>Deviation:</strong> ${deviation}% <br>
+      <strong>Status:</strong> ${status}
     `);
 
-    const cell = event.currentTarget;
-    const cellRect = cell.getBoundingClientRect();
-    const containerRect = cell.closest('.heatmap-container').getBoundingClientRect();
+    // Center tooltip above the cell
+    const cellRect = event.currentTarget.getBoundingClientRect();
+    const tooltip = tooltipRef.current;
 
-    const x = cellRect.left - containerRect.left;
-    const y = cellRect.top - containerRect.top - tooltip.offsetHeight - 5;
+    setTimeout(() => {
+      if (tooltip) {
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let left = cellRect.left + (cellRect.width / 2) - (tooltipRect.width / 2);
+        let top = cellRect.top - tooltipRect.height - 8;
+        // If not enough space above, show below
+        if (top < 0) {
+          top = cellRect.bottom + 8;
+        }
+        // Prevent overflow right
+        if (left + tooltipRect.width > window.innerWidth) {
+          left = window.innerWidth - tooltipRect.width - 8;
+        }
+        // Prevent overflow left
+        if (left < 0) left = 8;
+        setTooltipStyle({ left, top });
+      }
+    }, 0);
+  };
 
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
-    tooltip.style.visibility = "visible";
-    tooltip.style.display = "block";
-  }
-};
+  const handleMouseMove = () => {}; // Not needed with this positioning
 
-const handleMouseMove = (event) => {
-  const tooltip = tooltipRef.current;
-  const cell = event.currentTarget; // The cell that triggered the event
-
-  if (tooltip && tooltipVisible) {
-    // Get the dimensions and position of the cell
-    const cellRect = cell.getBoundingClientRect();
-    const tooltipWidth = tooltip.offsetWidth;
-    const tooltipHeight = tooltip.offsetHeight;
-
-    // Calculate tooltip position to be centered on top of the cell
-    const x = cellRect.left + (cellRect.width / 2) - (tooltipWidth / 2);
-    const y = cellRect.top - tooltipHeight - 5; // A little gap above the cell
-
-    // Update tooltip position
-    tooltip.style.left = `${x}px`;
-    tooltip.style.top = `${y}px`;
-    tooltip.style.visibility = "visible";
-    tooltip.style.display = "block";
-  }
-};
-
-    
-const handleMouseOut = () => {
-  setTooltipVisible(false);
-  const tooltip = tooltipRef.current;
-  if (tooltip) {
-    tooltip.style.visibility = "hidden";
-    tooltip.style.display = "none";
-  }
-};
+  const handleMouseOut = () => {
+    setTooltipVisible(false);
+  };
 
   const getColor = (deviation) => {
     if (deviation >= 0 && deviation < 25) return "rgba(0, 128, 0, 0.8)";
@@ -101,7 +82,7 @@ const handleMouseOut = () => {
     ];
 
     return (
-      <div className="legend">
+      <div className="legend legend-horizontal">
         <h4>Legend:</h4>
         {legendData.map((item, index) => (
           <div key={index} className="legend-item">
@@ -117,31 +98,40 @@ const handleMouseOut = () => {
   };
 
   return (
-    <div className="heatmap-wrapper">
-      {heatmapCategories.map((category) => (
-        <div key={category.key} className="heatmap-section">
-          <h3>{category.label}</h3>
-          <div className="heatmap-container" id={category.key}>
-            {data.map((item) => (
-              <div
-                key={`${item.ID}-${category.key}`}
-                className="heatmap-cell"
-                style={{ backgroundColor: getColor(item[category.deviationKey]) }}
-                onMouseOver={(e) => handleMouseOver(e, item, category, e.currentTarget.parentElement)}
-                onMouseMove={handleMouseMove}
-                onMouseOut={handleMouseOut}
-              ></div>
-            ))}
+    <div className="heatmap-root">
+      <div className="heatmap-legend-row">
+        <Legend />
+      </div>
+      <div className="heatmap-main-grid heatmap-main-grid-rowwise">
+        {heatmapCategories.map((category) => (
+          <div key={category.key} className="heatmap-grid-row">
+            <div className="heatmap-row-title">{category.label}</div>
+            <div className="heatmap-row-cells">
+              {data.map((item) => (
+                <div
+                  key={`${item.ID}-${category.key}`}
+                  className="heatmap-cell"
+                  style={{ backgroundColor: getColor(item[category.deviationKey]) }}
+                  onMouseOver={(e) => handleMouseOver(e, item, category)}
+                  onMouseOut={handleMouseOut}
+                ></div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-      <div
-        id="tooltip"
-        ref={tooltipRef}
-        className={`tooltip ${tooltipVisible ? "visible" : ""}`}
-        dangerouslySetInnerHTML={{ __html: tooltipContent }}
-      ></div>
-      <Legend />
+        ))}
+        <div
+          ref={tooltipRef}
+          className={`tooltip ${tooltipVisible ? "visible" : ""}`}
+          style={{
+            left: tooltipStyle.left,
+            top: tooltipStyle.top,
+            position: "fixed",
+            pointerEvents: "none",
+            zIndex: 1000
+          }}
+          dangerouslySetInnerHTML={{ __html: tooltipContent }}
+        ></div>
+      </div>
     </div>
   );
 };
