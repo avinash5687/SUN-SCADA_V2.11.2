@@ -20,7 +20,7 @@ const LineChartComponent = ({ data, onZoomChange }) => {
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={180}>
+    <ResponsiveContainer width="100%" height={220}>
       <LineChart data={normalizedData}>
         <CartesianGrid strokeDasharray="5 5" />
         <XAxis dataKey="Date_Time" />

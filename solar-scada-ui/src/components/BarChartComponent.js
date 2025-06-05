@@ -11,7 +11,7 @@ const BarChartComponent = ({ data }) => {
       <h6 className="generation-total">
         Day - Generation <span style={{ color: "red" }}>{totalGeneration.toFixed(2)}</span> kWh
       </h6>
-      <ResponsiveContainer width="100%" height={140}> {/* Reduced height */}
+      <ResponsiveContainer width="100%" height={180}> {/* Reduced height */}
         <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}> {/* Adjusted margins */}
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="TIME" stroke="#333" />
