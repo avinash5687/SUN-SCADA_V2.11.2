@@ -87,7 +87,7 @@
 .heatmap-row-title {
   width: 140px;
   min-width: 120px;
-  text-align: center;
+  text-align: left;
   padding-right: 10px;
   font-size: 20px;
   font-weight: 600;
@@ -99,10 +99,10 @@
   flex: 1 1 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 15px;
+  gap: 5px;
   align-items: center;
   height: 100%;
-  padding: 24px 0;
+  padding: 10px 0;
 }
 
 /* Heatmap cells fill the available grid cell */
