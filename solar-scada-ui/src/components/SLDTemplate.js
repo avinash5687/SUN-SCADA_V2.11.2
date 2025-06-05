@@ -13,21 +13,37 @@ const SLDScreen = () => {
 
   const [showMFMPopups, setShowMFMPopups] = useState({});
   const [mfmData, setMFMData] = useState({});
+  const [mfmStatus, setMFMStatus] = useState({});
 
   const fetchStatuses = async () => {
     try {
-      const statusPromises = [1, 2, 3, 4].map(id =>
+      const inverterStatusPromises = [1, 2, 3, 4].map(id =>
         axios.get(`http://localhost:5000/api/inverter?id=${id}`)
       );
-      const responses = await Promise.all(statusPromises);
-      const statusObj = {};
-      responses.forEach((res, i) => {
+      const mfmStatusPromises = [1, 2, 3, 4, 5, 6, 7, 8].map(id =>
+        axios.get(`http://localhost:5000/api/mfm?id=${id}`)
+      );
+
+      const [inverterResponses, mfmResponses] = await Promise.all([
+        Promise.all(inverterStatusPromises),
+        Promise.all(mfmStatusPromises)
+      ]);
+
+      const inverterStatusObj = {};
+      inverterResponses.forEach((res, i) => {
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
-        statusObj[i + 1] = data.CUM_STS;
+        inverterStatusObj[i + 1] = data.CUM_STS;
       });
-      setInverterStatus(statusObj);
+      setInverterStatus(inverterStatusObj);
+
+      const mfmStatusObj = {};
+      mfmResponses.forEach((res, i) => {
+        const data = Array.isArray(res.data) ? res.data[0] : res.data;
+        mfmStatusObj[i + 1] = data.CUM_STS; // Assuming the status field is similar
+      });
+      setMFMStatus(mfmStatusObj);
     } catch (err) {
-      console.error("Error fetching inverter statuses", err);
+      console.error("Error fetching statuses", err);
     }
   };
 
@@ -90,14 +106,14 @@ const SLDScreen = () => {
   };
 
   const inverterButtonStyles = {
-    1: { top: '84.3%', left: '14.9%' },
-    2: { top: '84.3%', left: '29.6%' },
-    3: { top: '84.3%', left: '50.8%' },
-    4: { top: '84.3%', left: '65.5%' }
+    1: { top: '86.3%', left: '27.4%' },
+    2: { top: '86.3%', left: '38.1%' },
+    3: { top: '86.3%', left: '53.5%' },
+    4: { top: '86.3%', left: '64.2%' }
   };
 
   const mfmButtonStyles = {
-    1: { top: '20%', left: '5%' },
+    1: { top: '54%', left: '34.8%' },
     2: { top: '26%', left: '5%' },
     3: { top: '32%', left: '5%' },
     4: { top: '38%', left: '5%' },
@@ -108,7 +124,7 @@ const SLDScreen = () => {
   };
 
   const inverterButtonStyle = (id) => ({
-    position: 'absolute',
+    position: 'fixed',
     width: '120px',
     height: '40px',
     opacity: 1,
@@ -116,19 +132,23 @@ const SLDScreen = () => {
     background: 'transparent',
     cursor: 'pointer',
     zIndex: 10,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    transform: 'translate(-50%, -50%)',
+    ...inverterButtonStyles[id]
   });
 
   const mfmButtonStyle = (id) => ({
-    position: 'absolute',
-    width: '120px',
-    height: '40px',
+    position: 'fixed',
+    width: '50px',
+    height: '29.7px',
     opacity: 1,
-    border: '2px solid yellow',
+    border: `3px solid ${mfmStatus[id] === 0 ? 'lime' : 'red'}`,
     background: 'transparent',
     cursor: 'pointer',
     zIndex: 10,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    transform: 'translate(-50%, -50%)',
+    ...mfmButtonStyles[id]
   });
 
   const popupStyle = {
@@ -240,18 +260,19 @@ const SLDScreen = () => {
   };
 
   const renderMFMPopup = (data, id) => {
-    if (!data) return null; // Ensure data is available
+    if (!data) return null;
 
+    const borderColor = data?.CUM_STS === 0 ? 'lime' : 'red';
     return (
       <div style={popupStyle}>
-        <div style={{ ...darkPopupBoxStyle, border: '3px solid cyan' }}>
+        <div style={{ ...darkPopupBoxStyle, border: `3px solid ${borderColor}` }}>
           {renderPopupHeader()}
           <h3 style={{ color: '#fff' }}>{`MFM ${id} Info`}</h3>
           {loading && <p style={{ color: '#fff' }}>Loading data...</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <table style={tableStyle}>
             <thead>
-              <tr style={{ backgroundColor: '#01579b', color: '#fff' }}>
+              <tr style={{ backgroundColor: '#1a237e', color: '#fff' }}>
                 <th style={cellStyle}>PARAMETER</th>
                 <th style={cellStyle}>VALUE</th>
                 <th style={cellStyle}>UNIT</th>
@@ -272,6 +293,13 @@ const SLDScreen = () => {
               {renderRow('Power Factor', data.PF, '')}
               {renderRow('Total Active Export', data.TOT_EXP_KWh, 'kWh')}
               {renderRow('Total Active Import', data.TOT_IXP_KWh, 'kWh')}
+              <tr>
+                <td style={{ ...cellStyle, textAlign: 'left' }}>Status</td>
+                <td style={{ ...cellStyle, color: data.CUM_STS === 0 ? 'lime' : 'red' }}>
+                  {data.CUM_STS === 0 ? 'Running' : 'Stop'}
+                </td>
+                <td style={cellStyle}></td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -281,14 +309,14 @@ const SLDScreen = () => {
 
   return (
     <Layout>
-      <div style={{ position: 'relative', textAlign: 'center', marginTop: '20px' }}>
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <img src={sldImage} alt="Single Line Diagram" style={{ maxWidth: '100vh', height: '100vh', border: '1px solid #ccc' }} />
+      <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
+        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+          <img src={sldImage} alt="Single Line Diagram" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'fixed', top: 0, left: 0 }} />
           {[1, 2, 3, 4].map(id => (
             <button
               key={`inv-${id}`}
               onClick={() => handleICRClick(id)}
-              style={{ ...inverterButtonStyle(id), ...inverterButtonStyles[id] }}
+              style={inverterButtonStyle(id)}
               title={`ICR ${Math.ceil(id / 2)}-INV ${((id - 1) % 2) + 1}`}
             />
           ))}
@@ -296,15 +324,14 @@ const SLDScreen = () => {
             <button
               key={`mfm-${id}`}
               onClick={() => handleMFMClick(id)}
-              style={{ ...mfmButtonStyle(id), ...mfmButtonStyles[id] }}
+              style={mfmButtonStyle(id)}
               title={`MFM ${id}`}
             >
-              MFM {id}
             </button>
           ))}
         </div>
-        {[1, 2, 3, 4].map(id => showICRPopups[id] && inverterData[id] && renderPopup(inverterData[id]))}
-        {[1, 2, 3, 4, 5, 6, 7, 8].map(id => showMFMPopups[id] && renderMFMPopup(mfmData[id], id))}
+        {Object.entries(showICRPopups).map(([id, isVisible]) => isVisible && inverterData[id] && renderPopup(inverterData[id]))}
+        {Object.entries(showMFMPopups).map(([id, isVisible]) => isVisible && mfmData[id] && renderMFMPopup(mfmData[id], id))}
       </div>
     </Layout>
   );
