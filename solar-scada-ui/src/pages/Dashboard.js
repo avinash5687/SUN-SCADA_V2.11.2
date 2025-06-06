@@ -21,16 +21,19 @@ const Dashboard = () => {
   const [barChartData, setBarChartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
-  const [trendType, setTrendType] = useState("day"); // Default Daily Trend
+  const [trendType, setTrendType] = useState("day");
   const [wmsData, setWMSData] = useState({});
-  const [deviceStatus, setDeviceStatus] = useState([]); // Stores device communication data
-  const [showPopup, setShowPopup] = useState(false); // Controls popup visibility
+  const [deviceStatus, setDeviceStatus] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Fetch KPI Data
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
+
   const fetchData = useCallback(async () => {
     try {
-      // Fetch Plant KPI
-      const { data: plantData } = await axios.get(`http://localhost:5000/api/dashboard/plant-kpi?_=${Date.now()}`);
+      const { data: plantData } = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
       const newKPI = plantData?.[0] || {};
 
       setPlantKPI((prev) => (JSON.stringify(prev) !== JSON.stringify(newKPI) ? newKPI : prev));
@@ -40,31 +43,26 @@ const Dashboard = () => {
       setGridAvailability(newKPI.GA || 0);
       setCUF(newKPI.CUF || 0);
 
-      // Fetch Line Chart Data
-      const { data: lineData } = await axios.get("http://localhost:5000/api/dashboard/line-chart");
+      const { data: lineData } = await axios.get(`${API_BASE_URL}/api/dashboard/line-chart`);
       setLineChartData((prev) => (JSON.stringify(prev) !== JSON.stringify(lineData) ? lineData : prev));
 
-      // Fetch WMS Data
-      const { data: wmsResponse } = await axios.get("http://localhost:5000/api/dashboard/WMSDATA-DASH");
-      const newWMSData = wmsResponse?.[0] || {}; // Assuming the response is an array
-
+      const { data: wmsResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/WMSDATA-DASH`);
+      const newWMSData = wmsResponse?.[0] || {};
       setWMSData((prev) => (JSON.stringify(prev) !== JSON.stringify(newWMSData) ? newWMSData : prev));
 
-      // Fetch Device Communication Status Data
-      const { data: deviceResponse } = await axios.get("http://localhost:5000/api/dashboard/device-status");
-      setDeviceStatus(deviceResponse); // Store device status data
+      const { data: deviceResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/device-status`);
+      setDeviceStatus(deviceResponse);
     } catch (error) {
       console.error("API Error:", error);
     }
-  }, []);
+  }, [API_BASE_URL]);
 
-  // Fetch Bar Chart Data Based on Trend Type
   const fetchBarChartData = useCallback(async () => {
-    let apiUrl = "http://localhost:5000/api/dashboard/bar-chart"; // Default API for Day
+    let apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart`;
 
-    if (trendType === "week") apiUrl = "http://localhost:5000/api/dashboard/bar-chart1";
-    else if (trendType === "month") apiUrl = "http://localhost:5000/api/dashboard/bar-chart2";
-    else if (trendType === "year") apiUrl = "http://localhost:5000/api/dashboard/bar-chart3";
+    if (trendType === "week") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart1`;
+    else if (trendType === "month") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart2`;
+    else if (trendType === "year") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart3`;
 
     try {
       const { data } = await axios.get(apiUrl, { params: { date: selectedDate } });
@@ -72,21 +70,17 @@ const Dashboard = () => {
     } catch (error) {
       console.error("API Error:", error);
     }
-  }, [trendType, selectedDate]);
+  }, [trendType, selectedDate, API_BASE_URL]);
 
-  // Fetch Data Intervals
   useEffect(() => {
-    // Fetch data immediately
     fetchData();
     fetchBarChartData();
-  
-    // Set interval to refresh data every 30 seconds
+
     const intervalId = setInterval(() => {
       fetchData();
       fetchBarChartData();
-    }, 30000); // 30000 milliseconds = 30 seconds
-  
-    // Cleanup interval on component unmount
+    }, 30000);
+
     return () => clearInterval(intervalId);
   }, [fetchData, fetchBarChartData]);
 
@@ -118,16 +112,11 @@ const Dashboard = () => {
       </div>
 
       <div className="charts-container">
-        {/* Bar Chart */}
         <div className="chart">
           <div className="chart-header">
             <h4 className="component-title">Energy Data</h4>
             <div className="chart-controls">
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-              />
+              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} />
               <button onClick={() => setTrendType("day")}>Day</button>
               <button onClick={() => setTrendType("week")}>Week</button>
               <button onClick={() => setTrendType("month")}>Month</button>
@@ -137,7 +126,6 @@ const Dashboard = () => {
           <BarChartComponent data={barChartData} />
         </div>
 
-        {/* Line Chart */}
         <div className="chart">
           <h4 className="component-title">Active Power & POA Trend</h4>
           <LineChartComponent data={lineChartData} />
@@ -145,7 +133,6 @@ const Dashboard = () => {
       </div>
 
       <div className="equipment-wms-container">
-        {/* Equipment Status Table */}
         <div className="equipment-status">
           <div className="equipment-status-header">
             <h4 className="component-title">Equipment Status</h4>
@@ -187,65 +174,60 @@ const Dashboard = () => {
           {showPopup && <DeviceStatusPopup data={deviceStatus} onClose={() => setShowPopup(false)} />}
         </div>
 
-        {/* WMS Data Table */}
         <div className="wms-data">
-  <h4 className="component-title">Weather Data</h4>
-  <table>
-    <thead>
-      <tr>
-        <th>Parameters</th>
-        <th>Value</th>
-        <th>Units</th>
-        <th>Parameters</th>
-        <th>Value</th>
-        <th>Units</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>POA</td>
-        <td className="center-align">{wmsData.POA1 || 0}</td>
-        <td className="center-align">W/m²</td>
-        <td>GHI</td>
-        <td className="center-align">{wmsData.GHI || 0}</td>
-        <td className="center-align">W/m²</td>
-      </tr>
-      <tr>
-        <td>Cumulative POA</td>
-        <td className="center-align">{wmsData.CUM_POA1 || 0}</td>
-        <td className="center-align">kWh/m²</td>
-        <td>Cumulative GHI</td>
-        <td className="center-align">{wmsData.CUM_GHI || 0}</td>
-        <td className="center-align">kWh/m²</td>
-      </tr>
-      <tr>
-        <td>Module Temperature 1</td>
-        <td className="center-align">{wmsData.MOD_TEMP1 || 0}</td>
-        <td className="center-align">°C</td>
-        <td>Module Temperature 2</td>
-        <td className="center-align">{wmsData.MOD_TEMP2 || 0}</td>
-        <td className="center-align">°C</td>
-      </tr>
-      <tr>
-        <td>Ambient Temperature</td>
-        <td className="center-align">{wmsData.AMB_TEMP || 0}</td>
-        <td className="center-align">°C</td>
-        <td>Rain</td>
-        <td className="center-align">{wmsData.RAIN || 0}</td>
-        <td className="center-align">mm</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
+          <h4 className="component-title">Weather Data</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Parameters</th>
+                <th>Value</th>
+                <th>Units</th>
+                <th>Parameters</th>
+                <th>Value</th>
+                <th>Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>POA</td>
+                <td className="center-align">{wmsData.POA1 || 0}</td>
+                <td className="center-align">W/m²</td>
+                <td>GHI</td>
+                <td className="center-align">{wmsData.GHI || 0}</td>
+                <td className="center-align">W/m²</td>
+              </tr>
+              <tr>
+                <td>Cumulative POA</td>
+                <td className="center-align">{wmsData.CUM_POA1 || 0}</td>
+                <td className="center-align">kWh/m²</td>
+                <td>Cumulative GHI</td>
+                <td className="center-align">{wmsData.CUM_GHI || 0}</td>
+                <td className="center-align">kWh/m²</td>
+              </tr>
+              <tr>
+                <td>Module Temperature 1</td>
+                <td className="center-align">{wmsData.MOD_TEMP1 || 0}</td>
+                <td className="center-align">°C</td>
+                <td>Module Temperature 2</td>
+                <td className="center-align">{wmsData.MOD_TEMP2 || 0}</td>
+                <td className="center-align">°C</td>
+              </tr>
+              <tr>
+                <td>Ambient Temperature</td>
+                <td className="center-align">{wmsData.AMB_TEMP || 0}</td>
+                <td className="center-align">°C</td>
+                <td>Rain</td>
+                <td className="center-align">{wmsData.RAIN || 0}</td>
+                <td className="center-align">mm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* ✅ At the Bottom: KIP Cards */}
       <div className="kip-cards-container">
         <KIPCard title="Plant Export" value={plantKPI.P_EXP || 0} unit="kWh" />
         <KIPCard title="Plant Import" value={plantKPI.P_IMP || 0} unit="kWh" />
-        {/* <KIPCard title="POA" value={plantKPI.poa || 0} unit="kWh/m²" />
-        <KIPCard title="GHI" value={plantKPI.ghi || 0} unit="kWh/m²" /> */}
         <KIPCard title="Start Time" value={plantKPI.P_START || "00:00"} unit="Hrs" />
         <KIPCard title="Stop Time" value={plantKPI.P_STOP || "00:00"} unit="Hrs" />
         <KIPCard title="Running Time" value={plantKPI.P_RUN || "00:00"} unit="Hrs" />
