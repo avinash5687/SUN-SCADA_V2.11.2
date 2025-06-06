@@ -13,7 +13,7 @@ const Inverter = () => {
 
   const fetchInverterData = () => {
     axios
-      .get('${API_BASE_URL}/api/inverter')
+      .get(`${API_BASE_URL}/api/inverter`)
       .then((response) => {
         setInverterData(response.data);
         setLoading(false);
