@@ -13,6 +13,10 @@ import {
 } from "recharts";
 import "./WMS.css";
 
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
 const WMS = () => {
   const [wmsData, setWmsData] = useState([]);
   const [chartData, setChartData] = useState([]);
@@ -25,7 +29,7 @@ const WMS = () => {
 
   const fetchWMSData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/wms");
+      const response = await axios.get(`${API_BASE_URL}/api/wms`);
       setWmsData(response.data);
     } catch (error) {
       console.error("Error fetching WMS data:", error);
@@ -34,7 +38,7 @@ const WMS = () => {
 
   const fetchChartData = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/wms/WMS-CHART");
+      const response = await axios.get(`${API_BASE_URL}/api/wms/WMS-CHART`);
       console.log("Fetched Chart Data:", response.data);
       setChartData(response.data);
       setZoomedData(response.data);

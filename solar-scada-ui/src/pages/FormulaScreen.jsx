@@ -4,13 +4,17 @@ import Layout from "../components/Layout";
 import FormulaBox from "../components/FormulaBox";
 import axios from "axios";
 
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
 const FormulaScreen = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = () => {
       axios
-        .get("http://localhost:5000/api/dashboard/plant-kpi")
+        .get(`${API_BASE_URL}/api/dashboard/plant-kpi`)
         .then((response) => {
           setData(response.data[0]);
         })

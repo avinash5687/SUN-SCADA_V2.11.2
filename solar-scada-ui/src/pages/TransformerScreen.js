@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './TransformerScreen.css';
 
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
 const TransformerCard = ({ title, values }) => (
   <div className="transformer-card">
     <div className="card-header">{title}</div>
@@ -25,7 +29,7 @@ const TransformerScreen = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/transformer');
+      const res = await axios.get(`${API_BASE_URL}/api/transformer`);
 
       // Format API response to fit card structure
       const formattedData = res.data.map((item) => ({
