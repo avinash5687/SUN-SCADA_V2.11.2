@@ -1,6 +1,6 @@
 /* Main Container */
 .wms-container {
-  width: 100%;
+  width: 100vw;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -10,9 +10,9 @@
 /* Title */
 .wms-title {
   text-align: center;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   color: #333;
 }
 
@@ -33,7 +33,7 @@
 .wms-table th,
 .wms-table td {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 2px;
   text-align: center;
 }
 
@@ -69,7 +69,7 @@
 
 /* Chart Styling */
 .chart-container {
-  width: 38%;
+  width: 20%;
   height: 500px;
   display: flex;
   justify-content: center;
@@ -102,7 +102,7 @@
   }
 
   .wms-table {
-    width: 100%;
+    width: 100vw;
   }
 
   .chart-container {

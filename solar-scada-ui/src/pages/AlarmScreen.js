@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AlarmScreen.css";
 
-const API_BASE_URL = "http://localhost:5000/api/alarm";
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
 
 const AlarmScreen = () => {
   const [alarms, setAlarms] = useState([]);
