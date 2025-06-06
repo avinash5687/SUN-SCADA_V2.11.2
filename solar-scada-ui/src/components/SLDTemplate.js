@@ -10,7 +10,6 @@ const SLDScreen = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [inverterStatus, setInverterStatus] = useState({});
-
   const [showMFMPopups, setShowMFMPopups] = useState({});
   const [mfmData, setMFMData] = useState({});
   const [mfmStatus, setMFMStatus] = useState({});
@@ -39,7 +38,7 @@ const SLDScreen = () => {
       const mfmStatusObj = {};
       mfmResponses.forEach((res, i) => {
         const data = Array.isArray(res.data) ? res.data[0] : res.data;
-        mfmStatusObj[i + 1] = data.CUM_STS; // Assuming the status field is similar
+        mfmStatusObj[i + 1] = data.CUM_STS;
       });
       setMFMStatus(mfmStatusObj);
     } catch (err) {
@@ -70,7 +69,24 @@ const SLDScreen = () => {
   };
 
   useEffect(() => {
+    const fetchAllMFMData = async () => {
+      try {
+        const ids = [1, 2, 3, 4, 5, 6, 7, 8];
+        const mfmPromises = ids.map(id => axios.get(`http://localhost:5000/api/mfm?id=${id}`));
+        const responses = await Promise.all(mfmPromises);
+        const allData = {};
+        responses.forEach((res, index) => {
+          const data = Array.isArray(res.data) ? res.data[0] : res.data;
+          allData[ids[index]] = data;
+        });
+        setMFMData(allData);
+      } catch (err) {
+        console.error('Failed to preload MFM data', err);
+      }
+    };
+
     fetchStatuses();
+    fetchAllMFMData();
     const interval = setInterval(fetchStatuses, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -142,7 +158,7 @@ const SLDScreen = () => {
     width: '50px',
     height: '29.7px',
     opacity: 1,
-    border: `3px solid ${mfmStatus[id] === 0 ? 'lime' : 'red'}`,
+    border: `2px solid ${mfmStatus[id] === 0 ? 'lime' : 'red'}`,
     background: 'transparent',
     cursor: 'pointer',
     zIndex: 10,
@@ -261,13 +277,12 @@ const SLDScreen = () => {
 
   const renderMFMPopup = (data, id) => {
     if (!data) return null;
-
     const borderColor = data?.CUM_STS === 0 ? 'lime' : 'red';
     return (
       <div style={popupStyle}>
         <div style={{ ...darkPopupBoxStyle, border: `3px solid ${borderColor}` }}>
           {renderPopupHeader()}
-          <h3 style={{ color: '#fff' }}>{`MFM ${id} Info`}</h3>
+          <h3 style={{ color: '#fff' }}>MFM {id}</h3>
           {loading && <p style={{ color: '#fff' }}>Loading data...</p>}
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <table style={tableStyle}>
@@ -279,20 +294,20 @@ const SLDScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {renderRow('ID', data.ID || id)}
-              {renderRow('Active Power', data.AC_PWR, 'kW')}
-              {renderRow('Reactive Power', data.RCT_PWR, 'kVAR')}
-              {renderRow('Apparent Power', data.APP_PWR, 'kVA')}
-              {renderRow('R Phase Voltage', data.RY_VLT, 'V')}
-              {renderRow('Y Phase Voltage', data.YB_VLT, 'V')}
-              {renderRow('B Phase Voltage', data.BR_VLT, 'V')}
-              {renderRow('R Phase Current', data.R_L_CRNT, 'A')}
-              {renderRow('Y Phase Current', data.Y_L_CRNT, 'A')}
-              {renderRow('B Phase Current', data.B_L_CRNT, 'A')}
-              {renderRow('Frequency', data.FRQ, 'Hz')}
-              {renderRow('Power Factor', data.PF, '')}
-              {renderRow('Total Active Export', data.TOT_EXP_KWh, 'kWh')}
-              {renderRow('Total Active Import', data.TOT_IXP_KWh, 'kWh')}
+              {renderRow('ID', id)}
+              {renderRow('Active Power', data.AC_PWR || 'N/A', 'kW')}
+              {renderRow('Reactive Power', data.RCT_PWR || 'N/A', 'kVAR')}
+              {renderRow('Apparent Power', data.APP_PWR || 'N/A', 'kVA')}
+              {renderRow('R Phase Voltage', data.RY_VLT || 'N/A', 'V')}
+              {renderRow('Y Phase Voltage', data.YB_VLT || 'N/A', 'V')}
+              {renderRow('B Phase Voltage', data.BR_VLT || 'N/A', 'V')}
+              {renderRow('R Phase Current', data.R_L_CRNT || 'N/A', 'A')}
+              {renderRow('Y Phase Current', data.Y_L_CRNT || 'N/A', 'A')}
+              {renderRow('B Phase Current', data.B_L_CRNT || 'N/A', 'A')}
+              {renderRow('Frequency', data.FRQ || 'N/A', 'Hz')}
+              {renderRow('Power Factor', data.PF || 'N/A')}
+              {renderRow('Total Active Export', data.TOT_EXP_KWh || 'N/A', 'kWh')}
+              {renderRow('Total Active Import', data.TOT_IXP_KWh || 'N/A', 'kWh')}
               <tr>
                 <td style={{ ...cellStyle, textAlign: 'left' }}>Status</td>
                 <td style={{ ...cellStyle, color: data.CUM_STS === 0 ? 'lime' : 'red' }}>
@@ -327,11 +342,15 @@ const SLDScreen = () => {
               style={mfmButtonStyle(id)}
               title={`MFM ${id}`}
             >
+              MFM {id}
             </button>
           ))}
         </div>
         {Object.entries(showICRPopups).map(([id, isVisible]) => isVisible && inverterData[id] && renderPopup(inverterData[id]))}
-        {Object.entries(showMFMPopups).map(([id, isVisible]) => isVisible && mfmData[id] && renderMFMPopup(mfmData[id], id))}
+        {Object.entries(showMFMPopups).map(([id, isVisible]) => {
+          const numericId = parseInt(id, 10);
+          return isVisible && mfmData[numericId] && renderMFMPopup(mfmData[numericId], numericId);
+        })}
       </div>
     </Layout>
   );
