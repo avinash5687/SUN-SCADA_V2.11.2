@@ -52,7 +52,7 @@ const Dashboard = () => {
 
       // ✅ Set lastUpdated from WMS tag
       if (newWMSData.Date_Time) {
-        setLastUpdated(`Last update :  ${newWMSData.Date_Time}`);
+        setLastUpdated(`Last API updated on :  ${newWMSData.Date_Time}`);
       }
 
       const { data: deviceResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/device-status`);
@@ -89,8 +89,8 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-title-container">
-        <h1 className="dashboard-title">Dashboard</h1>
+      <div className="dashboard-header">
+        <div className="dashboard-title">Dashboard</div>
         <span className="last-updated">{lastUpdated}</span>
       </div>
 

@@ -30,23 +30,29 @@ html, body, #root {
   overflow: hidden;
 }
 
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
 .dashboard-title {
   text-align: left;
   font-size: 2vw;
   font-weight: bolder;
-}
-
-.component-title {
-  font-size: 1.5vw;
-  font-weight: bold;
+  /* Remove text-align if using flex */
+  margin: 0;
 }
 
 .last-updated {
-  font-size: 2vw;
+  font-size: 1vw;
   color: #555;
   font-weight: bold;
   text-align: right;
+  margin-left: 20px;
 }
+
 
 /* ================================
    Equipment Status Table
