@@ -2,13 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Inverter.css";
 
+
+  const API_BASE_URL =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:5000"
+      : "http://103.102.234.177:5000";
 const Inverter = () => {
   const [inverterData, setInverterData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchInverterData = () => {
     axios
-      .get("http://localhost:5000/api/inverter")
+      .get('${API_BASE_URL}/api/inverter')
       .then((response) => {
         setInverterData(response.data);
         setLoading(false);
