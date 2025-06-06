@@ -70,7 +70,7 @@ const App = () => {
           }
         />
         <Route
-          path="/alarm"
+          path="/AlarmScreen"
           element={
             <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
               <Alarm />
@@ -85,12 +85,12 @@ const App = () => {
             </Layout>
           }
         />
-        <Route path="/custom-trend" element={<CustomTrend />} />
-        <Route path="/sld-template" element={<SLDScreen />} />
+        <Route path="/CustomTrend" element={<CustomTrend />} />
+        <Route path="/SLDTemplate" element={<SLDScreen />} />
         <Route path="/heatmap" element={<Layout><HeatmapScreen /></Layout>} />
         <Route path="/formula" element={<FormulaScreen />} />
         <Route
-          path="/transformer"
+          path="/TransformerScreen"
           element={
             <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
               <TransformerScreen />
