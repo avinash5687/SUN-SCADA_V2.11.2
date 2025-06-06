@@ -14,7 +14,7 @@ const Login = () => {
   useEffect(() => {
     const fetchEnergyData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/data/energy-data");
+        const response = await fetch("http://103.102.234.177:5000/api/data/energy-data");
         const data = await response.json();
         if (response.ok) {
           setEnergyData(data);
@@ -44,7 +44,7 @@ const Login = () => {
     try {
       console.log("🔍 Sending login request...");
   
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://103.102.234.177:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

@@ -29,6 +29,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
+        
         <Route
           path="/leaflet-map"
           element={
@@ -84,7 +85,7 @@ const App = () => {
               <Report />
             </Layout>
           }
-        />
+        />        
         <Route path="/CustomTrend" element={<CustomTrend />} />
         <Route path="/SLDTemplate" element={<SLDScreen />} />
         <Route path="/heatmap" element={<Layout><HeatmapScreen /></Layout>} />
@@ -96,7 +97,7 @@ const App = () => {
               <TransformerScreen />
             </Layout>
           }
-        />
+        /> 
       </Routes>
     </Router>
   );
