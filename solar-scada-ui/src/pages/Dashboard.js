@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [trendType, setTrendType] = useState("day");
   const [wmsData, setWMSData] = useState({});
+  const [lastUpdated, setLastUpdated] = useState("");
   const [deviceStatus, setDeviceStatus] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
 
@@ -35,7 +36,6 @@ const Dashboard = () => {
     try {
       const { data: plantData } = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
       const newKPI = plantData?.[0] || {};
-
       setPlantKPI((prev) => (JSON.stringify(prev) !== JSON.stringify(newKPI) ? newKPI : prev));
       setCurrentPower(newKPI.currentPower || 0);
       setPerformanceRatio(newKPI.PR || 0);
@@ -49,6 +49,11 @@ const Dashboard = () => {
       const { data: wmsResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/WMSDATA-DASH`);
       const newWMSData = wmsResponse?.[0] || {};
       setWMSData((prev) => (JSON.stringify(prev) !== JSON.stringify(newWMSData) ? newWMSData : prev));
+
+      // ✅ Set lastUpdated from WMS tag
+      if (newWMSData.Date_Time) {
+        setLastUpdated(`Last update :  ${newWMSData.Date_Time}`);
+      }
 
       const { data: deviceResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/device-status`);
       setDeviceStatus(deviceResponse);
@@ -75,18 +80,19 @@ const Dashboard = () => {
   useEffect(() => {
     fetchData();
     fetchBarChartData();
-
     const intervalId = setInterval(() => {
       fetchData();
       fetchBarChartData();
     }, 30000);
-
     return () => clearInterval(intervalId);
   }, [fetchData, fetchBarChartData]);
 
   return (
     <div className="dashboard-container">
-      <h1 className="dashboard-title">Dashboard</h1>
+      <div className="dashboard-title-container">
+        <h1 className="dashboard-title">Dashboard</h1>
+        <span className="last-updated">{lastUpdated}</span>
+      </div>
 
       <div className="gauge-container">
         <div>

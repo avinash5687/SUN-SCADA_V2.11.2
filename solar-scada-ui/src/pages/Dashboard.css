@@ -1,52 +1,79 @@
-/* Ensure the entire app takes full height */
+/* ================================
+   Root Variables
+================================= */
+:root {
+  --primary-bg: #f4f4f4;
+  --primary-color: #1f77b4;
+  --hover-color: #555;
+  --font-base: Arial;
+  --font-size-base: 1vw;
+  --table-hover: #e0f7ff;
+}
+
+/* ================================
+   General Styles
+================================= */
 html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
-   
+
 .dashboard-container {
   padding: 10px;
-  background-color: #f4f4f4;
-  font-family: Arial;
+  background-color: var(--primary-bg);
+  font-family: var(--font-base);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 45px); /* Adjust for layout */
+  height: calc(100vh - 45px);
   overflow: hidden;
 }
-  
+
 .dashboard-title {
   text-align: left;
-  font-size: 2vw; /* Responsive font size */
+  font-size: 2vw;
   font-weight: bolder;
 }
 
 .component-title {
-  font-size: 1.5vw; /* Responsive font size */
+  font-size: 1.5vw;
   font-weight: bold;
 }
 
+.last-updated {
+  font-size: 2vw;
+  color: #555;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* ================================
+   Equipment Status Table
+================================= */
 .equipment-status table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1vw; /* Responsive font size */
+  font-size: var(--font-size-base);
 }
-  
+
 .equipment-status th, .equipment-status td {
   border: 1px solid #333;
   padding: 5px;
   text-align: center;
 }
-  
+
 .equipment-status {
   background: white;
   padding: 10px;
   border-radius: 5px;
-  font-size: 1vw; /* Responsive font size */
-  
+  font-size: var(--font-size-base);
+  overflow-x: auto;
 }
-  
+
+/* ================================
+   Gauge & Chart Layouts
+================================= */
 .gauge-container {
   display: flex;
   flex-direction: row;
@@ -54,23 +81,23 @@ html, body, #root {
   margin-bottom: 5px;
   height: 170px;
 }
-  
+
 .gauge-container > div {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center-aligns the h6 and gauge values */
-  text-align: center;  /* Center-aligns the text within the h6 elements */
+  align-items: center;
+  text-align: center;
 }
-  
+
 .charts-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
-  font-size: 0.50vw; /* Responsive font size */
+  font-size: 0.50vw;
   height: 300px;
 }
-  
+
 .chart {
   flex: 1;
   background: white;
@@ -79,164 +106,150 @@ html, body, #root {
   max-height: 300px;
   overflow: hidden;
 }
-  
-.active-power {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-  
+
+/* ================================
+   Equipment & WMS Section
+================================= */
 .equipment-wms-container {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-top: 25px;
-  font-size: 1vw; /* Responsive font size */
+  font-size: var(--font-size-base);
   height: 350px;
 }
-  
+
 .equipment-status, .wms-data {
   flex: 1;
   border: 1px solid #ddd;
   padding: 5px;
   border-radius: 5px;
   background: #fff;
-  overflow: hidden;
+  overflow-x: auto;
 }
-  
+
 .equipment-status table, .wms-data table {
   width: 100%;
   border-collapse: collapse;
 }
-  
+
 .equipment-status th, .wms-data th {
+  background: var(--primary-bg);
   border: 1px solid #ddd;
   padding: 5px;
-  text-align: left;
 }
-  
+
 .equipment-status td, .wms-data td {
   border: 1px solid #ddd;
   padding: 5px;
   text-align: center;
 }
 
-/* ✅ Left Align WMS Parameters */
-.wms-data table td:first-child, .wms-data table td:nth-child(3), .wms-data table th:first-child, .wms-data table th:nth-child(3) {
+/* Alignments */
+.wms-data table td:first-child,
+.wms-data table td:nth-child(3),
+.wms-data table th:first-child,
+.wms-data table th:nth-child(3),
+.equipment-status table td:first-child,
+.equipment-status table th:first-child {
   text-align: left;
 }
-  
-/* ✅ Center Align WMS Values */
-.wms-data table td:nth-child(2), .wms-data table td:nth-child(4) {
-  text-align: left;
-}
-  
-/* ✅ Center Align "Value" Headings (2nd & 4th Columns) */
-.wms-data th:nth-child(2), .wms-data th:nth-child(4) {
+
+.wms-data td:nth-child(2),
+.wms-data td:nth-child(4),
+.wms-data th:nth-child(2),
+.wms-data th:nth-child(4),
+.equipment-status th:nth-child(2),
+.equipment-status th:nth-child(3),
+.equipment-status td:nth-child(2),
+.equipment-status td:nth-child(3) {
   text-align: center;
 }
- 
-/* ✅ Left Align Equipment Names */
-.equipment-status table td:first-child, .equipment-status table th:first-child {
-  text-align: left;
+
+/* Hover Effects */
+.equipment-status tr:hover,
+.wms-data tr:hover {
+  background-color: var(--table-hover);
 }
-  
-/* ✅ Center Align Equipment Table Headers (Total Count & Running Count) */
-.equipment-status th:nth-child(2), .equipment-status th:nth-child(3) {
-  text-align: center;
-}
-   
-/* ✅ Center Align Total Count & Running Count */
-.equipment-status table td:nth-child(2), .equipment-status table td:nth-child(3) {
-  text-align: center;
-}
-  
-.equipment-status th, .wms-data th {
-  background: #f4f4f4;
-}
-  
+
+/* Center Align Utility */
 .center-align {
   text-align: center;
 }
-  
+
+/* ================================
+   Popup & Buttons
+================================= */
 .popup-content {
   max-height: calc(100vh - 60px);
   overflow-y: auto;
 }
-  
-/* New styles for aligning buttons next to headings */
+
 .equipment-status-header, .chart-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 }
-  
+
 .open-popup-btn, .chart-controls button {
-  margin-left: 10px; /* Adjust the spacing between the button and the heading */
+  margin-left: 10px;
   padding: 5px 10px;
-  background-color: #1f77b4;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
-  
+
 .open-popup-btn:hover, .chart-controls button:hover {
-  background-color: #555;
+  background-color: var(--hover-color);
 }
-  
+
+button:focus {
+  outline: 2px solid var(--primary-color);
+}
+
 .chart-controls {
   display: flex;
   align-items: center;
 }
-  
+
 .chart-controls input {
   padding: 5px;
   font-size: 12px;
 }
 
-/* ✅ Center-align only numeric values */
-.center-align {
-  text-align: center;
-}
-
+/* ================================
+   KIP Cards Grid
+================================= */
 .kip-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  grid-template-columns: repeat(6, 1fr);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
 }
 
-/* ✅ Media Queries for Different Screens */
-  
-/* ✅ Large Screens (32-inch, 43-inch Monitors) */
+/* ================================
+   Responsive Media Queries
+================================= */
 @media (min-width: 1400px) {
   .gauge-container > div {
     flex: 1 1 calc(18% - 10px);
   }
-  .chart {
-    flex: 1 1 48%;
-  }
-  .equipment-status, .wms-data {
+  .chart, .equipment-status, .wms-data {
     flex: 1 1 48%;
   }
 }
-  
-/* ✅ Medium Screens (MacBook, 12-inch Laptops) */
+
 @media (max-width: 1200px) {
   .gauge-container > div {
     flex: 1 1 calc(25% - 10px);
   }
-  .chart {
-    flex: 1 1 100%;
-  }
-  .equipment-status, .wms-data {
+  .chart, .equipment-status, .wms-data {
     flex: 1 1 100%;
   }
 }
-  
-/* ✅ Tablets & iPads */
+
 @media (max-width: 992px) {
   .dashboard-title {
     font-size: 3vw;
@@ -244,15 +257,8 @@ html, body, #root {
   .gauge-container > div {
     flex: 1 1 calc(33% - 10px);
   }
-  .chart {
-    flex: 1 1 100%;
-  }
-  .equipment-status, .wms-data {
-    flex: 1 1 100%;
-  }
 }
-  
-/* ✅ Small Screens (iPhones, Tablets) */
+
 @media (max-width: 768px) {
   .dashboard-title {
     font-size: 4vw;
@@ -260,29 +266,27 @@ html, body, #root {
   .gauge-container {
     flex-direction: column;
   }
-  .gauge-container > div {
+  .gauge-container > div,
+  .kip-card {
     flex: 1 1 100%;
   }
   .chart {
     max-height: none;
   }
-  .kip-card {
-    flex: 1 1 48%;
+  .dashboard-container {
+    padding: 10px;
   }
 }
-  
-/* ✅ Extra Small Screens (Phones) */
+
 @media (max-width: 480px) {
   .dashboard-title {
     font-size: 5vw;
   }
-  .gauge-container > div {
+  .gauge-container > div,
+  .kip-card {
     flex: 1 1 100%;
   }
   .chart {
     max-height: none;
-  }
-  .kip-card {
-    flex: 1 1 100%;
   }
 }
