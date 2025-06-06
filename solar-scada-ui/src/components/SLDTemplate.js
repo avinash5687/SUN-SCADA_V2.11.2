@@ -326,7 +326,7 @@ const SLDScreen = () => {
     <Layout>
       <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
         <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-          <img src={sldImage} alt="Single Line Diagram" style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'fixed', top: 0, left: 0 }} />
+          <img src={sldImage} alt="Single Line Diagram" style={{ width: '100vw', height: '95vh', objectFit: 'contain', position: 'fixed', top: 35, left: 0 }} />
           {[1, 2, 3, 4].map(id => (
             <button
               key={`inv-${id}`}

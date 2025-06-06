@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Inverter from "./pages/Inverter";
@@ -13,7 +13,7 @@ import SLDScreen from './components/SLDTemplate';
 import HeatmapScreen from "./pages/HeatmapScreen";
 import FormulaScreen from "./pages/FormulaScreen";
 import TransformerScreen from "./pages/TransformerScreen";
-import LeafletMap from "./pages/LeafletMap"; // ✅ import map
+import LeafletMap from "./pages/LeafletMap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -27,7 +27,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
           path="/leaflet-map"
           element={
@@ -69,7 +70,7 @@ const App = () => {
           }
         />
         <Route
-          path="/AlarmScreen"
+          path="/alarm"
           element={
             <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
               <Alarm />
@@ -83,19 +84,19 @@ const App = () => {
               <Report />
             </Layout>
           }
-        />        
-        <Route path="/CustomTrend" element={<CustomTrend />} />
-        <Route path="/SLDTemplate" element={<SLDScreen />} />
+        />
+        <Route path="/custom-trend" element={<CustomTrend />} />
+        <Route path="/sld-template" element={<SLDScreen />} />
         <Route path="/heatmap" element={<Layout><HeatmapScreen /></Layout>} />
         <Route path="/formula" element={<FormulaScreen />} />
         <Route
-          path="/TransformerScreen"
+          path="/transformer"
           element={
             <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
               <TransformerScreen />
             </Layout>
           }
-        /> 
+        />
       </Routes>
     </Router>
   );
