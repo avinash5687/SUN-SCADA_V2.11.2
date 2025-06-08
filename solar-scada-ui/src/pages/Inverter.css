@@ -1,14 +1,7 @@
-.inverter-scale-wrapper {
-  transform: scale(0.67);
-  transform-origin: top left;
-  width: calc(100% / 0.67);
-  height: calc(100vh / 0.67);
-  overflow: hidden;
-}
-/* Container */
+/* ========== Inverter Container ========== */
 .inverter-container {
   width: 99%;
-  height: 90%;
+  height: 90vh;
   background: white;
   padding: 15px;
   border-radius: 8px;
@@ -19,30 +12,30 @@
   align-items: center;
 }
 
-/* Title */
+/* ========== Title ========== */
 .inverter-title {
   font-weight: bold;
-  margin-bottom: 15px;
-  font-size: 22px;
+  margin-bottom: 10px;
+  font-size: 15px;
 }
 
-/* Table Styling */
+/* ========== Table Styling ========== */
 .inverter-table {
-  width: 100%;
+  width: 99%;
   border-collapse: collapse;
   text-align: center;
-  font-size: 14px;
-  margin-bottom: 20px;
+  font-size: 11px;
+  margin-bottom: 10px;
+  overflow-x: auto;
 }
 
 .inverter-table th,
 .inverter-table td {
   border: 1px solid #ddd;
-  padding: 12px;
+  padding: 5px;
   white-space: nowrap;
 }
 
-/* Header Styling */
 .inverter-table th {
   background-color: #222;
   color: white;
@@ -92,32 +85,59 @@
   background-color: red;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* ========== Responsive Media Queries ========== */
+
+/* Tablets */
+
+/* Large Tablets and Small Laptops */
+@media (max-width: 1200px) {
   .inverter-container {
-    width: 100%;
+    padding: 10px;
   }
 
   .inverter-table th,
   .inverter-table td {
-    font-size: 12px;
+    font-size: 0.8rem;
     padding: 8px;
   }
 }
 
-@media (max-width: 768px) {
+/* Tablets */
+@media (max-width: 1024px) {
   .inverter-container {
-    width: 100%;
-    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .inverter-title {
+    font-size: 1.1rem;
   }
 
   .inverter-table {
-    font-size: 12px;
+    font-size: 0.75rem;
+  }
+}
+
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+  .inverter-container {
+    width: 100%;
+    padding: 8px;
+    overflow-x: auto;
+  }
+
+  .inverter-title {
+    font-size: clamp(16px, 4vw, 20px);
+  }
+
+  .inverter-table {
     min-width: 900px;
+    font-size: 12px;
   }
 
   .inverter-table th,
   .inverter-table td {
     padding: 6px;
+    font-size: 12px;
   }
 }

@@ -71,7 +71,6 @@ const WMS = () => {
   };
 
   return (
-    <div className="wms-scale-wrapper">
     <div className="wms-container">
       <h2 className="wms-title">WMS Data</h2>
 
@@ -173,7 +172,6 @@ const WMS = () => {
           </ResponsiveContainer>
         </div>
       </div>
-    </div>
     </div>
   );
 };

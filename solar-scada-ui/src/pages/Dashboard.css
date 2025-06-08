@@ -6,7 +6,7 @@
   --primary-color: #1f77b4;
   --hover-color: #555;
   --font-base: Arial;
-  --font-size-base: clamp(25px, 0.9vw, 1rem); 
+  --font-size-base: clamp(0.75rem, 0.9vw, 1rem); 
   --table-hover: #e0f7ff;
 }
 
@@ -17,23 +17,23 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
-}
-
-.dashboard-scale-wrapper {
-  transform: scale(0.67);
-  transform-origin: top left;
-  width: calc(100% / 0.67);
-  overflow: hidden;
+  overflow-x: hidden;
+  font-size: clamp(12px, 1.2vw, 16px);
 }
 
 .dashboard-container {
-  padding: 10px;
+  padding: 10px 20px 20px 20px; 
+  margin-top: -20px;
   background-color: var(--primary-bg);
   font-family: var(--font-base);
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
+  /* height: calc(100vh - 45px); */
+  min-height: 100vh; /* ✅ Let content flow */
+  overflow-y: auto;
   overflow: hidden;
+  font-size: 0.85rem;
 }
 
 .dashboard-header {
@@ -44,15 +44,16 @@ html, body, #root {
 }
 
 .dashboard-title {
-  font-size: clamp(18px, 2.2vw, 32px);
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
   font-weight: bolder;
   margin: 0;
 }
 
 .last-updated {
-  font-size: clamp(10px, 1.2vw, 16px);
+  font-size: clamp(0.8rem, 1vw, 1.2rem);
   color: #555;
   font-weight: bold;
+  text-align: right;
   margin-left: 20px;
 }
 
@@ -79,25 +80,38 @@ html, body, #root {
   overflow-x: auto;
 }
 
+.equipment-status,
+.wms-data,
+.chart {
+  padding: 8px;
+  font-size: var(--font-size-base);
+}
+
 /* ================================
    Gauge & Chart Layouts
 ================================= */
 .gauge-container {
   display: flex;
-  flex-direction: row;
+  flex-wrap:  nowrap;
   justify-content: space-evenly;
   margin-bottom: 5px;
-  height: 20vh;
-  min-height: 150px;
-  max-height: 200px;
+  gap: 10px;
+  /* height: 170px; */
+  height: auto;
+  overflow-x: auto;
+  padding-bottom: 5px;
 }
 
 .gauge-container > div {
+  /* flex: 1 1 18%; */
+  flex: 0 0 auto;
+  /* min-width: 150px; */
+  min-width: 160px;
+  max-width: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  min-width: 160px;
 }
 
 .charts-container {
@@ -105,18 +119,19 @@ html, body, #root {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
-  font-size: 0.5vw;
-  height: auto;
+  font-size: var(--font-size-base);
+  height: 250px;
 }
 
 .chart {
-  flex: 1 1 48%;
+  flex: 1 1 40%;
   background: white;
   padding: 10px;
   border-radius: 5px;
-  max-height: 300px;
-  min-width: 300px;
+  /* max-height: 300px; */
+  max-height: unset;
   overflow: hidden;
+  min-width: 300px;
 }
 
 /* ================================
@@ -124,12 +139,12 @@ html, body, #root {
 ================================= */
 .equipment-wms-container {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
   margin-top: 25px;
-  font-size: var(--font-size-base);
   height: auto;
-  flex-wrap: wrap;
+  font-size: var(--font-size-base);
 }
 
 .equipment-status, .wms-data {
@@ -139,8 +154,10 @@ html, body, #root {
   border-radius: 5px;
   background: #fff;
   overflow-x: auto;
+  min-width: 300px;
 }
 
+/* Tables */
 .equipment-status table, .wms-data table {
   width: 100%;
   border-collapse: collapse;
@@ -178,13 +195,11 @@ html, body, #root {
   text-align: center;
 }
 
-/* Hover Effects */
 .equipment-status tr:hover,
 .wms-data tr:hover {
   background-color: var(--table-hover);
 }
 
-/* Center Align Utility */
 .center-align {
   text-align: center;
 }
@@ -202,6 +217,7 @@ html, body, #root {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  font-size: 10px;
 }
 
 .open-popup-btn, .chart-controls button {
@@ -218,8 +234,12 @@ html, body, #root {
   background-color: var(--hover-color);
 }
 
+.component-title{
+  font-size: 14px;
+}
+
 button:focus {
-  outline: 2px solid var(--primary-color);
+  outline: 1px solid var(--primary-color);
 }
 
 .chart-controls {
@@ -229,7 +249,7 @@ button:focus {
 
 .chart-controls input {
   padding: 5px;
-  font-size: 12px;
+  font-size: 8px;
 }
 
 /* ================================
@@ -244,34 +264,73 @@ button:focus {
 /* ================================
    Responsive Media Queries
 ================================= */
-
-/* 1600px (16") */
-@media (max-width: 1600px) {
-  .dashboard-title { font-size: 2.3vw; }
+@media (max-width: 1400px) {
+  .gauge-container > div {
+    flex: 1 1 22%;
+  }
+  .chart, .equipment-status, .wms-data {
+    flex: 1 1 48%;
+  }
 }
 
-/* 1536px (15.6") */
-@media (max-width: 1536px) {
-  .dashboard-title { font-size: 2.5vw; }
-}
-
-/* 1440px (14") */
-@media (max-width: 1440px) {
-  .dashboard-title { font-size: 2.7vw; }
-}
-
-/* 1366px (13.3") */
-@media (max-width: 1366px) {
-  .dashboard-title { font-size: 2.9vw; }
-  .charts-container, .equipment-wms-container {
-    flex-direction: column;
+@media (max-width: 1200px) {
+  .gauge-container > div {
+    flex: 1 1 25%;
   }
   .chart, .equipment-status, .wms-data {
     flex: 1 1 100%;
   }
 }
 
-/* 1280px (12") */
+@media (max-width: 992px) {
+  .dashboard-title {
+    font-size: 3vw;
+  }
+  .gauge-container > div {
+    flex: 1 1 33%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 4vw;
+  }
+  .gauge-container {
+    flex-direction: column;
+  }
+  .gauge-container > div,
+  .kip-card {
+    flex: 1 1 100%;
+  }
+  .chart {
+    max-height: none;
+  }
+  .dashboard-container {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 5vw;
+  }
+  .gauge-container > div,
+  .kip-card {
+    flex: 1 1 100%;
+  }
+  .chart {
+    max-height: none;
+  }
+}
+
 @media (max-width: 1280px) {
-  .dashboard-title { font-size: 3.1vw; }
+  .gauge-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .gauge-container > div {
+    flex: 1 1 45%;
+    min-width: 140px;
+  }
 }

@@ -30,7 +30,6 @@ const MFM = () => {
   }, []);
 
   return (
-    <div className="mfm-scale-wrapper">
     <div className="mfm-container">
       <h2 className="mfm-title">MFM Data</h2>
       <table className="mfm-table">
@@ -88,7 +87,6 @@ const MFM = () => {
           ))}
         </tbody>
       </table>
-    </div>
     </div>
   );
 };

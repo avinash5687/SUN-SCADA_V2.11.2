@@ -55,7 +55,6 @@ const TransformerScreen = () => {
   }, []);
 
   return (
-    <div className='transformer-scale-wrapper'>
     <div className="transformer-container">
       {transformerData.map((transformer, index) => (
         <TransformerCard
@@ -64,7 +63,6 @@ const TransformerScreen = () => {
           values={transformer.values}
         />
       ))}
-    </div>
     </div>
   );
 };

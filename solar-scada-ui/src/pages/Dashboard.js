@@ -88,8 +88,6 @@ const Dashboard = () => {
   }, [fetchData, fetchBarChartData]);
 
   return (
-    
-    <div className="dashboard-scale-wrapper">
     <div className="dashboard-container">
       <div className="dashboard-header">
         <div className="dashboard-title">Dashboard</div>
@@ -241,7 +239,6 @@ const Dashboard = () => {
         <KIPCard title="Running Time" value={plantKPI.P_RUN || "00:00"} unit="Hrs" />
         <KIPCard title="Grid Downtime" value={plantKPI.P_DOWN || "00:00"} unit="Hrs" />
       </div>
-    </div>
     </div>
   );
 };
