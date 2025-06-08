@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import sldImage from '../assets/Plant_SLD_21MWp.png';
 import axios from 'axios';
-import './sldScreen.css';
 
 const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
@@ -48,8 +47,8 @@ const SLDScreen = () => {
 
   return (
     <Layout>
-      <div className="sld-wrapper">
-        <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
+      <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', position: 'relative' }}>
+        <img src={sldImage} alt="Single Line Diagram" style={{ width: '100vw', height: '95vh', objectFit: 'contain', position: 'fixed', top: 35, left: 0 }} />
       </div>
     </Layout>
   );

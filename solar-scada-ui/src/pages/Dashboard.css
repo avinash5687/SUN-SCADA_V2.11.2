@@ -6,7 +6,7 @@
   --primary-color: #1f77b4;
   --hover-color: #555;
   --font-base: Arial;
-  --font-size-base: clamp(0.75rem, 0.9vw, 1rem); 
+  --font-size-base: 1vw;
   --table-hover: #e0f7ff;
 }
 
@@ -17,23 +17,17 @@ html, body, #root {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  font-size: clamp(12px, 1.2vw, 16px);
+  overflow: hidden;
 }
 
 .dashboard-container {
-  padding: 10px 20px 20px 20px; 
-  margin-top: -20px;
+  padding: 10px;
   background-color: var(--primary-bg);
   font-family: var(--font-base);
   display: flex;
-  box-sizing: border-box;
   flex-direction: column;
-  /* height: calc(100vh - 45px); */
-  min-height: 100vh; /* ✅ Let content flow */
-  overflow-y: auto;
+  height: calc(100vh - 45px);
   overflow: hidden;
-  font-size: 0.85rem;
 }
 
 .dashboard-header {
@@ -44,18 +38,21 @@ html, body, #root {
 }
 
 .dashboard-title {
-  font-size: clamp(1.5rem, 2vw, 2.5rem);
+  text-align: left;
+  font-size: 2vw;
   font-weight: bolder;
+  /* Remove text-align if using flex */
   margin: 0;
 }
 
 .last-updated {
-  font-size: clamp(0.8rem, 1vw, 1.2rem);
+  font-size: 1vw;
   color: #555;
   font-weight: bold;
   text-align: right;
   margin-left: 20px;
 }
+
 
 /* ================================
    Equipment Status Table
@@ -80,34 +77,18 @@ html, body, #root {
   overflow-x: auto;
 }
 
-.equipment-status,
-.wms-data,
-.chart {
-  padding: 8px;
-  font-size: var(--font-size-base);
-}
-
 /* ================================
    Gauge & Chart Layouts
 ================================= */
 .gauge-container {
   display: flex;
-  flex-wrap:  nowrap;
+  flex-direction: row;
   justify-content: space-evenly;
   margin-bottom: 5px;
-  gap: 10px;
-  /* height: 170px; */
-  height: auto;
-  overflow-x: auto;
-  padding-bottom: 5px;
+  height: 170px;
 }
 
 .gauge-container > div {
-  /* flex: 1 1 18%; */
-  flex: 0 0 auto;
-  /* min-width: 150px; */
-  min-width: 160px;
-  max-width: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,19 +100,17 @@ html, body, #root {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
-  font-size: var(--font-size-base);
-  height: 250px;
+  font-size: 0.50vw;
+  height: 300px;
 }
 
 .chart {
-  flex: 1 1 40%;
+  flex: 1;
   background: white;
   padding: 10px;
   border-radius: 5px;
-  /* max-height: 300px; */
-  max-height: unset;
+  max-height: 300px;
   overflow: hidden;
-  min-width: 300px;
 }
 
 /* ================================
@@ -139,25 +118,22 @@ html, body, #root {
 ================================= */
 .equipment-wms-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
   margin-top: 25px;
-  height: auto;
   font-size: var(--font-size-base);
+  height: 350px;
 }
 
 .equipment-status, .wms-data {
-  flex: 1 1 48%;
+  flex: 1;
   border: 1px solid #ddd;
   padding: 5px;
   border-radius: 5px;
   background: #fff;
   overflow-x: auto;
-  min-width: 300px;
 }
 
-/* Tables */
 .equipment-status table, .wms-data table {
   width: 100%;
   border-collapse: collapse;
@@ -175,6 +151,7 @@ html, body, #root {
   text-align: center;
 }
 
+/* Alignments */
 .wms-data table td:first-child,
 .wms-data table td:nth-child(3),
 .wms-data table th:first-child,
@@ -195,11 +172,13 @@ html, body, #root {
   text-align: center;
 }
 
+/* Hover Effects */
 .equipment-status tr:hover,
 .wms-data tr:hover {
   background-color: var(--table-hover);
 }
 
+/* Center Align Utility */
 .center-align {
   text-align: center;
 }
@@ -217,7 +196,6 @@ html, body, #root {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  font-size: 10px;
 }
 
 .open-popup-btn, .chart-controls button {
@@ -234,12 +212,8 @@ html, body, #root {
   background-color: var(--hover-color);
 }
 
-.component-title{
-  font-size: 14px;
-}
-
 button:focus {
-  outline: 1px solid var(--primary-color);
+  outline: 2px solid var(--primary-color);
 }
 
 .chart-controls {
@@ -249,7 +223,7 @@ button:focus {
 
 .chart-controls input {
   padding: 5px;
-  font-size: 8px;
+  font-size: 12px;
 }
 
 /* ================================
@@ -264,9 +238,9 @@ button:focus {
 /* ================================
    Responsive Media Queries
 ================================= */
-@media (max-width: 1400px) {
+@media (min-width: 1400px) {
   .gauge-container > div {
-    flex: 1 1 22%;
+    flex: 1 1 calc(18% - 10px);
   }
   .chart, .equipment-status, .wms-data {
     flex: 1 1 48%;
@@ -275,7 +249,7 @@ button:focus {
 
 @media (max-width: 1200px) {
   .gauge-container > div {
-    flex: 1 1 25%;
+    flex: 1 1 calc(25% - 10px);
   }
   .chart, .equipment-status, .wms-data {
     flex: 1 1 100%;
@@ -287,7 +261,7 @@ button:focus {
     font-size: 3vw;
   }
   .gauge-container > div {
-    flex: 1 1 33%;
+    flex: 1 1 calc(33% - 10px);
   }
 }
 
@@ -320,17 +294,5 @@ button:focus {
   }
   .chart {
     max-height: none;
-  }
-}
-
-@media (max-width: 1280px) {
-  .gauge-container {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .gauge-container > div {
-    flex: 1 1 45%;
-    min-width: 140px;
   }
 }

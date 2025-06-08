@@ -1,16 +1,7 @@
-.trend-scale-wrapper {
-  transform: scale(0.67);
-  transform-origin: top left;
-  width: calc(100% / 0.67); /* Ensures it fits without horizontal scroll */
-  height: calc(100vh / 0.67);
-  overflow: hidden; /* Hide right overflow cleanly */
-}
-
 /* ✅ Ensure Full Page Uses Flexbox to Prevent Scrolling */
 .trend-container {
-  max-width: 99.8%;
-  /* height: calc(100vh - 50px);  */
-  height: 93%;
+  max-width: 100%;
+  height: calc(100vh - 50px); /* Ensure full page minus header */
   margin: auto;
   padding: 20px;
   background: white;
