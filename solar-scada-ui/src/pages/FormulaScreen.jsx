@@ -46,13 +46,22 @@ const FormulaScreen = () => {
   return (
     <Layout>
       <div
+  style={{
+    transform: "scale(0.67)",
+    transformOrigin: "top left",
+    width: `calc(100% / 0.67)`,
+    height: `calc(100vh / 0.67)`,
+    overflow: "hidden",
+  }}
+>
+      <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gridTemplateRows: "repeat(2, 1fr)",
           gap: "16px",
-          height: "calc(100vh - 50px)", // adjust if you have header/footer
-          width: "90vw",
+          height: "92%", // adjust if you have header/footer
+          width: "100%",
           padding: "16px",
           boxSizing: "border-box",
         }}
@@ -87,6 +96,7 @@ const FormulaScreen = () => {
           text="DC CUF (%) = (Total Power Generation / (24 * Plant DC Capacity)) * 100"
           formula={`DC CUF (%) = (${data.P_EXP} / (24 * ${data.DC_CAP})) * 100 = ${dcCuf}%`}
         />
+      </div>
       </div>
     </Layout>
   );

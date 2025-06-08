@@ -1,6 +1,15 @@
+
+.heatmap-scale-wrapper {
+  transform: scale(0.67);
+  transform-origin: top left;
+  width: calc(100% / 0.67); 
+  height: calc(100vh / 0.67);
+  overflow: hidden; 
+}
+
 .heatmap-root {
-  width: 100vw;
-  height: 100vh;
+  width: 98%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

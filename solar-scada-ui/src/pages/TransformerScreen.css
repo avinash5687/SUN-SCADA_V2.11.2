@@ -1,3 +1,4 @@
+
 .transformer-container {
     display: flex;
     justify-content: center;
@@ -31,7 +32,7 @@
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
-    font-size: 14px;
+    font-size: 10px;
     font-family: sans-serif;
   }
   

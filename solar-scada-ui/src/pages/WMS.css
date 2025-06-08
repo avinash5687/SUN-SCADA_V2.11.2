@@ -1,6 +1,6 @@
 /* Main Container */
 .wms-container {
-  width: 100vw;
+  width: 100%;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -10,7 +10,7 @@
 /* Title */
 .wms-title {
   text-align: center;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   margin-bottom: 5px;
   color: #333;
@@ -35,6 +35,7 @@
   border: 1px solid #ddd;
   padding: 2px;
   text-align: center;
+  font-size: 11px;
 }
 
 .wms-table th {
@@ -74,6 +75,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 }
 
 .recharts-responsive-container {
@@ -95,18 +97,69 @@
 }
 
 /* Responsive Design */
-@media screen and (max-width: 768px) {
-  .wms-content {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .wms-table {
-    width: 100vw;
+/* Large screens (≥1440px) */
+@media screen and (min-width: 1440px) {
+  .wms-title {
+    font-size: 1.25rem;
   }
 
   .chart-container {
+    height: 500px;
+  }
+}
+
+/* Medium screens (1024px–1439px) */
+@media screen and (max-width: 1439px) {
+  .wms-table {
+    font-size: 0.7rem;
+  }
+
+  .chart-container {
+    height: 450px;
+  }
+}
+
+/* Tablets and small laptops (768px–1023px) */
+@media screen and (max-width: 1023px) {
+  .wms-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .wms-table,
+  .chart-container {
     width: 100%;
-    height: 400px;
+  }
+
+  .chart-container {
+    height: 350px;
+  }
+}
+
+/* Mobile devices (<768px) */
+@media screen and (max-width: 767px) {
+  .wms-title {
+    font-size: 1rem;
+  }
+
+  .wms-table th,
+  .wms-table td {
+    font-size: 0.7rem;
+    padding: 4px;
+  }
+
+  .chart-container {
+    height: 300px;
+  }
+}
+
+/* Very small screens (<480px) */
+@media screen and (max-width: 479px) {
+  .wms-table {
+    font-size: 0.65rem;
+  }
+
+  .chart-container {
+    height: 250px;
   }
 }
