@@ -98,7 +98,6 @@ const Heatmap = ({ data }) => {
   };
 
   return (
-    <div className="heatmap-scale-wrapper">
     <div className="heatmap-root">
       <div className="heatmap-legend-row">
         <Legend />
@@ -133,7 +132,6 @@ const Heatmap = ({ data }) => {
           dangerouslySetInnerHTML={{ __html: tooltipContent }}
         ></div>
       </div>
-    </div>
     </div>
   );
 };
