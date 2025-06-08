@@ -1,7 +1,7 @@
-/* ========== Inverter Container ========== */
+/* Container */
 .inverter-container {
-  width: 99%;
-  height: 90vh;
+  width: 90vw;
+  height: 92vh;
   background: white;
   padding: 15px;
   border-radius: 8px;
@@ -12,30 +12,30 @@
   align-items: center;
 }
 
-/* ========== Title ========== */
+/* Title */
 .inverter-title {
   font-weight: bold;
-  margin-bottom: 10px;
-  font-size: 15px;
+  margin-bottom: 15px;
+  font-size: 22px;
 }
 
-/* ========== Table Styling ========== */
+/* Table Styling */
 .inverter-table {
-  width: 99%;
+  width: 100%;
   border-collapse: collapse;
   text-align: center;
-  font-size: 11px;
-  margin-bottom: 10px;
-  overflow-x: auto;
+  font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .inverter-table th,
 .inverter-table td {
   border: 1px solid #ddd;
-  padding: 5px;
+  padding: 12px;
   white-space: nowrap;
 }
 
+/* Header Styling */
 .inverter-table th {
   background-color: #222;
   color: white;
@@ -85,59 +85,32 @@
   background-color: red;
 }
 
-/* ========== Responsive Media Queries ========== */
-
-/* Tablets */
-
-/* Large Tablets and Small Laptops */
-@media (max-width: 1200px) {
+/* Responsive */
+@media (max-width: 1024px) {
   .inverter-container {
-    padding: 10px;
+    width: 100%;
   }
 
   .inverter-table th,
   .inverter-table td {
-    font-size: 0.8rem;
+    font-size: 12px;
     padding: 8px;
   }
 }
 
-/* Tablets */
-@media (max-width: 1024px) {
-  .inverter-container {
-    padding: 10px;
-  }
-
-  .inverter-title {
-    font-size: 1.1rem;
-  }
-
-  .inverter-table {
-    font-size: 0.75rem;
-  }
-}
-
-
-/* Mobile Devices */
 @media (max-width: 768px) {
   .inverter-container {
     width: 100%;
-    padding: 8px;
     overflow-x: auto;
   }
 
-  .inverter-title {
-    font-size: clamp(16px, 4vw, 20px);
-  }
-
   .inverter-table {
-    min-width: 900px;
     font-size: 12px;
+    min-width: 900px;
   }
 
   .inverter-table th,
   .inverter-table td {
     padding: 6px;
-    font-size: 12px;
   }
 }
