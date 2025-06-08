@@ -1,3 +1,11 @@
+.transformer-scale-wrapper {
+  transform: scale(0.67);
+  transform-origin: top left;
+  width: calc(100% / 0.67); 
+  height: calc(100vh / 0.67);
+  overflow: hidden; 
+}
+
 .transformer-container {
     display: flex;
     justify-content: center;

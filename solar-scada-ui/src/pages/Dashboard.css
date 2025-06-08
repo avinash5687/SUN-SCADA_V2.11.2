@@ -6,7 +6,7 @@
   --primary-color: #1f77b4;
   --hover-color: #555;
   --font-base: Arial;
-  --font-size-base: 1vw;
+  --font-size-base: clamp(25px, 0.9vw, 1rem); 
   --table-hover: #e0f7ff;
 }
 
@@ -20,13 +20,19 @@ html, body, #root {
   overflow: hidden;
 }
 
+.dashboard-scale-wrapper {
+  transform: scale(0.67);
+  transform-origin: top left;
+  width: calc(100% / 0.67);
+  overflow: hidden;
+}
+
 .dashboard-container {
   padding: 10px;
   background-color: var(--primary-bg);
   font-family: var(--font-base);
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 45px);
   overflow: hidden;
 }
 
@@ -38,21 +44,17 @@ html, body, #root {
 }
 
 .dashboard-title {
-  text-align: left;
-  font-size: 2vw;
+  font-size: clamp(18px, 2.2vw, 32px);
   font-weight: bolder;
-  /* Remove text-align if using flex */
   margin: 0;
 }
 
 .last-updated {
-  font-size: 1vw;
+  font-size: clamp(10px, 1.2vw, 16px);
   color: #555;
   font-weight: bold;
-  text-align: right;
   margin-left: 20px;
 }
-
 
 /* ================================
    Equipment Status Table
@@ -85,7 +87,9 @@ html, body, #root {
   flex-direction: row;
   justify-content: space-evenly;
   margin-bottom: 5px;
-  height: 170px;
+  height: 20vh;
+  min-height: 150px;
+  max-height: 200px;
 }
 
 .gauge-container > div {
@@ -93,6 +97,7 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  min-width: 160px;
 }
 
 .charts-container {
@@ -100,16 +105,17 @@ html, body, #root {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 10px;
-  font-size: 0.50vw;
-  height: 300px;
+  font-size: 0.5vw;
+  height: auto;
 }
 
 .chart {
-  flex: 1;
+  flex: 1 1 48%;
   background: white;
   padding: 10px;
   border-radius: 5px;
   max-height: 300px;
+  min-width: 300px;
   overflow: hidden;
 }
 
@@ -122,11 +128,12 @@ html, body, #root {
   gap: 10px;
   margin-top: 25px;
   font-size: var(--font-size-base);
-  height: 350px;
+  height: auto;
+  flex-wrap: wrap;
 }
 
 .equipment-status, .wms-data {
-  flex: 1;
+  flex: 1 1 48%;
   border: 1px solid #ddd;
   padding: 5px;
   border-radius: 5px;
@@ -151,7 +158,6 @@ html, body, #root {
   text-align: center;
 }
 
-/* Alignments */
 .wms-data table td:first-child,
 .wms-data table td:nth-child(3),
 .wms-data table th:first-child,
@@ -238,61 +244,34 @@ button:focus {
 /* ================================
    Responsive Media Queries
 ================================= */
-@media (min-width: 1400px) {
-  .gauge-container > div {
-    flex: 1 1 calc(18% - 10px);
-  }
-  .chart, .equipment-status, .wms-data {
-    flex: 1 1 48%;
-  }
+
+/* 1600px (16") */
+@media (max-width: 1600px) {
+  .dashboard-title { font-size: 2.3vw; }
 }
 
-@media (max-width: 1200px) {
-  .gauge-container > div {
-    flex: 1 1 calc(25% - 10px);
-  }
-  .chart, .equipment-status, .wms-data {
-    flex: 1 1 100%;
-  }
+/* 1536px (15.6") */
+@media (max-width: 1536px) {
+  .dashboard-title { font-size: 2.5vw; }
 }
 
-@media (max-width: 992px) {
-  .dashboard-title {
-    font-size: 3vw;
-  }
-  .gauge-container > div {
-    flex: 1 1 calc(33% - 10px);
-  }
+/* 1440px (14") */
+@media (max-width: 1440px) {
+  .dashboard-title { font-size: 2.7vw; }
 }
 
-@media (max-width: 768px) {
-  .dashboard-title {
-    font-size: 4vw;
-  }
-  .gauge-container {
+/* 1366px (13.3") */
+@media (max-width: 1366px) {
+  .dashboard-title { font-size: 2.9vw; }
+  .charts-container, .equipment-wms-container {
     flex-direction: column;
   }
-  .gauge-container > div,
-  .kip-card {
+  .chart, .equipment-status, .wms-data {
     flex: 1 1 100%;
-  }
-  .chart {
-    max-height: none;
-  }
-  .dashboard-container {
-    padding: 10px;
   }
 }
 
-@media (max-width: 480px) {
-  .dashboard-title {
-    font-size: 5vw;
-  }
-  .gauge-container > div,
-  .kip-card {
-    flex: 1 1 100%;
-  }
-  .chart {
-    max-height: none;
-  }
+/* 1280px (12") */
+@media (max-width: 1280px) {
+  .dashboard-title { font-size: 3.1vw; }
 }

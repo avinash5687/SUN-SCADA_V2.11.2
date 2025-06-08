@@ -1,6 +1,14 @@
+.wms-scale-wrapper {
+  transform: scale(0.67);
+  transform-origin: top left;
+  width: calc(100% / 0.67);
+  height: calc(1000vh / 0.67);
+  overflow: hidden;
+}
+
 /* Main Container */
 .wms-container {
-  width: 100vw;
+  width: 100%;
   padding: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;

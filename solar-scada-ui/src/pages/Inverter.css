@@ -1,7 +1,14 @@
+.inverter-scale-wrapper {
+  transform: scale(0.67);
+  transform-origin: top left;
+  width: calc(100% / 0.67);
+  height: calc(100vh / 0.67);
+  overflow: hidden;
+}
 /* Container */
 .inverter-container {
-  width: 90vw;
-  height: 92vh;
+  width: 99%;
+  height: 90%;
   background: white;
   padding: 15px;
   border-radius: 8px;

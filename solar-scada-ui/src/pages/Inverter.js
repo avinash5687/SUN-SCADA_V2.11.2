@@ -39,6 +39,7 @@ const Inverter = () => {
   };
 
   return (
+    <div className="inverter-scale-wrapper">
     <div className="inverter-container">
       <h2 className="inverter-title">Inverter Data</h2>
       <table className="inverter-table">
@@ -98,6 +99,7 @@ const Inverter = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

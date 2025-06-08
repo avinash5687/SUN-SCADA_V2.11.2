@@ -127,6 +127,7 @@ const CustomTrend = () => {
 
   return (
     <Layout>
+      <div className="trend-scale-wrapper">
       <div className="trend-container">
         <h2>📈 Custom Trend Analysis</h2>
 
@@ -257,6 +258,7 @@ const CustomTrend = () => {
             </ResponsiveContainer>
           </div>
         )}
+      </div>
       </div>
     </Layout>
   );

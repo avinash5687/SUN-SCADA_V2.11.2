@@ -103,6 +103,7 @@ const AlarmScreen = () => {
   }, []);
 
   return (
+    <div className="alarm-scale-wrapper">
     <div className="alarm-container">
       <div className="table-wrapper">
         <table className="alarm-table">
@@ -178,6 +179,7 @@ const AlarmScreen = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
