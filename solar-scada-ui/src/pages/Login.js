@@ -98,7 +98,7 @@ const Login = () => {
           fontWeight: "bold",
         }}
       >
-        21.5MWp JSPL SOLAR PROJECT, DHULE, MAHARASHTA
+        21.5MWp JSPL SOLAR PROJECT, DHULE, MAHARASHTRA
       </h2>
 
       <div
