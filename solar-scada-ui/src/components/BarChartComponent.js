@@ -17,7 +17,7 @@ const BarChartComponent = ({ data }) => {
           <XAxis dataKey="TIME" stroke="#333" />
           <YAxis stroke="#333" />
           <Tooltip />
-          <Bar dataKey="energyGenerated" fill="#FF4500" barSize={20} /> {/* Reduced bar size */}
+          <Bar dataKey="Energy Generated" fill="#FF4500" barSize={20} /> {/* Reduced bar size */}
         </BarChart>
       </ResponsiveContainer>
     </div>
