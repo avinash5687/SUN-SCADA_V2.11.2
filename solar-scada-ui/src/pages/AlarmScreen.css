@@ -37,6 +37,7 @@
     padding: 8px;
     border: 1px solid white;
     text-align: center;
+    font-size: 10px;
 }
 
 /* ✅ Highlight Active Alarms */
@@ -60,13 +61,14 @@
     bottom: 0;
     left: 0;
     right: 0;
+    
 }
 
 /* ✅ Buttons Styling */
 .ack-button,
 .clear-button {
     padding: 10px 15px;
-    font-size: 16px;
+    font-size: 10px;
     margin: 0 10px;
     border: none;
     cursor: pointer;

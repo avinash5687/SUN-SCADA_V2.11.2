@@ -128,7 +128,7 @@ const CustomTrend = () => {
   return (
     <Layout>
       <div className="trend-container">
-        <h2>📈 Custom Trend Analysis</h2>
+        <h2 style={{fontSize: '20px'}}>📈 Custom Trend Analysis</h2>
 
         <div className="input-group">
           <label>Select Table 1:</label>
