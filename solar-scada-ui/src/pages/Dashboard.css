@@ -177,6 +177,7 @@ html, body, #root {
 
 .wms-data table td:first-child,
 .wms-data table td:nth-child(3),
+.wms-data table td:nth-child(4), /* <-- Add this line */
 .wms-data table th:first-child,
 .wms-data table th:nth-child(3),
 .equipment-status table td:first-child,
@@ -184,8 +185,9 @@ html, body, #root {
   text-align: left;
 }
 
+
 .wms-data td:nth-child(2),
-.wms-data td:nth-child(4),
+/* .wms-data td:nth-child(4) has been removed from this rule */
 .wms-data th:nth-child(2),
 .wms-data th:nth-child(4),
 .equipment-status th:nth-child(2),
@@ -194,6 +196,7 @@ html, body, #root {
 .equipment-status td:nth-child(3) {
   text-align: center;
 }
+
 
 .equipment-status tr:hover,
 .wms-data tr:hover {
