@@ -46,7 +46,6 @@
 .header-inverter-image {
   max-height: 50px;
   width: auto;
-  transition: transform 0.2s ease-in-out;
   transform: scale(2.25);
 }
 
