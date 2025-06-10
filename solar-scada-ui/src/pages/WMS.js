@@ -106,17 +106,46 @@ const WMS = () => {
         </div>
 
         <div className="chart-container">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={zoomedData} onMouseDown={() => onZoomChange(true)} onMouseUp={() => onZoomChange(false)}>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              data={zoomedData}
+              onMouseDown={() => onZoomChange(true)}
+              onMouseUp={() => onZoomChange(false)}
+            >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Date_Time" angle={-15} textAnchor="end" height={50} />
-              <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-              <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+              <XAxis dataKey="Date_Time" />
+              <YAxis yAxisId="left" orientation="left" stroke="#8884d8" domain={[0, 1600]} />
+              <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" domain={[0, 8]} />
+              <YAxis yAxisId="right2" orientation="right" stroke="#ff7300" domain={[0, 100]} />
+              <YAxis yAxisId="right3" orientation="right" stroke="#6A5ACD" domain={[0, 20]} />
+              <YAxis yAxisId="right4" orientation="right" stroke="#9370DB" domain={[0, 360]} />
               <Tooltip />
               <Legend />
-              <Line yAxisId="left" type="monotone" dataKey="GHI" stroke="#8884d8" name="GHI (W/m²)" dot={false} />
-              <Line yAxisId="left" type="monotone" dataKey="POA" stroke="#82ca9d" name="POA (W/m²)" dot={false} />
-              <Brush dataKey="Date_Time" height={30} stroke="#8884d8" onChange={handleBrushChange}/>
+              <Line yAxisId="left" type="monotone" dataKey="GHI" stroke="#8884d8" name="GHI (W/m²)" />
+              <Line yAxisId="left" type="monotone" dataKey="POA" stroke="#82ca9d" name="POA (W/m²)" />
+              <Line yAxisId="left" type="monotone" dataKey="DHI" stroke="#1E90FF" name="DHI (W/m²)" />
+              <Line yAxisId="right" type="monotone" dataKey="CUM_GHI" stroke="#FFD700" name="GHI Cumulative (kWh/m²)" />
+              <Line yAxisId="right" type="monotone" dataKey="CUM_POA" stroke="#A0E7E5" name="POA Cumulative (kWh/m²)" />
+              <Line yAxisId="right" type="monotone" dataKey="DHI_CUMM" stroke="#B19CD9" name="DHI Cumulative (kWh/m²)" />
+              <Line yAxisId="right2" type="monotone" dataKey="MOD_TEMP1" stroke="#FF4500" name="Module Temperature 1 (°C)" />
+              <Line yAxisId="right2" type="monotone" dataKey="MOD_TEMP2" stroke="#DA70D6" name="Module Temperature 2 (°C)" />
+              <Line yAxisId="right2" type="monotone" dataKey="AMB_TEMP" stroke="#32CD32" name="Ambient Temperature (°C)" />
+              <Line yAxisId="right2" type="monotone" dataKey="RH" stroke="#FFDAB9" name="Humidity (%)" />
+              <Line yAxisId="right2" type="monotone" dataKey="SOI1" stroke="#556B2F" name="Soiling 1 (%)" />
+              <Line yAxisId="right2" type="monotone" dataKey="SOI_LS1" stroke="#8B4513" name="Transmission Loss 1 (%)" />
+              <Line yAxisId="right2" type="monotone" dataKey="SOI2" stroke="#2F4F4F" name="Soiling 2 (%)" />
+              <Line yAxisId="right2" type="monotone" dataKey="SOI_LS2" stroke="#708090" name="Transmission Loss 2 (%)" />
+              <Line yAxisId="right3" type="monotone" dataKey="WND_SPD" stroke="#6A5ACD" name="Wind Speed (m/s)" />
+              <Line yAxisId="right4" type="monotone" dataKey="WND_DIR" stroke="#9370DB" name="Wind Direction (°)" />
+ 
+              <Brush
+                dataKey="Date_Time"
+                height={20}
+                stroke="#8884d8"
+                onMouseDown={() => onZoomChange(true)}
+                onMouseUp={() => onZoomChange(false)}
+                onChange={handleBrushChange}
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>
