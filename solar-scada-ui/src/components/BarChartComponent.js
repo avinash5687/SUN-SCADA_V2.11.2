@@ -11,7 +11,7 @@ const BarChartComponent = ({ data }) => {
   return (
     <div className="bar-chart-container">
       <h6 className="generation-total">
-        Day - Generation <span style={{ color: "red" }}>{totalGeneration.toFixed(2)}</span> kWh
+        Total - Generation <span style={{ color: "red" }}>{totalGeneration.toFixed(2)}</span> MWh
       </h6>
       <ResponsiveContainer width="100%" height={180}>
         <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
