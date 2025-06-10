@@ -1,12 +1,16 @@
+// Inverter.js
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Inverter.css";
+// --- STEP 1: Import the image ---
+import inverterImage from '../assets/Sungrow_inv.png';
 
+const API_BASE_URL =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000"
+    : "http://103.102.234.177:5000";
 
-  const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:5000"
-      : "http://103.102.234.177:5000";
 const Inverter = () => {
   const [inverterData, setInverterData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,31 +44,33 @@ const Inverter = () => {
 
   return (
     <div className="inverter-container">
-      <h2 className="inverter-title">Inverter Data</h2>
+      <h2 className="inverter-title">Inverter Status Overview</h2>
       <table className="inverter-table">
+        {/* --- STEP 2: Restructure the table header --- */}
         <thead>
           <tr>
             <th>Parameters</th>
             {inverterData.map((inv, idx) => (
-              <th key={idx}>{inv.Name || `INV ${idx + 1}`}</th>
+              <th key={idx}>
+                <div className="inverter-header-content">
+                  <img src={inverterImage} alt="Inverter" className="header-inverter-image" />
+                  <div className="header-text-status">
+                    <span className="header-name">{inv.Name || `INV ${idx + 1}`}</span>
+                    <div
+                      className={`status-indicator ${
+                        inv.CUM_STS === 1 ? "status-green" : "status-red"
+                      }`}
+                      title={inv.CUM_STS === 1 ? 'Online' : 'Offline'}
+                    ></div>
+                  </div>
+                </div>
+              </th>
             ))}
             <th>UNIT</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Communication Status</td>
-            {inverterData.map((inv, idx) => (
-              <td key={idx} className="status-cell">
-                <div
-                  className={`status-indicator ${
-                    inv.CUM_STS === 1 ? "status-green" : "status-red"
-                  }`}
-                ></div>
-              </td>
-            ))}
-            <td></td>
-          </tr>
+          {/* --- STEP 3: The "Communication Status" row is now completely removed --- */}
           {[
             { name: "Timestamp", key: "Date_Time", unit: "" },
             { name: "Active Power", key: "Active_Power", unit: "kW" },
