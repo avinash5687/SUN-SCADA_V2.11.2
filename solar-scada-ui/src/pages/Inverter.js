@@ -44,7 +44,7 @@ const Inverter = () => {
 
   return (
     <div className="inverter-container">
-      <h2 className="inverter-title">Inverter Status Overview</h2>
+      <h2 className="inverter-title">Inverter Data Overview</h2>
       <table className="inverter-table">
         {/* --- STEP 2: Restructure the table header --- */}
         <thead>
