@@ -1,96 +1,124 @@
-/* MFM Container */
+/* ========== MFM Container and Page Layout ========== */
 .mfm-container {
   width: 100%;
-  height: 91vh;
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
+  height: auto;
+  min-height: 100%;
+  background-color: #f0f4f8; /* Soft, professional background */
+  box-sizing: border-box;
 }
 
-/* Title */
 .mfm-title {
-  font-weight: bold;
-  margin-bottom: 15px;
-  font-size: 14px;
-  text-align: center;
+  color: #1a3b5d;
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
-/* Table Wrapper for horizontal scrolling */
+/* Wrapper to allow horizontal scrolling */
 .mfm-table-wrapper {
   width: 100%;
   overflow-x: auto;
 }
 
-/* Table Styling */
+/* ========== Table Styling (Modern Grid Look) ========== */
 .mfm-table {
   width: 100%;
-  min-width: 1200px; /* ensures consistent structure */
-  border-collapse: collapse;
+  border-collapse: collapse; /* Essential for clean borders */
   text-align: center;
-  font-size: 10px;
-  margin-bottom: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+  /* Add an outer border to the table */
+  border: 1px solid #000000;
 }
 
-.mfm-table th,
+/* --- FIX 1: Font size consistency for all headers --- */
+.mfm-table th {
+  background-color: #2c3e50; /* Dark, professional blue-gray header */
+  color: #ffffff;
+  padding: 20px 10px;
+  vertical-align: middle;
+  font-size: 1rem; /* Ensures "Parameters" and "UNIT" match other headers */
+  border-bottom: 4px solid #3498db;
+}
+
+/* --- FIX 2: Add black borders for rows and columns --- */
+.mfm-table th, .mfm-table td {
+  /* Adds a black vertical line to the right of every cell */
+  border-right: 1px solid #000000;
+}
+
+/* Data Cells (td) */
 .mfm-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
+  vertical-align: middle;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 500;
+  /* Adds a black horizontal line above every data cell row */
+  border-top: 1px solid #000000;
+}
+
+/* Remove the extra border on the far right of the table */
+.mfm-table th:last-child,
+.mfm-table td:last-child {
+  border-right: none;
+}
+
+/* Zebra Striping and Hover Effect (Preserved) */
+.mfm-table tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+.mfm-table tbody tr:nth-child(even) {
+  background-color: #e9f0f7;
+}
+.mfm-table tbody tr:hover {
+  background-color: #cfe8ff; /* Distinct blue hover effect */
+}
+
+/* First column (parameters) styling */
+.mfm-table tbody tr td:first-child {
+  text-align: left;
+  font-weight: 700;
+  padding-left: 10px;
+  color: #2c3e50;
+}
+
+/* ========== MFM-Specific Header Content (Preserved) ========== */
+.mfm-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 150px;
+}
+
+.header-mfm-image {
+  max-height: 50px;
+  width: auto;
+  transform: scale(1.25);
+}
+
+.header-text-status, .header-name, .status-indicator {
+  /* These styles are preserved and work with the new grid */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 0.95rem;
   white-space: nowrap;
 }
 
-/* Header Styling */
-.mfm-table th {
-  background-color: #222; /* Black Header */
-  color: white;
-  font-weight: bold;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-/* First column left aligned */
-.mfm-table td:first-child {
-  text-align: left;
-  font-weight: bold;
-}
-
-/* Alternate Row Background */
-.mfm-table tr:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
-/* Hover Effect */
-.mfm-table tr:hover {
-  background-color: #ddd;
-  transition: background-color 0.3s ease-in-out;
-}
-
-/* Communication Status Cell */
-.status-cell {
-  text-align: center;
-  padding: 8px;
-}
-
-/* Status Indicators */
 .status-indicator {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  display: inline-block;
-  border: 1px solid black;
+  border: 2px solid #ffffff;
 }
-
-.status-green {
-  background-color: green;
-}
-
-.status-red {
-  background-color: red;
-}
+.status-green { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+.status-red { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
 
 /* Responsive Design */
 /* For typical laptops and tablets (up to 1024px) */
