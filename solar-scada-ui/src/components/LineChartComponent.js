@@ -45,7 +45,7 @@ const LineChartComponent = ({ data, onZoomChange }) => {
         <Legend 
          verticalAlign="bottom" 
          align="center"
-         wrapperStyle={{ paddingBottom: 15 }} />
+         wrapperStyle={{ paddingBottom: 25 }} />
 
         {/* Line for POA */}
         <Line
