@@ -1,6 +1,6 @@
 .heatmap-root {
-  width: 100vw;
-  height: 100vh;
+  width: 99%;
+  height: 95vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -10,11 +10,11 @@
 
 /* Legend at the top, horizontal */
 .heatmap-legend-row {
-  width: 100vw;
+  width: 95vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 12px 0 0 0;
+  padding: 10px 0 0 0;
   background: #fff;
   z-index: 2;
   position: sticky;
@@ -29,8 +29,8 @@
   box-shadow: none;
   border: 1px solid #ddd;
   background: #f5f5f5;
-  border-radius: 8px;
-  padding: 6px 16px;
+  border-radius: 6px;
+  padding: 6px 10px;
   height: auto;
   width: auto;
   margin: 0;
@@ -38,7 +38,7 @@
 
 .legend h4 {
   margin: 0 12px 0 0;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: bold;
 }
 
@@ -62,7 +62,7 @@
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  width: 90vw;
+  width: 107%;
   height: 100%;
   box-sizing: border-box;
   padding: 0;
@@ -79,17 +79,18 @@
   align-items: center;
   min-height: 0;
   border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
 }
 .heatmap-grid-row:last-child {
   border-bottom: none;
 }
 
 .heatmap-row-title {
-  width: 140px;
-  min-width: 120px;
+  width: 100px;
+  min-width: 110px;
   text-align: left;
   padding-right: 10px;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #222;
   white-space: nowrap;
@@ -99,16 +100,17 @@
   flex: 1 1 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 5px;
+  gap: 1px;
   align-items: center;
   height: 100%;
-  padding: 10px 0;
+  padding: 1px 0;
+  margin-right: 80px;
 }
 
 /* Heatmap cells fill the available grid cell */
 .heatmap-cell {
   width: 90%;
-  height: 100px;
+  height: 90px;
   cursor: pointer;
   border-radius: 8px;
   transition: transform 0.2s ease, box-shadow 0.2s;
@@ -157,7 +159,32 @@
   transform: translateX(-50%);
 }
 
-/* Responsive: stack on mobile */
+/* Responsive: stack*/
+
+@media (min-width: 1601px) and (max-width: 1920px) {
+
+  .heatmap-grid-row {
+    margin-bottom: 15px;
+  }
+  .heatmap-row-title {
+    font-size: 17px;
+  }
+  .legend h4 {
+    margin: 0 18px 0 0;
+    font-size: 18px;
+  }
+
+  .legend-item {
+    margin: 0 18px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .heatmap-cell {
+    width: 85%;
+  }
+}
+
 @media (max-width: 900px) {
   .heatmap-row-title {
     width: 100%;
@@ -183,3 +210,5 @@
     max-width: 220px;
   }
 }
+
+

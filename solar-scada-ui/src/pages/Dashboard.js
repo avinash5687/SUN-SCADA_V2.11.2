@@ -112,7 +112,7 @@ const Dashboard = () => {
           <CUFGauge value={cuf} />
         </div>
         <div>
-          <h6 style={{ marginLeft: 40 }}>Active Power</h6>
+          <h6>Active Power</h6>
           <ActivePowerGauge value={currentPower} />
         </div>
       </div>

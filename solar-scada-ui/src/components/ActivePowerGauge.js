@@ -21,14 +21,14 @@ const ActivePowerGauge = ({ value }) => {
 
   return (
     <div style={{ position: "relative", width: 120, height: 120 }}>
-      <PieChart width={120} height={120}>
+      <PieChart width={120} height={100}>
         <Pie
           data={data}
           dataKey="value"
           cx="50%"
           cy="50%"
-          innerRadius={35}
-          outerRadius={60}
+          innerRadius={27}
+          outerRadius={50}
           startAngle={90}
           endAngle={-270}
           paddingAngle={0}

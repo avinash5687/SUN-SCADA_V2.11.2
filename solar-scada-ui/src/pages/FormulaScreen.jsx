@@ -50,9 +50,9 @@ const FormulaScreen = () => {
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
           gridTemplateRows: "repeat(2, 1fr)",
-          gap: "16px",
+          gap: "15px",
           height: "calc(100vh - 50px)", // adjust if you have header/footer
-          width: "90vw",
+          width: "100%",
           padding: "16px",
           boxSizing: "border-box",
         }}

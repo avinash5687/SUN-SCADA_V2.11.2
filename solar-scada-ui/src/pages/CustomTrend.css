@@ -15,6 +15,10 @@
   font-weight: bold;
 }
 
+.trend-container h2 {
+  font-size: 20px;
+}
+
 /* ✅ Ensure Form Fields are Visible */
 .input-group {
   margin: 2px 0;
@@ -77,6 +81,31 @@ html, body {
 }
 
 /* ✅ Responsive Adjustments */
+@media (min-width: 1601px) and (max-width: 1920px) {
+ .trend-container h2 {
+  font-size:28px;
+ }
+
+ .input-group select, 
+ .input-group input {
+   padding: 4px;
+   margin-top: 4px;
+   font-size: 16px;
+   border-radius: 6px;
+ }
+
+ .input-group {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.button-group {
+  gap: 7px;
+  font-size: 16px;
+}
+ 
+}
+
 @media (max-width: 1024px) {
   .trend-container {
       padding: 15px;
