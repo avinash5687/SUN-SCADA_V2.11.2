@@ -108,3 +108,16 @@
     display: flex;
     justify-content: space-between;
 }
+
+@media (min-width: 1601px) and (max-width: 1920px) {
+    .alarm-table th,
+.alarm-table td {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.ack-button,
+.clear-button {
+    font-size: 18px;
+}
+  }

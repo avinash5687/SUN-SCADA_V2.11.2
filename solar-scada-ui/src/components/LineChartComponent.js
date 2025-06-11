@@ -42,7 +42,10 @@ const LineChartComponent = ({ data, onZoomChange }) => {
         />
 
         <Tooltip />
-        <Legend />
+        <Legend 
+         verticalAlign="bottom" 
+         align="center"
+         wrapperStyle={{ paddingBottom: 15 }} />
 
         {/* Line for POA */}
         <Line

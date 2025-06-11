@@ -15,7 +15,7 @@ const FormulaBox = ({ title, text, formula }) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        gap: "30px",
+        gap: "25px",
       }}
     >
       <h2 style={{ color: "#FFFFFF", fontWeight: "bold",}}>{title}</h2>
@@ -23,7 +23,7 @@ const FormulaBox = ({ title, text, formula }) => {
       {text && (
         <p
           style={{
-            fontSize: "22px",
+            fontSize: "20px",
             fontWeight: "bold",
             color: "#FFFFFF",
             marginBottom: "10px",
@@ -35,7 +35,7 @@ const FormulaBox = ({ title, text, formula }) => {
 
       <p
         style={{
-          fontSize: "24px",
+          fontSize: "20px",
           fontWeight: "bold",
           whiteSpace: "pre-line",
           color: "#FFFFFF",

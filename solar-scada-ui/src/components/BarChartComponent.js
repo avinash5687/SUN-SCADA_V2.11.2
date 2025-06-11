@@ -13,13 +13,13 @@ const BarChartComponent = ({ data }) => {
       <h6 className="generation-total">
         Total - Generation <span style={{ color: "red" }}>{totalGeneration.toFixed(2)}</span> MWh
       </h6>
-      <ResponsiveContainer width="100%" height={180}>
-        <BarChart data={data} margin={{ top: 10, right: 10, left: 10, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={130}>
+        <BarChart data={data} margin={{ top: 10, right: 5, left: 2, bottom: 1 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="TIME" stroke="#333" />
           <YAxis stroke="#333" />
           <Tooltip />
-          <Bar dataKey="Energy Generated" fill="#FF4500" barSize={20} />
+          <Bar dataKey="Energy Generated" fill="#FF4500" barSize={15} />
         </BarChart>
       </ResponsiveContainer>
     </div>

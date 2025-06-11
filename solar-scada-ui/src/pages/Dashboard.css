@@ -14,7 +14,7 @@
    General Styles
 ================================= */
 html, body, #root {
-  height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -29,9 +29,7 @@ html, body, #root {
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
-  /* height: calc(100vh - 45px); */
-  min-height: 100vh; /* ✅ Let content flow */
-  overflow-y: auto;
+  min-height: 100vh; 
   overflow: hidden;
   font-size: 0.85rem;
 }
@@ -40,7 +38,7 @@ html, body, #root {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
 }
 
 .dashboard-title {
@@ -94,45 +92,43 @@ html, body, #root {
   display: flex;
   flex-wrap:  nowrap;
   justify-content: space-evenly;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   gap: 10px;
-  /* height: 170px; */
-  height: auto;
+  height: 130px;
   overflow-x: auto;
-  padding-bottom: 5px;
 }
 
-.gauge-container > div {
-  /* flex: 1 1 18%; */
-  flex: 0 0 auto;
-  /* min-width: 150px; */
+.gauge-container > div {  
+  flex: 1 1 18%;
   min-width: 160px;
-  max-width: 240px;
+  max-width: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  
 }
 
 .charts-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 10px;
+  gap: 7px;
   font-size: var(--font-size-base);
-  height: 250px;
+  height: 180px;
+  padding-bottom: 6px;
+  margin-top: 1px;
 }
 
 .chart {
-  flex: 1 1 40%;
+  flex: 1 1 15%;
   background: white;
-  padding: 10px;
-  border-radius: 5px;
-  /* max-height: 300px; */
-  max-height: unset;
+  padding: 4px;
+  border-radius: 4px;
   overflow: hidden;
-  min-width: 300px;
+  min-width: 300px;   
 }
+
 
 /* ================================
    Equipment & WMS Section
@@ -141,10 +137,10 @@ html, body, #root {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 25px;
-  height: auto;
+  gap: 4px;
+  height: 220px;
   font-size: var(--font-size-base);
+  padding-top: 4px;
 }
 
 .equipment-status, .wms-data {
@@ -177,7 +173,6 @@ html, body, #root {
 
 .wms-data table td:first-child,
 .wms-data table td:nth-child(3),
-.wms-data table td:nth-child(4), /* <-- Add this line */
 .wms-data table th:first-child,
 .wms-data table th:nth-child(3),
 .equipment-status table td:first-child,
@@ -185,9 +180,8 @@ html, body, #root {
   text-align: left;
 }
 
-
 .wms-data td:nth-child(2),
-/* .wms-data td:nth-child(4) has been removed from this rule */
+.wms-data td:nth-child(4),
 .wms-data th:nth-child(2),
 .wms-data th:nth-child(4),
 .equipment-status th:nth-child(2),
@@ -196,7 +190,6 @@ html, body, #root {
 .equipment-status td:nth-child(3) {
   text-align: center;
 }
-
 
 .equipment-status tr:hover,
 .wms-data tr:hover {
@@ -238,9 +231,7 @@ html, body, #root {
 }
 
 .component-title{
-  font-size: 16px;
-  font-weight: bold;
-  font-family: tahoma;
+  font-size: 14px;
 }
 
 button:focus {
@@ -264,18 +255,100 @@ button:focus {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 10px;
+  
 }
 
 /* ================================
    Responsive Media Queries
 ================================= */
-@media (max-width: 1400px) {
-  .gauge-container > div {
-    flex: 1 1 22%;
+
+@media (min-width: 1440px) and (max-width: 1600px) {
+  .dashboard-container {
+    padding: 15px 30px;
   }
-  .chart, .equipment-status, .wms-data {
+
+  .gauge-container > div {
+    flex: 1 1 20%;
+    min-width: 180px;
+    max-width: 250px;
+  }
+
+  .chart {
+    flex: 1 1 45%;
+    max-height: 220px;
+  }
+  
+  .equipment-wms-container {
+    padding-top: 20px;
+    margin-top: 35px;
+    margin-bottom: 10px;
+  }
+
+  .equipment-status,
+  .wms-data {
     flex: 1 1 48%;
   }
+
+  .dashboard-title {
+    font-size: clamp(1.75rem, 2vw, 2.75rem);
+  }
+
+  .component-title {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1601px) and (max-width: 1920px) {
+  .dashboard-container {
+    padding: 20px 40px;
+  }
+
+  .gauge-container {
+    height: 140px;
+  }
+
+  .gauge-container > div {
+    flex: 1 1 18%;
+    max-width: 260px;
+    padding-bottom:8px;
+  }
+
+  .charts-container {
+    height: 350px;
+    gap: 8px;
+  }
+
+  .chart {
+    flex: 1 1 55%;
+    font-size: 20px;
+    height: 240px;
+  }
+
+  .chart-header {
+    font-size: 16px;
+    padding: 5px;
+  }
+
+  .chart-controls input {
+    height: 25px;
+    font-size: 15px;
+  }
+
+  .chart-header
+  .component-title {
+    font-size: 24px;
+  }
+  .equipment-wms-container {
+    padding-top: 2px;
+    margin-top: 14vh;
+    margin-bottom: 6px;
+  }
+
+
+  .component-title {
+    font-size: 16px;
+  }
+
 }
 
 @media (max-width: 1200px) {
@@ -284,34 +357,6 @@ button:focus {
   }
   .chart, .equipment-status, .wms-data {
     flex: 1 1 100%;
-  }
-}
-
-@media (max-width: 992px) {
-  .dashboard-title {
-    font-size: 3vw;
-  }
-  .gauge-container > div {
-    flex: 1 1 33%;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-title {
-    font-size: 4vw;
-  }
-  .gauge-container {
-    flex-direction: column;
-  }
-  .gauge-container > div,
-  .kip-card {
-    flex: 1 1 100%;
-  }
-  .chart {
-    max-height: none;
-  }
-  .dashboard-container {
-    padding: 10px;
   }
 }
 

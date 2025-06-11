@@ -1,63 +1,73 @@
-/* ========== MFM Container and Page Layout ========== */
+/* MFM Container */
 .mfm-container {
   width: 100%;
-  height: auto;
-  min-height: 100%;
+  height: 91vh;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
   background-color: #f0f4f8; /* Soft, professional background */
-  box-sizing: border-box;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Title */
 .mfm-title {
-  color: #1a3b5d;
+  font-weight: 600;
   font-size: 1.25rem;
-  margin-bottom: 10px;
-  font-weight: 700;
+  color: #1a3b5d;
+  margin-bottom: 15px;
 }
 
-/* Wrapper to allow horizontal scrolling */
+/* Table Wrapper for horizontal scrolling */
 .mfm-table-wrapper {
   width: 100%;
   overflow-x: auto;
+  border-radius: 10px;
 }
 
-/* ========== Table Styling (Modern Grid Look) ========== */
+/* Table Styling */
 .mfm-table {
-  width: 100%;
-  border-collapse: collapse; /* Essential for clean borders */
+  width: 100%;/* ensures consistent structure */
+  border-collapse: collapse;
   text-align: center;
   background-color: #ffffff;
-  border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-  overflow: hidden;
-  /* Add an outer border to the table */
+  font-size: 10px;
   border: 1px solid #000000;
+  margin-bottom: 20px;
+  height: 79vh;
+  overflow: hidden;
 }
 
-/* --- FIX 1: Font size consistency for all headers --- */
+.mfm-table th,
+.mfm-table td {
+  border-right: 1px solid #000000;
+  padding: 8px;
+  white-space: nowrap;
+}
+
+/* Header Styling */
 .mfm-table th {
-  background-color: #2c3e50; /* Dark, professional blue-gray header */
+  background-color: #2c3e50;/* Dark, professional blue-gray header */
   color: #ffffff;
-  padding: 20px 10px;
+  padding: 10px 10px;
   vertical-align: middle;
   font-size: 1rem; /* Ensures "Parameters" and "UNIT" match other headers */
   border-bottom: 4px solid #3498db;
-}
-
-/* --- FIX 2: Add black borders for rows and columns --- */
-.mfm-table th, .mfm-table td {
-  /* Adds a black vertical line to the right of every cell */
-  border-right: 1px solid #000000;
+  
 }
 
 /* Data Cells (td) */
 .mfm-table td {
-  padding: 10px;
+  padding: 5px;
   vertical-align: middle;
   color: #495057;
-  font-size: 1rem;
+  font-size: .80rem;
   font-weight: 500;
   /* Adds a black horizontal line above every data cell row */
   border-top: 1px solid #000000;
+  overflow: hidden;
 }
 
 /* Remove the extra border on the far right of the table */
@@ -81,23 +91,25 @@
 .mfm-table tbody tr td:first-child {
   text-align: left;
   font-weight: 700;
-  padding-left: 10px;
+  padding-left: 5px;
   color: #2c3e50;
 }
 
-/* ========== MFM-Specific Header Content (Preserved) ========== */
+
+ /*========== MFM-Specific Header Content (Preserved) ========== */
 .mfm-header-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-width: 150px;
+  gap: 4px;
+  width: 120px;
 }
 
 .header-mfm-image {
   max-height: 50px;
   width: auto;
+  padding: 2px;
   transform: scale(1.25);
 }
 
@@ -105,9 +117,9 @@
   /* These styles are preserved and work with the new grid */
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 1px;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.65rem;
   white-space: nowrap;
 }
 
