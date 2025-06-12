@@ -210,7 +210,7 @@ const Layout = ({ children }) => {
             <h1 className="project-name" onClick={navigateToMap} style={{ cursor: 'pointer' }}>SUN-SCADA</h1>
           </div>
           <div className="header-title">
-            <h2>21.5MWp JSPL SOLAR PROJECT, DHULE, MAHARASHTRA</h2>
+            <h2>21.5 MWp JSPL SOLAR PROJECT, DHULE, MAHARASHTRA</h2>
           </div>
           <div className="header-right">
             <FontAwesomeIcon icon={faCamera} className="print-screen-icon icon-large" onClick={handleScreenshot} />
