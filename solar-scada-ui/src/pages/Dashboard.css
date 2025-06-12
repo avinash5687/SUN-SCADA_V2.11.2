@@ -109,6 +109,22 @@ html, body, #root {
   
 }
 
+.gauge-wrapper {
+  position: relative;
+  width: 120px;
+  height: 100px;
+}
+
+.gauge-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
 .charts-container {
   display: flex;
   flex-wrap: wrap;
@@ -129,7 +145,24 @@ html, body, #root {
   min-width: 300px;   
 }
 
+.bar-chart-container {
+  padding: 1px 0;
+}
 
+.bar-chart {
+  width: 100%;
+  height: 130px;
+}
+
+.generation-total {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+
+.line-chart-wrapper {
+  height: 220px; /* default */
+}
 /* ================================
    Equipment & WMS Section
 ================================= */
@@ -262,9 +295,107 @@ button:focus {
    Responsive Media Queries
 ================================= */
 
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .dashboard-container {
+    padding: 10px 20px;
+  }
+
+  .gauge-container {
+    height: 112px;
+    margin-bottom: 1px;
+  }
+
+  .gauge-container > div {
+    max-width: 220px;
+  }
+
+  .gauge-wrapper {
+    position: relative;
+    width: 100px;
+    height: 85px;
+  }
+  
+  .gauge-center-text {
+    font-size: 12px;
+  }
+
+  .charts-container {
+    height: 160px;
+    padding-bottom: 1px;
+  }
+
+  .chart {
+    flex: 1 1 10%;
+    max-height: 10rem;
+    font-size: 10px;
+    padding-top: 1px;
+  }
+
+  .bar-chart-container {
+    padding: 1px 0;
+  }
+  
+  .generation-total {
+    margin-bottom: .5px;
+    font-size: 0.5rem;
+  } 
+  
+  .chart-header {
+    padding-top: .5px;
+    margin-bottom: 1px;
+    font-size: 8px;
+  }
+
+  .chart-controls input {
+    padding-bottom: 1px;
+    font-size: 6px;
+  }
+  
+  .equipment-wms-container {
+    padding-bottom: 1px;
+    height: 160px;
+  }
+
+  .equipment-status, .wms-data {
+    min-width: 300px;
+    height: 160px;
+    padding-top: 0px;
+    margin-bottom: 2px;
+  }
+
+  .equipment-status td, .wms-data td {
+    padding: 2px;
+  }
+
+  .component-title {
+    font-size: 10px;
+  }
+
+  .line-chart-wrapper {
+    height: 160px; /* default */
+  }
+
+}
+
+
 @media (min-width: 1440px) and (max-width: 1600px) {
   .dashboard-container {
     padding: 15px 30px;
+  }
+
+  .gauge-wrapper {
+    position: relative;
+    width: 100px;
+    height: 120px;
+  }
+  
+  .gauge-center-text {
+    font-size: 14px;
+    left: 60%;
+  }
+
+  .gauge-container {
+    height: 140px;
   }
 
   .gauge-container > div {
@@ -273,9 +404,15 @@ button:focus {
     max-width: 250px;
   }
 
+
   .chart {
     flex: 1 1 45%;
-    max-height: 220px;
+    max-height: 14rem;
+  }
+  
+  .bar-chart {
+    height: 160px;
+    padding-bottom: 1px;
   }
   
   .equipment-wms-container {
@@ -288,6 +425,7 @@ button:focus {
   .wms-data {
     flex: 1 1 48%;
   }
+
 
   .dashboard-title {
     font-size: clamp(1.75rem, 2vw, 2.75rem);
@@ -314,14 +452,17 @@ button:focus {
   }
 
   .charts-container {
-    height: 350px;
+    height: 200px;
     gap: 8px;
+    width: 100%;
+    margin-bottom: 6rem;
   }
 
   .chart {
-    flex: 1 1 55%;
+    flex: 1 1 48%;
     font-size: 20px;
-    height: 240px;
+    height: 280px;
+   
   }
 
   .chart-header {
@@ -338,27 +479,127 @@ button:focus {
   .component-title {
     font-size: 24px;
   }
+
+  .bar-chart-container {
+    padding: 4px 0;
+  }
+  
+  .generation-total {
+    margin-bottom: .5px;
+    font-size: 1.2rem;
+  } 
+
+  .bar-chart {
+    height: 180px;
+    padding-bottom: 1px;
+  }
   .equipment-wms-container {
     padding-top: 2px;
-    margin-top: 14vh;
     margin-bottom: 6px;
+    height: 250px;
   }
 
-
+  .equipment-status td, .wms-data td {
+    padding: 6px;
+  }
   .component-title {
     font-size: 16px;
   }
 
+  .open-popup-btn {
+    font-size: 16px;
+  }
+
+  .line-chart-wrapper {
+    height: 260px; /* default */
+    padding-left: 4px;
+    font-size: 14px;
+  }
+
 }
 
-@media (max-width: 1200px) {
-  .gauge-container > div {
-    flex: 1 1 25%;
+@media (min-width: 1921px) {
+  .dashboard-container {
+    padding: 25px 50px;
   }
-  .chart, .equipment-status, .wms-data {
-    flex: 1 1 100%;
+
+  .gauge-container {
+    height: 160px;
+  }
+
+  .gauge-container > div {
+    flex: 1 1 16%;
+    max-width: 280px;
+    padding-bottom: 10px;
+  }
+
+  .charts-container {
+    height: 240px;
+    gap: 12px;
+    margin-bottom: 6rem;
+    width: 100%;
+  }
+
+  .chart {
+    flex: 1 1 48%;
+    font-size: 22px;
+    height: 320px;
+  }
+
+  .chart-header {
+    font-size: 18px;
+    padding: 8px;
+  }
+
+  .chart-controls input {
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .chart-header .component-title {
+    font-size: 26px;
+  }
+
+  .bar-chart-container {
+    padding: 6px 0;
+  }
+
+  .generation-total {
+    font-size: 1.3rem;
+    margin-bottom: 2px;
+  }
+
+  .bar-chart {
+    height: 220px;
+    padding-bottom: 2px;
+  }
+
+  .equipment-wms-container {
+    padding-top: 4px;
+    margin-bottom: 10px;
+    height: 270px;
+  }
+
+  .equipment-status td,
+  .wms-data td {
+    padding: 8px;
+  }
+
+  .component-title {
+    font-size: 18px;
+  }
+
+  .open-popup-btn {
+    font-size: 17px;
+  }
+
+  .line-chart-wrapper {
+    height: 300px;
+    padding-left: 6px;
+    font-size: 15px;
   }
 }
+
 
 @media (max-width: 480px) {
   .dashboard-title {

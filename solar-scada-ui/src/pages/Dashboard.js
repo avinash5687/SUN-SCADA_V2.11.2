@@ -1,14 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import PRGauge from "../components/PRGauge";
-import PlantAvailabilityGauge from "../components/PlantAvailabilityGauge";
-import GridAvailabilityGauge from "../components/GridAvailabilityGauge";
-import BarChartComponent from "../components/BarChartComponent";
-import LineChartComponent from "../components/LineChartComponent";
-import CUFGauge from "../components/CUFGauge";
-import ActivePowerGauge from "../components/ActivePowerGauge";
 import DeviceStatusPopup from "../components/DeviceStatusPopup";
 import KIPCard from "../components/KIPCard";
+import { PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from "recharts";
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -26,6 +21,7 @@ const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState("");
   const [deviceStatus, setDeviceStatus] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const API_BASE_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -87,6 +83,123 @@ const Dashboard = () => {
     return () => clearInterval(intervalId);
   }, [fetchData, fetchBarChartData]);
 
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getGaugeRadii = (screenWidth) => {
+    if (screenWidth <= 1280) return { innerRadius: 23, outerRadius: 40 };
+    if (screenWidth <= 1440) return { innerRadius: 24, outerRadius: 44 };
+    if (screenWidth <= 1920) return { innerRadius: 30, outerRadius: 54 };
+    return { innerRadius: 30, outerRadius: 54 };
+  };
+
+  const renderGauge = (value, label) => {
+    const { innerRadius, outerRadius } = getGaugeRadii(screenWidth);
+    const segments = 20;
+    const filledSegments = Math.round((value / 100) * segments);
+
+    let fillColor = "#008000";
+    if (value < 70) fillColor = "#dd112f";
+    else if (value <= 80) fillColor = "#fbd202";
+
+    const data = Array.from({ length: segments }, (_, index) => ({
+      value: 1,
+      color: index < filledSegments ? fillColor : "#e0e0e0",
+    }));
+
+    return (
+      <div className="gauge-wrapper">
+        <PieChart width={outerRadius * 2 + 20} height={outerRadius * 2}>
+          <Pie
+            data={data}
+            dataKey="value"
+            cx="50%"
+            cy="50%"
+            innerRadius={innerRadius}
+            outerRadius={outerRadius}
+            startAngle={90}
+            endAngle={-270}
+            paddingAngle={2}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} />
+            ))}
+          </Pie>
+        </PieChart>
+        <div className="gauge-center-text">{value}%</div>
+      </div>
+    );
+  };
+
+  const LineChartComponent = ({ data, onZoomChange }) => {
+    const normalizedData = data.map(entry => ({
+      ...entry,
+      POA: entry.POA,
+      ACTIVE_POWER: entry.ACTIVE_POWER,
+    }));
+  
+    return (
+      <div className="line-chart-wrapper">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={normalizedData}>
+            <CartesianGrid strokeDasharray="5 5" />
+            <XAxis dataKey="Date_Time" />
+            
+            <YAxis
+              yAxisId="left"
+              orientation="left"
+              stroke="#ff7300"
+              domain={[0, 1200]}
+            />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              stroke="#387908"
+              domain={[0, 14000]}
+            />
+  
+            <Tooltip />
+            <Legend 
+              verticalAlign="bottom" 
+              align="center"
+              wrapperStyle={{ paddingBottom: 25 }} 
+            />
+  
+            <Line
+              yAxisId="left"
+              type="monotone"
+              dataKey="POA"
+              stroke="#ff7300"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              yAxisId="right"
+              type="monotone"
+              dataKey="ACTIVE_POWER"
+              stroke="#387908"
+              strokeWidth={2}
+              dot={false}
+            />
+  
+            <Brush
+              dataKey="Date_Time"
+              height={20}
+              stroke="#8884d8"
+              onMouseDown={() => onZoomChange?.(true)}
+              onMouseUp={() => onZoomChange?.(false)}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
+  
+
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -97,23 +210,29 @@ const Dashboard = () => {
       <div className="gauge-container">
         <div>
           <h6>Performance Ratio</h6>
-          <PRGauge value={performanceRatio} />
+          {/* <PRGauge value={performanceRatio} /> */}
+          {renderGauge(performanceRatio)}
+
         </div>
         <div>
           <h6>Plant Availability</h6>
-          <PlantAvailabilityGauge value={plantAvailability} />
+          {/* <PlantAvailabilityGauge value={plantAvailability} /> */}
+          {renderGauge(plantAvailability)}
         </div>
         <div>
           <h6>Grid Availability</h6>
-          <GridAvailabilityGauge value={gridAvailability} />
+          {/* <GridAvailabilityGauge value={gridAvailability} /> */}
+          {renderGauge(gridAvailability)}
         </div>
         <div>
           <h6>CUF (%)</h6>
-          <CUFGauge value={cuf} />
+          {/* <CUFGauge value={cuf} /> */}
+          {renderGauge(cuf)}
         </div>
         <div>
           <h6>Active Power</h6>
-          <ActivePowerGauge value={currentPower} />
+          {/* <ActivePowerGauge value={currentPower} /> */}
+          {renderGauge(currentPower)}
         </div>
       </div>
 
@@ -129,7 +248,24 @@ const Dashboard = () => {
               <button onClick={() => setTrendType("year")}>Year</button>
             </div>
           </div>
-          <BarChartComponent data={barChartData} />
+          <div className="bar-chart-container">
+            <h6 className="generation-total">
+              Total - Generation <span style={{ color: "red" }}>
+                {barChartData.reduce((sum, item) => sum + (parseFloat(item["Energy Generated"]) || 0), 0).toFixed(2)}
+              </span> MWh
+            </h6>
+            <div className="bar-chart">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barChartData} margin={{ top: 10, right: 5, left: 2, bottom: 1 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="TIME" stroke="#333" />
+                <YAxis stroke="#333" />
+                <Tooltip />
+                <Bar dataKey="Energy Generated" fill="#FF4500" barSize={15} />
+              </BarChart>
+            </ResponsiveContainer>
+            </div>
+          </div>
         </div>
 
         <div className="chart">

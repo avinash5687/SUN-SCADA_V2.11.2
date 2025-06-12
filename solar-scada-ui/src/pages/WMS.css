@@ -1,184 +1,227 @@
-/* ========== Main Layout ========== */
+/* ========== Fullscreen Container and Layout ========== */
 .wms-container-fullscreen {
-  width: calc(100vw - 190px);
-  height: calc(100vh - 70px);
+  width: calc(100vw - 97px);
+  height: calc(100vh - 60px);
   background-color: #f0f4f8;
   padding: 10px;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: hidden; /* Prevent the main page from scrolling */
   display: flex;
   flex-direction: column;
 }
 
 .wms-title {
   color: #1a3b5d;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  font-weight: 600;
+  font-size: .9rem;
+  margin-bottom: 4px;
+  font-weight: 700;
   flex-shrink: 0;
 }
 
+/* FIX: This grid layout is key to the side-by-side view */
 .wms-grid-content {
   flex-grow: 1;
   display: grid;
-  grid-template-columns: 450px 1fr;
-  grid-template-rows: 1fr;
+  grid-template-columns: 35% 1fr; /* Table takes 55%, chart takes the rest */
+  grid-template-rows: 1fr; /* A single row that fills the available height */
   gap: 10px;
-  min-height: 0;
+  min-height: 0; /* CRITICAL: Allows children to shrink and use ResponsiveContainer */
 }
 
-/* ========== Table Styling (UPDATED FOR GRID LINES) ========== */
+/* Container for the table to handle its own scrolling */
 .wms-table-container {
-  overflow: hidden;
+  overflow: auto; /* Allows table to scroll vertically and horizontally */
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #d0d7de; /* Outer border */
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  height: 85vh;
 }
 
+/* ========== Table Styling (Modern Grid Look) ========== */
 .wms-table {
   width: 100%;
-  border-collapse: collapse; /* Essential for clean grid lines */
+  border-collapse: collapse;
   text-align: center;
-}
-
-/* UPDATED: Add borders to all cells for grid effect */
-.wms-table th,
-.wms-table td {
-  border: 1px solid #d0d7de; /* Light gray lines for all cells */
-  padding: 0;
 }
 
 .wms-table th {
   background-color: #2c3e50;
   color: #ffffff;
-  padding: 15px;
+  padding: 10px;
+  vertical-align: middle;
   font-size: 0.9rem;
-  font-weight: 600;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-.wms-table tbody tr td:first-child {
-  text-align: left;
-  font-weight: 500;
-  color: #2c3e50;
-  padding: 0px 15px;
+.wms-table th, .wms-table td {
+  border-bottom: 1px solid #000000;
+  border-right: 1px solid #000000;
+}
+.wms-table th:first-child, .wms-table td:first-child {
+  border-left: 1px solid #000000;
 }
 
-.text-cell { 
-  padding: 6px 12px;
-  font-weight: 500; 
+.wms-table td {
+  padding: 0;
+  vertical-align: middle;
 }
 
-.progress-bar-cell { 
-  position: relative; 
-  height: 32px; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  overflow: hidden; 
-}
+.wms-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
+.wms-table tbody tr:hover { background-color: #e9f5ff; }
+.wms-table tbody tr td:first-child { text-align: left; font-weight: 600; color: #2c3e50; padding: 5px 6px; }
 
-.progress-bar-fill { 
-  position: absolute; 
-  left: 0; 
-  top: 0; 
-  height: 100%; 
-  transition: width 0.4s ease-in-out; 
-}
+/* Progress Bar Styling (Corrected) */
+.progress-bar-cell { position: relative; height: 100%; min-height: 34px; display: flex; align-items: center; justify-content: center; }
+.progress-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 0.3s ease-in-out; opacity: 0.7; z-index: 1; }
+.progress-bar-text { position: relative; z-index: 2; font-weight: 600; color: #111; }
 
-.progress-bar-fill.blue { 
-  background-color: #a0c4e4; 
-}
+/* Header and Status Styling */
+.wms-header-content { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px; }
+.header-name { font-weight: 600; }
+.status-indicator { width: 15px; height: 15px; border-radius: 50%; border: 2px solid #ffffff; }
+.status-green { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+.status-red { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
 
-.progress-bar-fill.yellow {
-  background-color: #f7d97c; 
-}
-
-.progress-bar-fill.red { 
-  background-color: #e57373; 
-}
-
-.progress-bar-text { 
-  position: relative; 
-  z-index: 2; 
-  font-weight: 500; 
-  color: #111; 
-}
-
-.wms-header-content { 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 8px; 
-}
-
-.status-indicator { 
-  width: 12px; 
-  height: 12px; 
-  border-radius: 50%; 
-  border: 1.5px solid rgba(255, 255, 255, 0.8); 
-}
-
-.status-green { 
-  background-color: #2ecc71; 
-  box-shadow: 0 0 8px #2ecc71; 
-}
-
-.status-red { 
-  background-color: #e74c3c; 
-  box-shadow: 0 0 8px #e74c3c; 
-}
-
-/* ========== Chart Layout and Styling ========== */
-
-.charts-column-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  min-height: 0;
-}
-
-.chart-container,
-.additional-graph-container {
+/* FIX: Corrected Chart Container Styling */
+.chart-container {
+  display: flex; /* Makes it easy to center loading text */
+  align-items: center;
+  justify-content: center;
   background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e0e6ed;
-  display: flex;
-  min-height: 0;
-  flex: 1; /* Makes both charts share the vertical space */
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  min-height: 0; /* CRITICAL: Works with the grid to give ResponsiveContainer height */
 }
 
-.recharts-legend-item-text { color: #333 !important; }
-.recharts-cartesian-axis-tick-value { font-size: 0.8rem; }
+.loading-text {
+  font-size: 1.2rem;
+  color: #888;
+}
 
 
 /* Responsive Design */
 /* Large screens (≥1440px) */
-@media screen and (min-width: 1440px) {
+/* ========== Breakpoint: 1280px (HD Laptops) ========== */
+@media screen and (min-width: 1280px) and (max-width: 1359px) {
+  .wms-title {
+    font-size: 1rem;
+  }
+
+  .wms-table {
+    font-size: 0.78rem;
+  }
+
+  .progress-bar-cell {
+    min-height: 26px;
+  }
+
+  .wms-table tbody tr td:first-child {
+    padding: 4px 2px;
+  }
+
+  .chart-container {
+    height: 420px;
+  }
+}
+
+/* ========== Breakpoint: 1360px to 1439px ========== */
+@media screen and (min-width: 1360px) and (max-width: 1439px) {
+  .wms-title {
+    font-size: 1.1rem;
+  }
+
+  .wms-table {
+    font-size: 0.85rem;
+  }
+
+  .progress-bar-cell {
+    min-height: 30px;
+  }
+
+  .wms-table tbody tr td:first-child {
+    padding: 6px 6px;
+  }
+
+  .chart-container {
+    height: 600px;
+    padding : 5px;
+  }
+}
+
+/* ========== Breakpoint: 1440px (Full HD) ========== */
+@media screen and (min-width: 1440px) and (max-width: 1679px) {
   .wms-title {
     font-size: 1.25rem;
+  }
+
+  .wms-table {
+    font-size: 0.9rem;
+  }
+
+  .progress-bar-cell {
+    min-height: 32px;
   }
 
   .chart-container {
     height: 500px;
   }
+
+  .wms-table tbody tr td:first-child {
+    font-size: 1rem;
+    padding: 4px 4px;
+  }
 }
 
-/* Medium screens (1024px–1439px) */
-@media screen and (max-width: 1439px) {
+/* ========== Breakpoint: 1680px to 1919px ========== */
+@media screen and (min-width: 1680px) and (max-width: 1919px) {
+  .wms-title {
+    font-size: 1.35rem;
+  }
+
   .wms-table {
-    font-size: 0.7rem;
+    font-size: 1rem;
   }
 
   .chart-container {
-    height: 450px;
+    height: 520px;
+  }
+
+  .progress-bar-cell {
+    min-height: 42px;
   }
 }
+
+/* ========== Breakpoint: 1920px and above ========== */
+@media screen and (min-width: 1920px) {
+  .wms-title {
+    font-size: 1.5rem;
+  }
+
+  .wms-table {
+    font-size: 1.05rem;
+  }
+
+  .progress-bar-cell {
+    min-height: 45px;
+  }
+
+  .wms-table tbody tr td:first-child {
+    font-size: 1.1rem;
+    padding: 8px 6px;
+  }
+
+  .chart-container {
+    height: 580px;
+  }
+
+  .wms-table-container {
+    height: 88vh;
+  }
+}
+
 
 /* Tablets and small laptops (768px–1023px) */
 @media screen and (max-width: 1023px) {

@@ -4,14 +4,14 @@ import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Brush, CartesianGrid
 } from "recharts";
 import "./WMS.css";
-import ProgressBarCell from './ProgressBarCell'; // Ensure this file exists
+import ProgressBarCell from './ProgressBarCell'; // Import the new component
 
 const API_BASE_URL =
   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? "http://localhost:5000"
     : "http://103.102.234.177:5000";
 
-// Configuration for all parameters
+// Configuration for all parameters, including progress bar max values
 const parametersConfig = [
   { name: "Timestamp", key: "Date_Time", unit: "", max: null },
   { name: "GHI", key: "GHI", unit: "W/m²", max: 1600 },
@@ -24,7 +24,7 @@ const parametersConfig = [
   { name: "Module Temperature 2", key: "MOD_TEMP2", unit: "°C", max: 100 },
   { name: "Ambient Temperature", key: "AMB_TEMP", unit: "°C", max: 100 },
   { name: "Humidity", key: "RH", unit: "%", max: 100 },
-  { name: "Wind Speed", key: "WND_SPD", unit: "m/s", max: 20 },
+  { name: "Wind Speed", key: "WND_SPD", unit: "m/s", max: 15 },
   { name: "Wind Direction", key: "WND_DIR", unit: "°", max: 360 },
   { name: "Rainfall", key: "RAIN", unit: "mm", max: 200 },
   { name: "Soiling 1", key: "SOI1", unit: "%", max: 100 },
@@ -39,10 +39,8 @@ const WMS = () => {
   const [zoomedData, setZoomedData] = useState([]);
   const [isZooming, setIsZooming] = useState(false);
 
-  const onZoomChange = (zooming) => {
-    setIsZooming(zooming);
-  };
-
+  // --- Data fetching logic (remains the same) ---
+  const onZoomChange = (zooming) => setIsZooming(zooming);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -52,17 +50,12 @@ const WMS = () => {
           axios.get(`${API_BASE_URL}/api/wms/WMS-CHART`),
         ]);
         setWmsData(wmsRes.data);
-        const formattedChartData = chartRes.data.map(d => ({
-          ...d,
-          Date_Time: new Date(d.Date_Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
-        }));
-        setChartData(formattedChartData);
-        setZoomedData(formattedChartData);
+        setChartData(chartRes.data);
+        setZoomedData(chartRes.data);
       } catch (error) {
         console.error("Error fetching WMS data:", error);
       }
     };
-
     fetchAllData();
     const interval = setInterval(() => { if (!isZooming) fetchAllData(); }, 30000);
     return () => clearInterval(interval);
@@ -79,7 +72,6 @@ const WMS = () => {
       <h2 className="wms-title">Weather Monitoring Station Overview</h2>
       <div className="wms-grid-content">
         <div className="wms-table-container">
-          {/* Table remains the same */}
           <table className="wms-table">
             <thead>
               <tr>
@@ -100,10 +92,10 @@ const WMS = () => {
                   <td>{param.name}</td>
                   {wmsData.map((sensor, index) => (
                     <td key={index}>
-                      {param.max != null ? (
-                        <ProgressBarCell name={param.name} value={sensor[param.key]} max={param.max} unit={param.unit} />
+                      {param.max ? (
+                        <ProgressBarCell value={sensor[param.key]} max={param.max} unit={param.unit} />
                       ) : (
-                        <div className="text-cell">{sensor[param.key] || 'N/A'}</div>
+                        sensor[param.key] || 0
                       )}
                     </td>
                   ))}
@@ -113,17 +105,13 @@ const WMS = () => {
           </table>
         </div>
 
-        {/* NEW: Wrapper for the charts column */}
-        <div className="charts-column-container">
-          {/* --- FIRST CHART (Original detailed one) --- */}
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={zoomedData}
-                onMouseDown={() => onZoomChange(true)}
-                onMouseUp={() => onZoomChange(false)}
-              >
-
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={zoomedData}
+              onMouseDown={() => onZoomChange(true)}
+              onMouseUp={() => onZoomChange(false)}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="Date_Time" />
               <YAxis yAxisId="left" orientation="left" stroke="#8884d8" domain={[0, 1600]} />
@@ -158,26 +146,8 @@ const WMS = () => {
                 onMouseUp={() => onZoomChange(false)}
                 onChange={handleBrushChange}
               />
-
             </LineChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* --- SECOND CHART (New additional one) --- */}
-          <div className="additional-graph-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Date_Time" />
-                <YAxis yAxisId="wind" orientation="left" stroke="#6A5ACD" domain={[0, 20]} />
-                <YAxis yAxisId="dir" orientation="right" stroke="#9370DB" domain={[0, 360]} />
-                <Tooltip />
-                <Legend />
-                <Line yAxisId="wind" type="monotone" dataKey="WND_SPD" stroke="#6A5ACD" name="Wind Speed (m/s)" dot={false} />
-                <Line yAxisId="dir" type="monotone" dataKey="WND_DIR" stroke="#9370DB" name="Wind Direction (°)" dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
