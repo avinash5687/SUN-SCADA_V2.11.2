@@ -36,7 +36,7 @@ const FormulaScreen = () => {
     );
 
   // Calculations
-  const poaResult = ((data.AVG_POA / 1000) * parseFloat(data.P_RUN)).toFixed(2);
+  const poaResult = ((data.AVG_POA / 60000)).toFixed(2);
   const plantAvailability = (1 - data.INV_DOWN / data.OP_COUNT) * 100;
   const GA = (1 - data.OG_DOWN / data.PLANT_AVAIL) * 100;
   const pr = ((data.P_EXP / (data.POA * data.DC_CAP)) * 100).toFixed(2);
@@ -58,9 +58,9 @@ const FormulaScreen = () => {
         }}
       >
         <FormulaBox
-          title="SOLAR Average Irradiation"
-          text="POA = (Average Radiation(Tilted)/1000) * Today Operation Hrs"
-          formula={`POA = (${data.AVG_POA} / 1000) * ${data.P_RUN} = ${poaResult}`}
+          title="Cumulative POA (kWh/M²)"
+          text="Cumulative POA(kWh/M²)= (Sum(POA (W/M²))) / 60,000"
+          formula={`Cumulative POA(kWh/M²) = (${data.AVG_POA} / 60,000)  = ${poaResult}`}
         />
         <FormulaBox
           title="Plant Availability (%)"
@@ -74,7 +74,7 @@ const FormulaScreen = () => {
         />
         <FormulaBox
           title="Performance Ratio (%)"
-          text="PR(%) = (Total Power Generation / (POA ACC * Plant Capacity)) * 100"
+          text="PR(%) = (Total Power Generation / (Cumulative POA * Plant Capacity)) * 100"
           formula={`PR (%) = (${data.P_EXP} / (${data.POA} * ${data.DC_CAP})) * 100 = ${pr}%`}
         />
         <FormulaBox
