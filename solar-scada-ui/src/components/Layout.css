@@ -43,7 +43,7 @@
   
 .header-title h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: bold;
 }
   
@@ -89,7 +89,7 @@
 .menu li {
     display: flex;
     align-items: center;
-    padding: 15px 10px;
+    padding: 10px 10px;
     cursor: pointer;
     transition: background 0.3s ease;
     position: relative; /* For positioning the bottom border */
@@ -181,7 +181,7 @@
 }
 
 .alarm-icon {
-    font-size: 2rem;
+    font-size: 1.5rem;
     color: red;
     margin-right: 5px;
     cursor: pointer;  /* Makes it look clickable */
@@ -199,14 +199,14 @@
   }
   
 .alarm-icon.blink {
-animation: blink 1s infinite;
-color: red; /* You can change the color if needed */
+    animation: blink 1s infinite;
+    color: red; /* You can change the color if needed */
 }
 
 .alarm-icon-container {
     position: relative;
     display: inline-block;
-  }
+}
   
   .alarm-count {
     position: absolute;
@@ -221,11 +221,11 @@ color: red; /* You can change the color if needed */
   }
   
 .icon-large {
-font-size: 22px; /* Adjust the size as needed */
+font-size: 20px; /* Adjust the size as needed */
 }
 
 .datetime {
-    font-size: 16px; /* Adjust the size as needed */
+    font-size: 15px; /* Adjust the size as needed */
     font-weight: bold; /* Optional: Make the text bold */
     margin-left: 0px; /* Adjust spacing as needed */
   }
