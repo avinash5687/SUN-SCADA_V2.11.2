@@ -79,7 +79,7 @@ const Dashboard = () => {
     const intervalId = setInterval(() => {
       fetchData();
       fetchBarChartData();
-    }, 30000);
+    }, 60000);
     return () => clearInterval(intervalId);
   }, [fetchData, fetchBarChartData]);
 
