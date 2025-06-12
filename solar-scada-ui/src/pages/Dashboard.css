@@ -243,6 +243,10 @@ html, body, #root {
   text-align: center;
 }
 
+.equipment-status-header, h4.component-title {
+  font-size: 1rem;
+}
+
 /* ================================
    Popup & Buttons
 ================================= */
@@ -324,6 +328,7 @@ button:focus {
     height: 80px;
   }
 
+
   .gauge-center-text {
     font-size: 11px;
     left: 52%;
@@ -337,7 +342,7 @@ button:focus {
 
   .chart {
     flex: 1 1 48%;
-    max-height: 9rem;
+    max-height: 12rem;
     font-size: 9px;
     padding-top: 2px;
   }
@@ -347,7 +352,7 @@ button:focus {
   }
 
   .generation-total {
-    font-size: 0.6rem;
+    font-size: .8rem;
     margin-bottom: 2px;
   }
 
@@ -359,12 +364,12 @@ button:focus {
 
   .chart-controls input {
     padding-bottom: 1px;
-    font-size: 7px;
+    font-size: 8px;
   }
 
   .equipment-wms-container {
-    padding-bottom: 2px;
-    height: 160px;
+    padding-top: 3rem;
+    height: 200px;
   }
 
   .equipment-status,
@@ -380,12 +385,16 @@ button:focus {
     padding: 2px;
   }
 
+  .equipment-status-header, h4.component-title {
+    font-size: .8rem;
+  }
+
   .component-title {
     font-size: 9px;
   }
 
   .line-chart-wrapper {
-    height: 140px;
+    height: 185px;
     padding-left: 2px;
     font-size: 10px;
   }
@@ -393,9 +402,10 @@ button:focus {
   .open-popup-btn {
     padding-top: 4px;
   }
+  .kip-cards-container {
+    margin-left: 4px;
+  }
 }
-
-
 
 @media (min-width: 1280px) and (max-width: 1439px) {
   .dashboard-container {
@@ -416,11 +426,6 @@ button:focus {
     width: 100px;
     height: 85px;
   }
-  
-  .gauge-center-text {
-    font-size: 12px;
-  }
-
   .charts-container {
     height: 160px;
     padding-bottom: 1px;
@@ -428,9 +433,9 @@ button:focus {
 
   .chart {
     flex: 1 1 10%;
-    max-height: 10rem;
+    max-height: 10.2rem;
     font-size: 10px;
-    padding-top: 1px;
+    padding-top:1px;
   }
 
   .bar-chart-container {
@@ -438,9 +443,13 @@ button:focus {
   }
   
   .generation-total {
-    margin-bottom: .5px;
-    font-size: 0.5rem;
+    font-size: 0.7rem;
   } 
+
+  .bar-chart {
+    padding-bottom: 8px;
+    font-size: 10px;
+  }
   
   .chart-header {
     padding-top: .5px;
@@ -450,7 +459,7 @@ button:focus {
 
   .chart-controls input {
     padding-bottom: 1px;
-    font-size: 6px;
+    font-size: 10px;
   }
   
   .equipment-wms-container {
@@ -469,13 +478,14 @@ button:focus {
     padding: 2px;
   }
 
-  .component-title {
-    font-size: 10px;
+  .line-chart-wrapper {
+    height: 165px; /* default */
+
   }
 
-  .line-chart-wrapper {
-    height: 160px; /* default */
-  }
+  .equipment-status-header, h4.component-title {
+    font-size: .8rem;
+  } 
 
 }
 
@@ -485,16 +495,6 @@ button:focus {
     padding: 15px 30px;
   }
 
-  .gauge-wrapper {
-    position: relative;
-    width: 100px;
-    height: 120px;
-  }
-  
-  .gauge-center-text {
-    font-size: 14px;
-    left: 60%;
-  }
 
   .gauge-container {
     height: 140px;
@@ -506,6 +506,9 @@ button:focus {
     max-width: 250px;
   }
 
+  .generation-total {
+    font-size: 0.9rem;
+  } 
 
   .chart {
     flex: 1 1 45%;
@@ -536,6 +539,20 @@ button:focus {
   .component-title {
     font-size: 15px;
   }
+
+  .open-popup-btn, .chart-controls {
+    
+  font-size: .8rem;
+  }
+
+  .chart-controls input {
+    height: 24px;
+    font-size: 10px;
+    padding-left: 2px;
+  }
+
+
+  
 }
 
 @media (min-width: 1601px) and (max-width: 1920px) {
@@ -594,6 +611,7 @@ button:focus {
   .bar-chart {
     height: 180px;
     padding-bottom: 1px;
+    font-size: 16px;
   }
   .equipment-wms-container {
     padding-top: 2px;
@@ -617,6 +635,10 @@ button:focus {
     padding-left: 4px;
     font-size: 14px;
   }
+
+  .equipment-status-header, h4.component-title {
+  font-size: 1.3rem;
+} 
 
 }
 
@@ -692,7 +714,7 @@ button:focus {
   }
 
   .open-popup-btn {
-    font-size: 17px;
+    font-size: 19px;
   }
 
   .line-chart-wrapper {
@@ -700,6 +722,10 @@ button:focus {
     padding-left: 6px;
     font-size: 15px;
   }
+
+  .equipment-status-header, h4.component-title {
+    font-size: 1.5rem;
+  } 
 }
 
 

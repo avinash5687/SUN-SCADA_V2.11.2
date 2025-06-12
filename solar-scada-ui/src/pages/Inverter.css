@@ -143,9 +143,26 @@
 
 /* Large Tablets and Small Laptops */
 
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .inverter-table td {
+    padding: 3px;
+    font-size: .9rem;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .inverter-table td {
+    padding: 4px;
+    font-size: .95rem;
+  }
+}
+
+
+
 @media (min-width: 1440px) and (max-width: 1600px) {
  .inverter-container {
   height: 100vh;
+  overflow: auto;
  }
  .inverter-table {
   overflow: hidden;
@@ -164,30 +181,16 @@
     height: 88vh;
   }
 }
-@media (max-width: 1200px) {
+
+@media (min-width: 1921px) {
+
   .inverter-container {
-    padding: 10px;
+    height: 100vh;
   }
 
-  .inverter-table th,
   .inverter-table td {
-    font-size: 0.8rem;
-    padding: 8px;
-  }
-}
-
-/* Tablets */
-@media (max-width: 1024px) {
-  .inverter-container {
     padding: 10px;
-  }
-
-  .inverter-title {
-    font-size: 1.1rem;
-  }
-
-  .inverter-table {
-    font-size: 0.75rem;
+    font-size: 1.4rem;
   }
 }
 

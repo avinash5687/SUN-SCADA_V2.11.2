@@ -1,6 +1,7 @@
 /* ========== Fullscreen Container and Layout ========== */
 .wms-container-fullscreen {
-  width: calc(100vw - 97px);
+  /* width: calc(100vw - 97px); */
+  width: 100%;
   height: calc(100vh - 60px);
   background-color: #f0f4f8;
   padding: 10px;
@@ -104,6 +105,29 @@
 
 /* Responsive Design */
 /* Large screens (≥1440px) */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .wms-title {
+    font-size: 0.95rem;
+  }
+
+  .wms-table {
+    font-size: 0.8rem;
+  }
+
+  .progress-bar-cell {
+    min-height: 25px;
+  }
+
+  .wms-table tbody tr td:first-child {
+    padding: 5px 2px;
+  }
+
+  .chart-container {
+    height: 400px;
+  }
+}
+
+
 /* ========== Breakpoint: 1280px (HD Laptops) ========== */
 @media screen and (min-width: 1280px) and (max-width: 1359px) {
   .wms-title {
@@ -119,7 +143,7 @@
   }
 
   .wms-table tbody tr td:first-child {
-    padding: 4px 2px;
+    padding: 5px 2px;
   }
 
   .chart-container {
