@@ -143,7 +143,7 @@
   }
 
   .wms-table tbody tr td:first-child {
-    padding: 5px 2px;
+    padding: 4px 2px;
   }
 
   .chart-container {
@@ -162,11 +162,11 @@
   }
 
   .progress-bar-cell {
-    min-height: 30px;
+    min-height: 28px;
   }
 
   .wms-table tbody tr td:first-child {
-    padding: 6px 6px;
+    padding: 4px 6px;
   }
 
   .chart-container {
@@ -214,7 +214,7 @@
   }
 
   .progress-bar-cell {
-    min-height: 42px;
+    min-height: 38px;
   }
 }
 

@@ -112,13 +112,13 @@ html, body, #root {
 .gauge-wrapper {
   position: relative;
   width: 120px;
-  height: 100px;
+  height: 120px;
 }
 
 .gauge-center-text {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 54%;
   transform: translate(-50%, -50%);
   font-size: 14px;
   font-weight: bold;
@@ -367,9 +367,11 @@ button:focus {
     font-size: 8px;
   }
 
+
   .equipment-wms-container {
     padding-top: 3rem;
     height: 200px;
+    margin-bottom: 5px;
   }
 
   .equipment-status,
@@ -382,11 +384,7 @@ button:focus {
 
   .equipment-status td,
   .wms-data td {
-    padding: 2px;
-  }
-
-  .equipment-status-header, h4.component-title {
-    font-size: .8rem;
+    padding: 1.5px;
   }
 
   .component-title {
@@ -394,7 +392,7 @@ button:focus {
   }
 
   .line-chart-wrapper {
-    height: 185px;
+    height: 182px;
     padding-left: 2px;
     font-size: 10px;
   }
@@ -405,6 +403,13 @@ button:focus {
   .kip-cards-container {
     margin-left: 4px;
   }
+
+  .equipment-status-header, h4.component-title {
+    font-size: .8rem;
+    padding: 2px;
+  } 
+
+ 
 }
 
 @media (min-width: 1280px) and (max-width: 1439px) {
@@ -426,14 +431,19 @@ button:focus {
     width: 100px;
     height: 85px;
   }
+
+  .gauge-center-text {
+    font-size: 12px;
+    left: 52%;
+  } 
   .charts-container {
-    height: 160px;
+    height: 170px;
     padding-bottom: 1px;
   }
 
   .chart {
     flex: 1 1 10%;
-    max-height: 10.2rem;
+    max-height: 10.4rem;
     font-size: 10px;
     padding-top:1px;
   }
@@ -464,13 +474,15 @@ button:focus {
   
   .equipment-wms-container {
     padding-bottom: 1px;
-    height: 180px;
+    height: 185px;
   }
+
+  
 
   .equipment-status, .wms-data {
     min-width: 300px;
-    height: 170px;
-    padding-top: 0px;
+    height: 180px;
+    padding-top: 2px;
     margin-bottom: 2px;
   }
 
@@ -485,12 +497,97 @@ button:focus {
 
   .equipment-status-header, h4.component-title {
     font-size: .8rem;
+    padding: 2px;
   } 
 
 }
 
 
-@media (min-width: 1440px) and (max-width: 1600px) {
+@media (min-width: 1440px) and (max-width: 1500px) {
+  .dashboard-container {
+    padding: 15px 30px;
+  }
+
+
+  .gauge-container {
+    height: 140px;
+  }
+
+  .gauge-container > div {
+    flex: 1 1 20%;
+    min-width: 180px;
+    max-width: 250px;
+  }
+
+  .gauge-wrapper {
+    position: relative;
+    width: 100px;
+    height: 90px;
+  }
+
+  .gauge-center-text {
+    font-size: 12px;
+    left: 52%;
+  } 
+
+  .generation-total {
+    font-size: 0.9rem;
+  } 
+
+  .chart {
+    flex: 1 1 45%;
+    max-height: 14rem;
+  }
+  
+  .bar-chart {
+    height: 160px;
+    padding-bottom: 1px;
+  }
+  
+
+  .charts-container {
+    height: 190px;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 3rem;
+  }
+
+  .equipment-wms-container {
+    padding-top: 2px;
+    margin-bottom: 6px;
+    height: 200px;
+  }
+
+  .equipment-status,
+  .wms-data {
+    flex: 1 1 48%;
+  }
+
+
+  .dashboard-title {
+    font-size: clamp(1.75rem, 2vw, 2.75rem);
+  }
+
+  .component-title {
+    font-size: 15px;
+  }
+
+  .open-popup-btn, .chart-controls {
+    
+  font-size: .8rem;
+  }
+
+  .chart-controls input {
+    height: 24px;
+    font-size: 10px;
+    padding-left: 2px;
+  }
+
+
+  
+}
+
+@media (min-width: 1501px) and (max-width: 1600px) {
   .dashboard-container {
     padding: 15px 30px;
   }
@@ -571,7 +668,7 @@ button:focus {
   }
 
   .charts-container {
-    height: 200px;
+    height: 190px;
     gap: 8px;
     width: 100%;
     margin-bottom: 6rem;
@@ -657,6 +754,17 @@ button:focus {
     padding-bottom: 10px;
   }
 
+  .gauge-wrapper {
+    position: relative;
+    width: 100px;
+    height: 110px;
+  }
+
+  .gauge-center-text {
+    font-size: 14px;
+    left: 62%;
+  } 
+
   .charts-container {
     height: 240px;
     gap: 12px;
@@ -696,6 +804,7 @@ button:focus {
   .bar-chart {
     height: 220px;
     padding-bottom: 2px;
+    font-size: 16px;
   }
 
   .equipment-wms-container {
