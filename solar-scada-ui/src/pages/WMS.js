@@ -1,3 +1,4 @@
+// (No change at top imports)
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -6,14 +7,13 @@ import {
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import "./WMS.css";
-import ProgressBarCell from './ProgressBarCell'; // Import your progress bar cell
+import ProgressBarCell from './ProgressBarCell';
 
 const API_BASE_URL =
   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
     ? "http://localhost:5000"
     : "http://103.102.234.177:5000";
 
-// Configuration for all parameters, including progress bar max values
 const parametersConfig = [
   { name: "Timestamp", key: "Date_Time", unit: "", max: null },
   { name: "GHI", key: "GHI", unit: "W/m²", max: 1600 },
@@ -38,6 +38,7 @@ const parametersConfig = [
 const WMS = () => {
   const [wmsData, setWmsData] = useState([]);
   const [chartData, setChartData] = useState([]);
+  const [soilChartData, setSoilChartData] = useState([]);
   const [zoomedData, setZoomedData] = useState([]);
   const [isZooming, setIsZooming] = useState(false);
 
@@ -46,13 +47,15 @@ const WMS = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const [wmsRes, chartRes] = await Promise.all([
+        const [wmsRes, chartRes, soilRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/wms`),
           axios.get(`${API_BASE_URL}/api/wms/WMS-CHART`),
+          axios.get(`${API_BASE_URL}/api/wms/SOIL-CHART`)
         ]);
         setWmsData(wmsRes.data);
         setChartData(chartRes.data);
         setZoomedData(chartRes.data);
+        setSoilChartData(soilRes.data);
       } catch (error) {
         console.error("Error fetching WMS data:", error);
       }
@@ -68,71 +71,76 @@ const WMS = () => {
     }
   };
 
-  // --------- Highcharts Area Chart Data Preparation ---------
-  // Use GHI as the time series (you can change to any other parameter)
-  const highchartsAreaData = chartData.map(row => [
-    new Date(row.Date_Time).getTime(),
-    Number(row.GHI) || 0
-  ]);
+  const energyVsSoilData = soilChartData.map(row => ({
+    time: new Date(row.Date).getTime(),
+    energy: Number(row.Energy) || 0,
+    soilLoss: Number(row.Loss_Due_To_Soil) || 0,
+  }));
 
   const highchartsAreaOptions = {
     chart: {
+      type: 'area',
       zoomType: 'x',
-      height: "100%",
+      height: 400,
       backgroundColor: '#fff'
     },
     title: {
-      text: 'Loss Due to Transmission',
-      align: 'center'
-    },
-    subtitle: {
-      text: typeof window !== "undefined" && window.ontouchstart === undefined
-        ? 'Shadow impact may vary the data.'
-        : 'Pinch the chart to zoom in',
+      text: 'Energy vs Loss Due to Soil',
       align: 'center'
     },
     xAxis: {
-      type: 'datetime'
+      type: 'datetime',
+      title: { text: 'Date' }
     },
-    yAxis: {
-      title: {
-        text: 'GHI (W/m²)'
+    yAxis: [{
+      title: { text: 'Energy (kWh)' },
+      opposite: false
+    }, {
+      title: { text: 'Loss Due to Soil (%)' },
+      opposite: true
+    }],
+    tooltip: {
+      shared: true,
+      xDateFormat: '%d-%b %Y %H:%M',
+      formatter: function () {
+        let s = `<b>${Highcharts.dateFormat('%d-%b %Y %H:%M', this.x)}</b>`;
+        this.points.forEach(point => {
+          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${point.y.toFixed(2)}</b>`;
+        });
+        return s;
       }
     },
     legend: {
-      enabled: false
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
     },
     plotOptions: {
       area: {
-        fillColor: {
-          linearGradient: {
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: 1
-          },
-          stops: [
-            [0, Highcharts.getOptions().colors[0]],
-            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-          ]
-        },
-        marker: {
-          radius: 2
-        },
+        stacking: 'normal',
+        lineColor: '#666666',
         lineWidth: 1,
-        states: {
-          hover: {
-            lineWidth: 1
-          }
-        },
-        threshold: null
+        marker: {
+          enabled: false
+        }
       }
     },
-    series: [{
-      type: 'area',
-      name: 'GHI (W/m²)',
-      data: highchartsAreaData
-    }],
+    series: [
+      {
+        name: 'Energy (kWh)',
+        data: energyVsSoilData.map(d => [d.time, d.energy]),
+        yAxis: 0,
+        type: 'area',
+        color: '#00BFFF'
+      },
+      {
+        name: 'Loss Due to Soil (%)',
+        data: energyVsSoilData.map(d => [d.time, d.soilLoss]),
+        yAxis: 1,
+        type: 'area',
+        color: '#483D8B'
+      }
+    ],
     credits: { enabled: false }
   };
 
@@ -174,9 +182,7 @@ const WMS = () => {
           </table>
         </div>
 
-        {/* --------- Stacked Chart Section --------- */}
         <div className="charts-stack">
-          {/* Recharts Chart */}
           <div className="chart-container">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -220,12 +226,18 @@ const WMS = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          {/* Highcharts Area Chart */}
+
           <div className="chart-container">
             <HighchartsReact
               highcharts={Highcharts}
-              options={highchartsAreaOptions}
-              containerProps={{ style: { height: "100%" } }}
+              options={{
+                ...highchartsAreaOptions,
+                chart: {
+                  ...highchartsAreaOptions.chart,
+                  height: 800, // Increase height (you can adjust this)
+                },
+              }}
+              containerProps={{ style: { height: "100%", width: "100%" } }} // Increase height & width
             />
           </div>
         </div>
