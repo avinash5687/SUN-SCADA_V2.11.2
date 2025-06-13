@@ -17,6 +17,8 @@
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.8",
+    "highcharts": "^12.2.0",
+    "highcharts-react-official": "^3.2.2",
     "howler": "^2.2.4",
     "html2canvas": "^1.4.1",
     "konva": "^9.3.20",

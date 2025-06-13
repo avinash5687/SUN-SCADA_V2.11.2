@@ -86,22 +86,30 @@
 .status-red { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
 
 /* FIX: Corrected Chart Container Styling */
+.charts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 85vh;
+  min-height: 0;
+}
 .chart-container {
-  display: flex; /* Makes it easy to center loading text */
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
+  flex: 1 1 0;
+  min-height: 0;
+  height: 0;
+  background-color: #fff;
   padding: 10px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-  min-height: 0; /* CRITICAL: Works with the grid to give ResponsiveContainer height */
+  margin-bottom: 0;
+  overflow: hidden;
 }
+
 
 .loading-text {
   font-size: 1.2rem;
   color: #888;
 }
-
 
 /* Responsive Design */
 /* Large screens (≥1440px) */
