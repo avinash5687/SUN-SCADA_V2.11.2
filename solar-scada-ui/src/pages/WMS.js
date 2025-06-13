@@ -82,12 +82,12 @@ const WMS = () => {
       backgroundColor: '#fff'
     },
     title: {
-      text: 'GHI over Time',
+      text: 'Loss Due to Transmission',
       align: 'center'
     },
     subtitle: {
       text: typeof window !== "undefined" && window.ontouchstart === undefined
-        ? 'Click and drag in the plot area to zoom in'
+        ? 'Shadow impact may vary the data.'
         : 'Pinch the chart to zoom in',
       align: 'center'
     },

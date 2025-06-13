@@ -89,7 +89,7 @@
 .charts-stack {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   height: 85vh;
   min-height: 0;
 }
