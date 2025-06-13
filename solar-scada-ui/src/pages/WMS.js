@@ -234,7 +234,7 @@ const WMS = () => {
                 ...highchartsAreaOptions,
                 chart: {
                   ...highchartsAreaOptions.chart,
-                  height: 800, // Increase height (you can adjust this)
+                  height: 400, // Increase height (you can adjust this)
                 },
               }}
               containerProps={{ style: { height: "100%", width: "100%" } }} // Increase height & width
