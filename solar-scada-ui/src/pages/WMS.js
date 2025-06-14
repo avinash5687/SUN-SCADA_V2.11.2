@@ -1,5 +1,5 @@
 // (No change at top imports)
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Brush, CartesianGrid
@@ -41,6 +41,8 @@ const WMS = () => {
   const [soilChartData, setSoilChartData] = useState([]);
   const [zoomedData, setZoomedData] = useState([]);
   const [isZooming, setIsZooming] = useState(false);
+  const chartRef = useRef(null);
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   const onZoomChange = (zooming) => setIsZooming(zooming);
 
@@ -77,20 +79,37 @@ const WMS = () => {
     soilLoss: Number(row.Loss_Due_To_Soil) || 0,
   }));
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (chartRef.current) {
+        chartRef.current.chart.reflow();
+        setWindowHeight(window.innerHeight);
+      }
+    };
+  
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  const chartHeight = Math.max(250, windowHeight * 0.4);
+
   const highchartsAreaOptions = {
     chart: {
       type: 'area',
       zoomType: 'x',
-      height: 400,
-      backgroundColor: '#fff'
+      height:chartHeight, // or '100%' if the parent container controls the height
+      spacing: [10, 10, 10, 10] ,
+      backgroundColor: '#fff',
     },
     title: {
       text: 'Energy vs Loss Due to Soil',
-      align: 'center'
+      align: 'center',
+      margin: 5,
+      style: { fontSize: '16px' }
     },
     xAxis: {
       type: 'datetime',
-      title: { text: 'Date' }
+      title: { text: 'Date' }, 
     },
     yAxis: [{
       title: { text: 'Energy (kWh)' },
@@ -98,6 +117,7 @@ const WMS = () => {
     }, {
       title: { text: 'Loss Due to Soil (%)' },
       opposite: true
+
     }],
     tooltip: {
       shared: true,
@@ -117,7 +137,7 @@ const WMS = () => {
     },
     plotOptions: {
       area: {
-        stacking: 'normal',
+        stacking: 'null',
         lineColor: '#666666',
         lineWidth: 1,
         marker: {
@@ -232,12 +252,13 @@ const WMS = () => {
               highcharts={Highcharts}
               options={{
                 ...highchartsAreaOptions,
-                chart: {
-                  ...highchartsAreaOptions.chart,
-                  height: 400, // Increase height (you can adjust this)
-                },
+                // chart: {
+                //   ...highchartsAreaOptions.chart,
+                //   height: 600, // Increase height (you can adjust this)
+                // },
               }}
               containerProps={{ style: { height: "100%", width: "100%" } }} // Increase height & width
+              ref={chartRef}
             />
           </div>
         </div>

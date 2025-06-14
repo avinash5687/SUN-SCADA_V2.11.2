@@ -90,21 +90,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 85vh;
+  height: 87vh;
   min-height: 0;
-}
-.chart-container {
-  flex: 1 1 0;
-  min-height: 0;
-  height: 0;
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-  margin-bottom: 0;
-  overflow: hidden;
+  width: 100%;
 }
 
+.chart-container {
+  flex: 1 1 0;
+  height: auto;
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  margin-bottom: 8px;
+  overflow: hidden;
+  font-size: 12px;
+  width: 100%;
+  max-width: 100%;
+}
 
 .loading-text {
   font-size: 1.2rem;
@@ -123,15 +126,21 @@
   }
 
   .progress-bar-cell {
-    min-height: 25px;
+    min-height: 26px;
   }
 
   .wms-table tbody tr td:first-child {
-    padding: 5px 2px;
+    padding: 4px 2px;
+  }
+
+  .charts-stack {
+    height: 86vh;
+    gap: 4px;
+    width: 98%;
   }
 
   .chart-container {
-    height: 400px;
+    padding: 2px;
   }
 }
 
@@ -154,8 +163,14 @@
     padding: 4px 2px;
   }
 
+  .charts-stack {
+    height: 86vh;
+    gap: 4px;
+    width: 98%;
+  }
+
   .chart-container {
-    height: 420px;
+    padding: 2px;
   }
 }
 
@@ -176,10 +191,14 @@
   .wms-table tbody tr td:first-child {
     padding: 4px 6px;
   }
+  .charts-stack {
+    height: 86vh;
+    gap: 4px;
+    width: 98%;
+  }
 
   .chart-container {
-    height: 600px;
-    padding : 5px;
+    padding: 2px;
   }
 }
 
@@ -197,14 +216,22 @@
     min-height: 32px;
   }
 
+  .charts-stack {
+    height: 86vh;
+    gap: 4px;
+    width: 98%;
+  }
+
   .chart-container {
-    height: 500px;
+    padding: 2px;
   }
 
   .wms-table tbody tr td:first-child {
     font-size: 1rem;
     padding: 4px 4px;
   }
+
+
 }
 
 /* ========== Breakpoint: 1680px to 1919px ========== */
@@ -223,6 +250,16 @@
 
   .progress-bar-cell {
     min-height: 38px;
+  }
+
+   .charts-stack {
+    height: 89vh;
+    gap: 4px;
+    width: 98%;
+  }
+
+  .chart-container {
+    padding: 2px;
   }
 }
 
@@ -245,8 +282,14 @@
     padding: 8px 6px;
   }
 
+  .charts-stack {
+    height: 89vh;
+    gap: 4px;
+    width: 98%;
+  }
+
   .chart-container {
-    height: 580px;
+    padding: 7px;
   }
 
   .wms-table-container {
