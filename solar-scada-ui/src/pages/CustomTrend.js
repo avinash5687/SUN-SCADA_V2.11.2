@@ -129,7 +129,7 @@ const CustomTrend = () => {
     <Layout>
       <div className="trend-container">
         <h2 style={{fontSize: '20px'}}>📈 Custom Trend Analysis</h2>
-
+        <div className="form-grid">
         <div className="input-group">
           <label>Select Table 1:</label>
           <select
@@ -144,6 +144,7 @@ const CustomTrend = () => {
             ))}
           </select>
         </div>
+  
 
         {selectedTable1 && (
           <div className="input-group">
@@ -218,18 +219,20 @@ const CustomTrend = () => {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
           />
-        </div>
+          </div>
+  
 
-        <div className="button-group">
-          <button onClick={fetchTrendData}>📊 Show Trend</button>
-          <button onClick={exportCSV}>📥 Export CSV</button>
-          <button onClick={() => window.location.reload()}>🔄 Reload Page</button>
+          <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
+          <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
+          <button onClick={exportCSV} className="secondary">📥 Export CSV</button>
+          <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
+        </div>
         </div>
 
         {trendData.length > 0 && (
           <div className="chart-container">
             <h3>Trend Graph</h3>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
                 <XAxis dataKey="Date_Time" />
                 <YAxis />
