@@ -102,7 +102,7 @@ const WMS = () => {
       backgroundColor: '#fff',
     },
     title: {
-      text: 'Energy vs Loss Due to Soil',
+      text: 'Energy vs Loss Due to Soiling',
       align: 'center',
       margin: 5,
       style: { fontSize: '16px' }

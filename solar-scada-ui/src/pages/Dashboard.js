@@ -96,19 +96,29 @@ const Dashboard = () => {
     return { innerRadius: 30, outerRadius: 54 };
   };
 
-  const renderGauge = (value, label) => {
+  const renderGauge = (value, label, max = 100, displayType = "percent") => {
     const { innerRadius, outerRadius } = getGaugeRadii(screenWidth);
     const segments = 20;
-    const filledSegments = Math.round((value / 100) * segments);
+    const filledSegments = Math.round((value / max) * segments);
 
     let fillColor = "#008000";
-    if (value < 70) fillColor = "#dd112f";
-    else if (value <= 80) fillColor = "#fbd202";
+    if ((value / max) * 100 < 70) fillColor = "#dd112f";
+    else if ((value / max) * 100 <= 80) fillColor = "#fbd202";
 
     const data = Array.from({ length: segments }, (_, index) => ({
       value: 1,
       color: index < filledSegments ? fillColor : "#e0e0e0",
     }));
+
+    // Decide what to display in the center
+    let centerText = "";
+    if (displayType === "value") {
+      centerText = Number(value).toFixed(1).replace(/\.00$/, "");
+    } else {
+    const percentValue = (value / max) * 100;
+    centerText = percentValue === 100 ? "100"
+      : percentValue.toFixed(1).replace(/\.0$/, "");
+    }
 
     return (
       <div className="gauge-wrapper">
@@ -129,7 +139,9 @@ const Dashboard = () => {
             ))}
           </Pie>
         </PieChart>
-        <div className="gauge-center-text">{value}%</div>
+        <div className="gauge-center-text">
+          {centerText}
+        </div>
       </div>
     );
   };
@@ -184,7 +196,6 @@ const Dashboard = () => {
               strokeWidth={2}
               dot={false}
             />
-  
             <Brush
               dataKey="Date_Time"
               height={20}
@@ -198,8 +209,6 @@ const Dashboard = () => {
     );
   };
   
-
-
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
@@ -209,30 +218,24 @@ const Dashboard = () => {
 
       <div className="gauge-container">
         <div>
-          <h6>Performance Ratio</h6>
-          {/* <PRGauge value={performanceRatio} /> */}
-          {renderGauge(performanceRatio)}
-
+          <h6>Performance Ratio (%)</h6>
+          {renderGauge(performanceRatio, "Performance Ratio", 100, "percent")}
         </div>
         <div>
-          <h6>Plant Availability</h6>
-          {/* <PlantAvailabilityGauge value={plantAvailability} /> */}
-          {renderGauge(plantAvailability)}
+          <h6>Plant Availability (%)</h6>
+          {renderGauge(plantAvailability, "Plant Availability", 100, "percent")}
         </div>
         <div>
-          <h6>Grid Availability</h6>
-          {/* <GridAvailabilityGauge value={gridAvailability} /> */}
-          {renderGauge(gridAvailability)}
+          <h6>Grid Availability (%)</h6>
+          {renderGauge(gridAvailability, "Grid Availability", 100, "percent")}
         </div>
         <div>
-          <h6>CUF (%)</h6>
-          {/* <CUFGauge value={cuf} /> */}
-          {renderGauge(cuf)}
+          <h6>CUF</h6>
+          {renderGauge(cuf, "CUF", 25, "value")}
         </div>
         <div>
-          <h6>Active Power</h6>
-          {/* <ActivePowerGauge value={currentPower} /> */}
-          {renderGauge(currentPower)}
+          <h6>Active Power (MWp)</h6>
+          {renderGauge(currentPower, "Active Power", 21.5, "value")}
         </div>
       </div>
 

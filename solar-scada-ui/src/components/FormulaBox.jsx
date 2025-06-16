@@ -10,7 +10,7 @@ const FormulaBox = ({ title, text, formula }) => {
         width: "100%",
         height: "100%",
         borderRadius: "8px",
-        backgroundColor: "#444",
+        backgroundColor: "#1a3b5d",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
