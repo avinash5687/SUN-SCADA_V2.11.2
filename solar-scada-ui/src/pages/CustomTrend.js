@@ -119,94 +119,18 @@ const CustomTrend = () => {
       console.error("Error exporting CSV:", error);
     }
   };
-  useEffect(() => {
-    // Custom animation patch
-    (function (H) {
-      const animateSVGPath = (svgElem, animation, callback = void 0) => {
-        const length = svgElem.element.getTotalLength();
-        svgElem.attr({
-          'stroke-dasharray': length,
-          'stroke-dashoffset': length,
-          opacity: 1
-        });
-        svgElem.animate({
-          'stroke-dashoffset': 0
-        }, animation, callback);
-      };
-
-      H.seriesTypes.line.prototype.animate = function (init) {
-        const series = this,
-          animation = H.animObject(series.options.animation);
-        if (!init) {
-          animateSVGPath(series.graph, animation);
-        }
-      };
-
-      H.addEvent(H.Axis, 'afterRender', function () {
-        const axis = this,
-          chart = axis.chart,
-          animation = H.animObject(chart.renderer.globalAnimation);
-
-        axis.axisGroup
-          .attr({
-            opacity: 0,
-            rotation: -3,
-            scaleY: 0.9
-          })
-          .animate({
-            opacity: 1,
-            rotation: 0,
-            scaleY: 1
-          }, animation);
-
-        if (axis.horiz) {
-          axis.labelGroup
-            .attr({
-              opacity: 0,
-              rotation: 3,
-              scaleY: 0.5
-            })
-            .animate({
-              opacity: 1,
-              rotation: 0,
-              scaleY: 1
-            }, animation);
-        } else {
-          axis.labelGroup
-            .attr({
-              opacity: 0,
-              rotation: 3,
-              scaleX: -0.5
-            })
-            .animate({
-              opacity: 1,
-              rotation: 0,
-              scaleX: 1
-            }, animation);
-        }
-
-        if (axis.plotLinesAndBands) {
-          axis.plotLinesAndBands.forEach(plotLine => {
-            const anim = H.animObject(plotLine.options.animation);
-            plotLine.label.attr({ opacity: 0 });
-            animateSVGPath(plotLine.svgElem, anim, function () {
-              plotLine.label.animate({ opacity: 1 });
-            });
-          });
-        }
-      });
-    }(Highcharts));
-  }, []);
+ 
 
   const getChartHeight = () => {
     const width = window.innerWidth;
     if (width <= 1230) return 200;
+    if (width <= 1280) return 155;
     if (width <= 1396) return 210;
     if (width <= 1440) return 220;
     if (width <= 1536) return 230;
     if (width <= 1707) return 320;
     if (width <= 1920) return 420;
-    return 480;
+    return 440;
   };
   
   const [chartHeight, setChartHeight] = useState(getChartHeight());

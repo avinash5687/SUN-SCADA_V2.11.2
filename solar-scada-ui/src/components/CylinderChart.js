@@ -14,18 +14,19 @@ const CylinderChart = ({ data }) => {
   }, []);
 
   const getSpacingForWidth = (width) => {
-    if (width <= 1229) return [5, 0, 8, -25];
-    else if (width <= 1240) return [6, 6, 9, -12];
-    else if (width <= 1396) return [8, 8, 10, -20];
+    if (width <= 1229) return [5, 0, 10, -25];
+    else if (width <= 1240) return [6, 6, 24, -12];
+    else if (width <= 1280) return [6, 10, 22, -20];
+    else if (width <= 1396) return [8, 8, 13, -20];
     else if (width <= 1440) return [10, 10, 12, -20];
-    else if (width <= 1536) return [0, 10, 10, -22];
-    else if (width <= 1707) return [14, 14, 16, -24];
-    else if (width <= 1920) return [16, 16, 18, -26];
-    else return [18, 18, 20, -28];
+    else if (width <= 1536) return [4, 10, 14, -22];
+    else if (width <= 1707) return [14, 14, 20, -24];
+    else if (width <= 1920) return [16, 16, 20, -26];
+    else return [18, 18, 24, -28];
   };
 
   const getHeightForWidth = (width) => {
-    if (width <= 1229) return 150;
+    if (width <= 1229) return 148;
     else if (width <= 1240) return 160;
     else if (width <= 1396) return 160;
     else if (width <= 1440) return 170;

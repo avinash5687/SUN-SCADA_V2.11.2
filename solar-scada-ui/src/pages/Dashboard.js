@@ -170,25 +170,27 @@ const Dashboard = () => {
   }, []);
 
   const getSpacingForWidth = (width) => {
-    if (width <= 1229) return [15, 2, 10, 0];
-    else if (width <= 1240) return [6, 6, 9, 0];
-    else if (width <= 1396) return [8, 4, 10, 0];
+    if (width <= 1229) return [10, 2, 14, 0];
+    else if (width <= 1240) return [8, 6, 22, 0];
+    else if (width <= 1280) return [5, 6, 14, 0];
+    else if (width <= 1396) return [8, 4, 16, 0];
     else if (width <= 1440) return [10, 10, 10, 0];
-    else if (width <= 1536) return [5, 8, 10, 0];
-    else if (width <= 1707) return [14, 14, 16, 0];
-    else if (width <= 1920) return [16, 16, 18, 0];
-    else return [18, 10, 25, 0];
+    else if (width <= 1536) return [8, 8, 12, 0];
+    else if (width <= 1707) return [14, 14, 10, 0];
+    else if (width <= 1920) return [16, 16, 10, 0];
+    else return [18, 10, 10, 0];
   };
 
   const getHeightForWidth = (width) => {
     if (width <= 1229) return 150;
     else if (width <= 1240) return 160;
+    else if (width <= 1280) return 150;
     else if (width <= 1396) return 160;
     else if (width <= 1440) return 170;
     else if (width <= 1536) return 170;
     else if (width <= 1707) return 220
     else if (width <= 1920) return 220;
-    else return 280;
+    else return 250;
   };
 
   const spacing = getSpacingForWidth(windowWidth);
@@ -196,15 +198,13 @@ const Dashboard = () => {
 
 
   const getLineChartOptions = (data, height, spacing, onZoomChange) => {
-    const datePrefix = new Date().toISOString().slice(0, 10); // Use today's date or actual date you want
-    const poaSeries = data.map(d => [
-      new Date(`${datePrefix}T${d.Date_Time}:00`).getTime(),
-      d.POA
-    ]);
-    const activePowerSeries = data.map(d => [
-      new Date(`${datePrefix}T${d.Date_Time}:00`).getTime(),
-      d.ACTIVE_POWER
-    ]);
+   
+
+    const poaSeries = data.map(d => d.POA);
+const activePowerSeries = data.map(d => d.ACTIVE_POWER);
+const categories = data.map(d => d.Date_Time);
+
+    
     
 
   
@@ -221,8 +221,12 @@ const Dashboard = () => {
           }
         }
       },
+      
       title: { text: '' },
-      xAxis: { type: 'datetime' },
+      xAxis: {
+        type: 'datetime',
+       categories: categories
+      },
       yAxis: [
         {
           title: { text: 'POA' },
@@ -240,7 +244,7 @@ const Dashboard = () => {
           lineWidth: 2,
           labels: { style: { color: '#387908' } },
           min: 0,
-          max: 18000
+          max: 20000
         }
       ],
       legend: { align: 'center', verticalAlign: 'bottom', y: 20 },
@@ -251,6 +255,7 @@ const Dashboard = () => {
       ]
     };
   };
+  
   
   return (
     <div className="dashboard-container">

@@ -152,7 +152,7 @@
 
 @media (min-width: 1279px) and (max-width: 1439px) {
   .inverter-table td {
-    padding: 4px;
+    padding: 2px;
     font-size: .95rem;
   }
 }

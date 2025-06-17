@@ -383,11 +383,12 @@ button:focus {
 
   .equipment-status td,
   .wms-data td {
-    padding: 2px;
+    padding: 1.5px;
   }
 
   .equipment-status-header, h4.component-title {
     font-size: .8rem;
+    padding: 2px;
   }
 
   .component-title {
@@ -408,14 +409,100 @@ button:focus {
   }
 }
 
-@media (min-width: 1280px) and (max-width: 1439px) {
+@media (min-width: 1280px) and (max-width: 1360px) {
+  .dashboard-container {
+    padding: 10px 20px;
+  }
+
+  .gauge-container {
+    height: 110px;
+    margin-bottom: 0px;
+  }
+
+  .gauge-container > div {
+    max-width: 200px;
+  }
+
+  .gauge-wrapper {
+    position: relative;
+    width: 100px;
+    height: 85px;
+  }
+  .charts-container {
+    height: 158px;
+    padding-bottom: 1px;
+  }
+
+  .chart {
+    flex: 1 1 10%;
+    max-height: 12rem;
+    font-size: 10px;
+    padding-top:1px;
+  }
+
+  .bar-chart-container {
+    padding: 1px 0;
+  }
+  
+  .generation-total {
+    font-size: 0.7rem;
+  } 
+
+  .bar-chart {
+    font-size: 8px;
+  }
+  
+  .chart-header {
+    padding-top: .5px;
+    margin-bottom: 2px;
+    font-size: 8px;
+  }
+
+  .chart-controls input {
+    padding-bottom: 1px;
+    font-size: 10px;
+  }
+  
+  .equipment-wms-container {
+    height: 170px;
+    margin-top: 30px;
+  }
+
+  .equipment-status, .wms-data {
+    min-width: 300px;
+    height: 170px;
+    padding-top: 0px;
+    margin-bottom: 2px;
+  }
+
+  .equipment-status td, .wms-data td {
+    padding: 1.5px;
+  }
+
+  .line-chart-wrapper {
+    height: 165px; /* default */
+
+  }
+
+  .equipment-status-header, h4.component-title {
+    font-size: .8rem;
+    padding: 3px;
+  } 
+
+  .kip-cards-container {
+    margin-top: 0px;
+  }
+
+}
+
+@media (min-width: 1361px) and (max-width: 1439px) {
   .dashboard-container {
     padding: 10px 20px;
   }
 
   .gauge-container {
     height: 120px;
-    margin-bottom: 1px;
+    margin-bottom: 0px;
   }
 
   .gauge-container > div {
@@ -463,14 +550,13 @@ button:focus {
   }
   
   .equipment-wms-container {
-    padding-bottom: 2px;
-    height: 180px;
-    margin-top: 45px;
+    height: 185px;
+    margin-top: 40px;
   }
 
   .equipment-status, .wms-data {
     min-width: 300px;
-    height: 175px;
+    height: 180px;
     padding-top: 0px;
     margin-bottom: 2px;
   }
@@ -486,8 +572,12 @@ button:focus {
 
   .equipment-status-header, h4.component-title {
     font-size: .8rem;
-    padding: 2px;
+    padding: 4px;
   } 
+
+  .kip-cards-container {
+    margin-top: 0px;
+  }
 
 }
 
@@ -530,7 +620,7 @@ button:focus {
 
   .equipment-wms-container {
     padding-top: 20px;
-    margin-top: 35px;
+    margin-top: 15px;
     margin-bottom: 10px;
   }
 

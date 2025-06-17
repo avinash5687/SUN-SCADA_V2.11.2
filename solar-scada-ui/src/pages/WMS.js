@@ -100,6 +100,7 @@ const WMS = () => {
   const getSpacingForWidth = (width) => {
     if (width <= 1229) return [10,5,35,0];
     else if (width <= 1240) return [20, 10, 50, 0];
+    else if (width <= 1280) return [8, 10, 58, 0];
     else if (width <= 1396) return [20, 10, 50, 0];
     else if (width <= 1440) return [10, 10, 50, 0];
     else if (width <= 1536) return [20, 0, 80, 0];
@@ -111,6 +112,7 @@ const WMS = () => {
   const getHeightForWidth = (width) => {
     if (width <= 1229) return 300;
     else if (width <= 1240) return 320;
+    else if (width <= 1280) return 330;
     else if (width <= 1396) return 350;
     else if (width <= 1440) return 380;
     else if (width <= 1536) return 400;

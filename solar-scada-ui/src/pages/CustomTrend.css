@@ -120,6 +120,31 @@ html, body {
 }
 
 /* ✅ Responsive Adjustments */
+@media (min-width: 1921px) {
+  .trend-container h2 {
+   font-size:28px;
+  }
+ 
+  .input-group select, 
+  .input-group input {
+    padding: 4px;
+    margin-top: 4px;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+ 
+  .input-group label {
+   font-size: 18px;
+   font-weight: bold;
+ }
+ 
+ .button-group {
+   gap: 7px;
+   font-size: 18px;
+ }
+  
+ }
+
 @media (min-width: 1601px) and (max-width: 1920px) {
  .trend-container h2 {
   font-size:28px;
@@ -145,9 +170,31 @@ html, body {
  
 }
 
-@media (min-width: 1241px) and (max-width: 1400px) {
+@media (min-width: 1401px) and (max-width: 1600px) {
   .input-group {
     font-size: 8px;
+  }
+ 
+  .input-group label {
+    margin-bottom: 2px;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .input-group select, 
+ .input-group input {
+   padding: 4px;
+   margin-top: 4px;
+   font-size: 14px;
+   border-radius: 6px;
+ }
+  
+
+}
+
+@media (min-width: 1241px) and (max-width: 1400px) {
+  .input-group {
+    font-size: 6px;
   }
  
   .input-group label {
@@ -158,8 +205,8 @@ html, body {
 
   .input-group select, 
  .input-group input {
-   padding: 4px;
-   margin-top: 4px;
+   padding: 2px;
+   margin-top: 2px;
    font-size: 12px;
    border-radius: 6px;
  }
