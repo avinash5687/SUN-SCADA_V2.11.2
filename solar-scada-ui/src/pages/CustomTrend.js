@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
 import Layout from "../components/Layout";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import "./CustomTrend.css";
 
-  const BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:5000"
-      : "http://103.102.234.177:5000";
+const BASE_URL =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000"
+    : "http://103.102.234.177:5000";
 
 
 const API_BASE_URL = `${BASE_URL}/api/custom-trend`;
@@ -31,6 +24,8 @@ const CustomTrend = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [trendData, setTrendData] = useState([]);
+   const chartRef = useRef(null);
+    const [windowHeight, setWindowHeight] = useState(window.innerHeight);
 
   useEffect(() => {
     axios
@@ -124,140 +119,265 @@ const CustomTrend = () => {
       console.error("Error exporting CSV:", error);
     }
   };
+  useEffect(() => {
+    // Custom animation patch
+    (function (H) {
+      const animateSVGPath = (svgElem, animation, callback = void 0) => {
+        const length = svgElem.element.getTotalLength();
+        svgElem.attr({
+          'stroke-dasharray': length,
+          'stroke-dashoffset': length,
+          opacity: 1
+        });
+        svgElem.animate({
+          'stroke-dashoffset': 0
+        }, animation, callback);
+      };
+
+      H.seriesTypes.line.prototype.animate = function (init) {
+        const series = this,
+          animation = H.animObject(series.options.animation);
+        if (!init) {
+          animateSVGPath(series.graph, animation);
+        }
+      };
+
+      H.addEvent(H.Axis, 'afterRender', function () {
+        const axis = this,
+          chart = axis.chart,
+          animation = H.animObject(chart.renderer.globalAnimation);
+
+        axis.axisGroup
+          .attr({
+            opacity: 0,
+            rotation: -3,
+            scaleY: 0.9
+          })
+          .animate({
+            opacity: 1,
+            rotation: 0,
+            scaleY: 1
+          }, animation);
+
+        if (axis.horiz) {
+          axis.labelGroup
+            .attr({
+              opacity: 0,
+              rotation: 3,
+              scaleY: 0.5
+            })
+            .animate({
+              opacity: 1,
+              rotation: 0,
+              scaleY: 1
+            }, animation);
+        } else {
+          axis.labelGroup
+            .attr({
+              opacity: 0,
+              rotation: 3,
+              scaleX: -0.5
+            })
+            .animate({
+              opacity: 1,
+              rotation: 0,
+              scaleX: 1
+            }, animation);
+        }
+
+        if (axis.plotLinesAndBands) {
+          axis.plotLinesAndBands.forEach(plotLine => {
+            const anim = H.animObject(plotLine.options.animation);
+            plotLine.label.attr({ opacity: 0 });
+            animateSVGPath(plotLine.svgElem, anim, function () {
+              plotLine.label.animate({ opacity: 1 });
+            });
+          });
+        }
+      });
+    }(Highcharts));
+  }, []);
+
+  const getChartHeight = () => {
+    const width = window.innerWidth;
+    if (width <= 1230) return 200;
+    if (width <= 1396) return 210;
+    if (width <= 1440) return 220;
+    if (width <= 1536) return 230;
+    if (width <= 1707) return 320;
+    if (width <= 1920) return 420;
+    return 480;
+  };
+  
+  const [chartHeight, setChartHeight] = useState(getChartHeight());
+
+  useEffect(() => {
+    const handleResize = () => setChartHeight(getChartHeight());
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+
+  const options = {
+    chart: {
+      type: 'line',
+      animation: { duration: 1000 },
+      zoomType: 'x',
+      animation: { duration: 1000 },
+    height: chartHeight // or '100%' if the parent container controls the height
+      // spacing: [10, 10, 10, 10]
+    },
+    title: {
+      text: ''
+    },
+    xAxis: {
+      type: 'datetime',
+      title: { text: 'Date' }
+    },
+    yAxis: {
+      title: { text: 'Value' },
+      lineWidth: 1,
+      tickWidth: 2,
+      gridLineWidth: 0
+ 
+    },
+    tooltip: {
+      shared: true,
+      xDateFormat: '%d-%b %Y %H:%M'
+    },
+    series:[
+      ...selectedColumns1.map(col => ({
+        name: `${selectedTable1}_${col}`,
+        data: trendData.map(item => [item.Date_Time, item[`${selectedTable1}_${col}`]]),
+        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        animation: { duration: 1000 }
+      })),
+      ...selectedColumns2.map(col => ({
+        name: `${selectedTable2}_${col}`,
+        data: trendData.map(item => [item.Date_Time, item[`${selectedTable2}_${col}`]]),
+        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+        animation: { duration: 1000 }
+      }))
+    ],
+    credits: { enabled: false }
+  };
+  
+  
 
   return (
     <Layout>
       <div className="trend-container">
-        <h2 style={{fontSize: '20px'}}>📈 Custom Trend Analysis</h2>
+        <h2 style={{ fontSize: '20px' }}>📈 Custom Trend Analysis</h2>
         <div className="form-grid">
-        <div className="input-group">
-          <label>Select Table 1:</label>
-          <select
-            value={selectedTable1}
-            onChange={(e) => setSelectedTable1(e.target.value)}
-          >
-            <option value="">-- Select Table --</option>
-            {tables.map((table) => (
-              <option key={table} value={table}>
-                {table}
-              </option>
-            ))}
-          </select>
-        </div>
-  
-
-        {selectedTable1 && (
           <div className="input-group">
-            <label>Select Columns for Table 1:</label>
+            <label>Select Table 1:</label>
             <select
-              multiple
-              value={selectedColumns1}
-              onChange={(e) =>
-                setSelectedColumns1(
-                  [...e.target.selectedOptions].map((o) => o.value)
-                )
-              }
+              value={selectedTable1}
+              onChange={(e) => setSelectedTable1(e.target.value)}
             >
-              {columns1.map((col) => (
-                <option key={col} value={col}>
-                  {col}
+              <option value="">-- Select Table --</option>
+              {tables.map((table) => (
+                <option key={table} value={table}>
+                  {table}
                 </option>
               ))}
             </select>
           </div>
-        )}
 
-        <div className="input-group">
-          <label>Select Table 2 (Optional):</label>
-          <select
-            value={selectedTable2}
-            onChange={(e) => setSelectedTable2(e.target.value)}
-          >
-            <option value="">-- Select Table --</option>
-            {tables.map((table) => (
-              <option key={table} value={table}>
-                {table}
-              </option>
-            ))}
-          </select>
-        </div>
 
-        {selectedTable2 && (
+          {selectedTable1 && (
+            <div className="input-group">
+              <label>Select Columns for Table 1:</label>
+              <select
+                multiple
+                value={selectedColumns1}
+                onChange={(e) =>
+                  setSelectedColumns1(
+                    [...e.target.selectedOptions].map((o) => o.value)
+                  )
+                }
+              >
+                {columns1.map((col) => (
+                  <option key={col} value={col}>
+                    {col}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="input-group">
-            <label>Select Columns for Table 2:</label>
+            <label>Select Table 2 (Optional):</label>
             <select
-              multiple
-              value={selectedColumns2}
-              onChange={(e) =>
-                setSelectedColumns2(
-                  [...e.target.selectedOptions].map((o) => o.value)
-                )
-              }
+              value={selectedTable2}
+              onChange={(e) => setSelectedTable2(e.target.value)}
             >
-              {columns2.map((col) => (
-                <option key={col} value={col}>
-                  {col}
+              <option value="">-- Select Table --</option>
+              {tables.map((table) => (
+                <option key={table} value={table}>
+                  {table}
                 </option>
               ))}
             </select>
           </div>
-        )}
 
-        <div className="input-group">
-          <label>Start Date:</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-          />
-        </div>
+          {selectedTable2 && (
+            <div className="input-group">
+              <label>Select Columns for Table 2:</label>
+              <select
+                multiple
+                value={selectedColumns2}
+                onChange={(e) =>
+                  setSelectedColumns2(
+                    [...e.target.selectedOptions].map((o) => o.value)
+                  )
+                }
+              >
+                {columns2.map((col) => (
+                  <option key={col} value={col}>
+                    {col}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-        <div className="input-group">
-          <label>End Date:</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
+          <div className="input-group">
+            <label>Start Date:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
           </div>
-  
+
+          <div className="input-group">
+            <label>End Date:</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+
 
           <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
-          <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
-          <button onClick={exportCSV} className="secondary">📥 Export CSV</button>
-          <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
-        </div>
+            <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
+            <button onClick={exportCSV} className="secondary">📥 Export CSV</button>
+            <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
+          </div>
         </div>
 
         {trendData.length > 0 && (
           <div className="chart-container">
             <h3>Trend Graph</h3>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData}>
-                <XAxis dataKey="Date_Time" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                {selectedColumns1.map((col) => (
-                  <Line
-                    key={`${selectedTable1}_${col}`}
-                    type="monotone"
-                    dataKey={`${selectedTable1}_${col}`}
-                    stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-                    name={`${selectedTable1}_${col}`}
-                  />
-                ))}
-                {selectedColumns2.map((col) => (
-                  <Line
-                    key={`${selectedTable2}_${col}`}
-                    type="monotone"
-                    dataKey={`${selectedTable2}_${col}`}
-                    stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-                    name={`${selectedTable2}_${col}`}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
+           
+
+<HighchartsReact
+      highcharts={Highcharts}
+      options={options}
+      containerProps={{ style: { height: "100%", width: "100%" } }} 
+    />
           </div>
         )}
       </div>

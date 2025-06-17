@@ -1,10 +1,17 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
-import DeviceStatusPopup from "../components/DeviceStatusPopup";
-import KIPCard from "../components/KIPCard";
-import { PieChart, Pie, Cell } from "recharts";
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from "recharts";
-import "./Dashboard.css";
+  import React, { useState, useEffect, useCallback, useRef } from "react";
+  import axios from "axios";
+  import DeviceStatusPopup from "../components/DeviceStatusPopup";
+  import KIPCard from "../components/KIPCard";
+  import { PieChart, Pie, Cell } from "recharts";
+  import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from "recharts";
+  import "./Dashboard.css";
+  import CylinderChart from "../components/CylinderChart";
+  import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+  
+ 
+
+// Highcharts3D.default(Highcharts); 
 
 const Dashboard = () => {
   const [plantKPI, setPlantKPI] = useState({});
@@ -22,6 +29,10 @@ const Dashboard = () => {
   const [deviceStatus, setDeviceStatus] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const chartRef = useRef(null);
+     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    
+    
 
   const API_BASE_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -41,6 +52,9 @@ const Dashboard = () => {
 
       const { data: lineData } = await axios.get(`${API_BASE_URL}/api/dashboard/line-chart`);
       setLineChartData((prev) => (JSON.stringify(prev) !== JSON.stringify(lineData) ? lineData : prev));
+
+      console.log("Line chart data:", lineChartData);
+
 
       const { data: wmsResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/WMSDATA-DASH`);
       const newWMSData = wmsResponse?.[0] || {};
@@ -120,6 +134,9 @@ const Dashboard = () => {
       : percentValue.toFixed(1).replace(/\.0$/, "");
     }
 
+   
+    
+
     return (
       <div className="gauge-wrapper">
         <PieChart width={outerRadius * 2 + 20} height={outerRadius * 2}>
@@ -146,67 +163,93 @@ const Dashboard = () => {
     );
   };
 
-  const LineChartComponent = ({ data, onZoomChange }) => {
-    const normalizedData = data.map(entry => ({
-      ...entry,
-      POA: entry.POA,
-      ACTIVE_POWER: entry.ACTIVE_POWER,
-    }));
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getSpacingForWidth = (width) => {
+    if (width <= 1229) return [15, 2, 10, 0];
+    else if (width <= 1240) return [6, 6, 9, 0];
+    else if (width <= 1396) return [8, 4, 10, 0];
+    else if (width <= 1440) return [10, 10, 10, 0];
+    else if (width <= 1536) return [5, 8, 10, 0];
+    else if (width <= 1707) return [14, 14, 16, 0];
+    else if (width <= 1920) return [16, 16, 18, 0];
+    else return [18, 10, 25, 0];
+  };
+
+  const getHeightForWidth = (width) => {
+    if (width <= 1229) return 150;
+    else if (width <= 1240) return 160;
+    else if (width <= 1396) return 160;
+    else if (width <= 1440) return 170;
+    else if (width <= 1536) return 170;
+    else if (width <= 1707) return 220
+    else if (width <= 1920) return 220;
+    else return 280;
+  };
+
+  const spacing = getSpacingForWidth(windowWidth);
+  const height = getHeightForWidth(windowWidth);
+
+
+  const getLineChartOptions = (data, height, spacing, onZoomChange) => {
+    const datePrefix = new Date().toISOString().slice(0, 10); // Use today's date or actual date you want
+    const poaSeries = data.map(d => [
+      new Date(`${datePrefix}T${d.Date_Time}:00`).getTime(),
+      d.POA
+    ]);
+    const activePowerSeries = data.map(d => [
+      new Date(`${datePrefix}T${d.Date_Time}:00`).getTime(),
+      d.ACTIVE_POWER
+    ]);
+    
+
   
-    return (
-      <div className="line-chart-wrapper">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={normalizedData}>
-            <CartesianGrid strokeDasharray="5 5" />
-            <XAxis dataKey="Date_Time" />
-            
-            <YAxis
-              yAxisId="left"
-              orientation="left"
-              stroke="#ff7300"
-              domain={[0, 1200]}
-            />
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              stroke="#387908"
-              domain={[0, 14000]}
-            />
-  
-            <Tooltip />
-            <Legend 
-              verticalAlign="bottom" 
-              align="center"
-              wrapperStyle={{ paddingBottom: 25 }} 
-            />
-  
-            <Line
-              yAxisId="left"
-              type="monotone"
-              dataKey="POA"
-              stroke="#ff7300"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              yAxisId="right"
-              type="monotone"
-              dataKey="ACTIVE_POWER"
-              stroke="#387908"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Brush
-              dataKey="Date_Time"
-              height={20}
-              stroke="#8884d8"
-              onMouseDown={() => onZoomChange?.(true)}
-              onMouseUp={() => onZoomChange?.(false)}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    );
+    return {
+      chart: {
+        type: 'line',
+        zoomType: 'x',
+        height: height,
+        spacing: spacing,
+        animation: { duration: 1200 },
+        events: {
+          selection: function(event) {
+            // onZoomChange?.(!!event.xAxis);
+          }
+        }
+      },
+      title: { text: '' },
+      xAxis: { type: 'datetime' },
+      yAxis: [
+        {
+          title: { text: 'POA' },
+          opposite: false,
+          lineColor: '#ff7300',
+          lineWidth: 2,
+          labels: { style: { color: '#ff7300' } },
+          min: 0,
+          max: 2000
+        },
+        {
+          title: { text: 'ACTIVE_POWER' },
+          opposite: true,
+          lineColor: '#387908',
+          lineWidth: 2,
+          labels: { style: { color: '#387908' } },
+          min: 0,
+          max: 18000
+        }
+      ],
+      legend: { align: 'center', verticalAlign: 'bottom', y: 20 },
+      tooltip: { shared: true, crosshairs: true },
+      series: [
+        { name: 'POA', data: poaSeries, yAxis: 0, color: '#ff7300', marker: { enabled: false } },
+        { name: 'ACTIVE_POWER', data: activePowerSeries, yAxis: 1, color: '#387908', marker: { enabled: false } }
+      ]
+    };
   };
   
   return (
@@ -258,22 +301,21 @@ const Dashboard = () => {
               </span> MWh
             </h6>
             <div className="bar-chart">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barChartData} margin={{ top: 10, right: 5, left: 2, bottom: 1 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="TIME" stroke="#333" />
-                <YAxis stroke="#333" />
-                <Tooltip />
-                <Bar dataKey="Energy Generated" fill="#FF4500" barSize={15} />
-              </BarChart>
-            </ResponsiveContainer>
-            </div>
+  <CylinderChart data={barChartData}/>
+</div>
+
           </div>
         </div>
 
         <div className="chart">
           <h4 className="component-title">Active Power & POA Trend</h4>
-          <LineChartComponent data={lineChartData} />
+          <HighchartsReact
+  highcharts={Highcharts}
+  options={getLineChartOptions(lineChartData, height, spacing, (zoomed) => {
+    console.log('Zoom changed:', zoomed);
+  })}
+  ref={chartRef}
+/>
         </div>
       </div>
 

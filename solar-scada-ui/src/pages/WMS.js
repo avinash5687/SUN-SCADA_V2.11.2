@@ -43,8 +43,8 @@ const WMS = () => {
   const [isZooming, setIsZooming] = useState(false);
   const chartRef = useRef(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-
-  const onZoomChange = (zooming) => setIsZooming(zooming);
+  const onZoomChange = (zooming) => setIsZooming(zooming)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -91,7 +91,39 @@ const WMS = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
+ useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const getSpacingForWidth = (width) => {
+    if (width <= 1229) return [10,5,35,0];
+    else if (width <= 1240) return [20, 10, 50, 0];
+    else if (width <= 1396) return [20, 10, 50, 0];
+    else if (width <= 1440) return [10, 10, 50, 0];
+    else if (width <= 1536) return [20, 0, 80, 0];
+    else if (width <= 1707) return [20, 14, 45, 0];
+    else if (width <= 1920) return [16, 16, 30, 0];
+    else return [15, 20, 25, 10];
+  };
+
+  const getHeightForWidth = (width) => {
+    if (width <= 1229) return 300;
+    else if (width <= 1240) return 320;
+    else if (width <= 1396) return 350;
+    else if (width <= 1440) return 380;
+    else if (width <= 1536) return 400;
+    else if (width <= 1707) return 420
+    else if (width <= 1920) return 440;
+    else return 450;
+  };
+
+  const spacing = getSpacingForWidth(windowWidth);
+  const height = getHeightForWidth(windowWidth);
+
   const chartHeight = Math.max(250, windowHeight * 0.4);
+
 
   const highchartsAreaOptions = {
     chart: {
@@ -163,6 +195,107 @@ const WMS = () => {
     ],
     credits: { enabled: false }
   };
+  const highChartsMultiYAxisLine = (data) => ({
+    chart: {
+      type: 'line',
+      zoomType: 'x',
+      height:height,
+      spacing: spacing,
+      animation: {
+        duration: 1500,
+        easing: 'easeOutBounce' // You can try 'easeOutBounce', 'easeOutElastic', 'easeOutBack', etc.
+      }
+    },
+    title: {
+      text: ''
+    },
+    xAxis: {
+      categories: data.map(item => item.Date_Time),
+      gridLineWidth: 1,
+      title: { text: '' },
+      tickmarkPlacement: 'on',
+  //     min: 0.5,        // Add this
+  // max: data.length - 0.5  
+    },
+    yAxis: [
+      {
+        title: { text: 'W/m²' },
+        lineColor: '#8884d8',
+        lineWidth: 2,
+        labels: { style: { color: '#8884d8' } , }
+      },
+      {
+        title: { text: 'kWh/m²' },
+        lineColor: '#82ca9d',
+        lineWidth: 2,
+        labels: { style: { color: '#82ca9d' } },
+        opposite: true
+      },
+      {
+        title: { text: '°C / %' },
+        lineColor: '#ff7300',
+        lineWidth: 2,
+        labels: { style: { color: '#ff7300' } },
+        opposite: true
+      },
+      {
+        title: { text: 'm/s' },
+        lineColor: '#6A5ACD',
+        lineWidth: 1,
+        labels: { style: { color: '#6A5ACD' } },
+        opposite: true
+      },
+      {
+        title: { text: '°' },
+        lineColor: '#9370DB',
+        lineWidth: 1,
+        labels: { style: { color: '#9370DB' } },
+        opposite: true
+      }
+    ],
+    tooltip: {
+      shared: true,
+      crosshairs: true
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom',
+      itemStyle: {
+        fontSize: '13px'  // smaller text to fit better
+      }
+    },
+    series: [
+      { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8', animation: { duration: 1000, easing: 'easeOutElastic' } },
+      { name: 'POA (W/m²)', data: data.map(d => d.POA), yAxis: 0, color: '#82ca9d' },
+      { name: 'DHI (W/m²)', data: data.map(d => d.DHI), yAxis: 0, color: '#1E90FF' },
+  
+      { name: 'GHI Cumulative (kWh/m²)', data: data.map(d => d.CUM_GHI), yAxis: 1, color: '#FFD700' },
+      { name: 'POA Cumulative (kWh/m²)', data: data.map(d => d.CUM_POA), yAxis: 1, color: '#A0E7E5' },
+      { name: 'DHI Cumulative (kWh/m²)', data: data.map(d => d.DHI_CUMM), yAxis: 1, color: '#B19CD9' },
+  
+      { name: 'Module Temperature 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500' },
+      { name: 'Module Temperature 2 (°C)', data: data.map(d => d.MOD_TEMP2), yAxis: 2, color: '#DA70D6' },
+      { name: 'Ambient Temperature (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32' },
+      { name: 'Humidity (%)', data: data.map(d => d.RH), yAxis: 2, color: '#FFDAB9' },
+      { name: 'Soiling 1 (%)', data: data.map(d => d.SOI1), yAxis: 2, color: '#556B2F' },
+      { name: 'Transmission Loss 1 (%)', data: data.map(d => d.SOI_LS1), yAxis: 2, color: '#8B4513' },
+      { name: 'Soiling 2 (%)', data: data.map(d => d.SOI2), yAxis: 2, color: '#2F4F4F' },
+      { name: 'Transmission Loss 2 (%)', data: data.map(d => d.SOI_LS2), yAxis: 2, color: '#708090' },
+  
+      { name: 'Wind Speed (m/s)', data: data.map(d => d.WND_SPD), yAxis: 3, color: '#6A5ACD' },
+      { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB' },
+    ],
+    plotOptions: {
+      series: {
+        animation: {
+          duration: 1500,
+          easing: 'easeOutBounce' 
+        }
+      }
+    }
+  });
+  
 
   return (
     <div className="wms-container-fullscreen">
@@ -203,49 +336,14 @@ const WMS = () => {
         </div>
 
         <div className="charts-stack">
+         
           <div className="chart-container">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={zoomedData}
-                onMouseDown={() => onZoomChange(true)}
-                onMouseUp={() => onZoomChange(false)}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="Date_Time" />
-                <YAxis yAxisId="left" orientation="left" stroke="#8884d8" domain={[0, 1600]} />
-                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" domain={[0, 8]} />
-                <YAxis yAxisId="right2" orientation="right" stroke="#ff7300" domain={[0, 100]} />
-                <YAxis yAxisId="right3" orientation="right" stroke="#6A5ACD" domain={[0, 20]} />
-                <YAxis yAxisId="right4" orientation="right" stroke="#9370DB" domain={[0, 360]} />
-                <Tooltip />
-                <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="GHI" stroke="#8884d8" name="GHI (W/m²)" />
-                <Line yAxisId="left" type="monotone" dataKey="POA" stroke="#82ca9d" name="POA (W/m²)" />
-                <Line yAxisId="left" type="monotone" dataKey="DHI" stroke="#1E90FF" name="DHI (W/m²)" />
-                <Line yAxisId="right" type="monotone" dataKey="CUM_GHI" stroke="#FFD700" name="GHI Cumulative (kWh/m²)" />
-                <Line yAxisId="right" type="monotone" dataKey="CUM_POA" stroke="#A0E7E5" name="POA Cumulative (kWh/m²)" />
-                <Line yAxisId="right" type="monotone" dataKey="DHI_CUMM" stroke="#B19CD9" name="DHI Cumulative (kWh/m²)" />
-                <Line yAxisId="right2" type="monotone" dataKey="MOD_TEMP1" stroke="#FF4500" name="Module Temperature 1 (°C)" />
-                <Line yAxisId="right2" type="monotone" dataKey="MOD_TEMP2" stroke="#DA70D6" name="Module Temperature 2 (°C)" />
-                <Line yAxisId="right2" type="monotone" dataKey="AMB_TEMP" stroke="#32CD32" name="Ambient Temperature (°C)" />
-                <Line yAxisId="right2" type="monotone" dataKey="RH" stroke="#FFDAB9" name="Humidity (%)" />
-                <Line yAxisId="right2" type="monotone" dataKey="SOI1" stroke="#556B2F" name="Soiling 1 (%)" />
-                <Line yAxisId="right2" type="monotone" dataKey="SOI_LS1" stroke="#8B4513" name="Transmission Loss 1 (%)" />
-                <Line yAxisId="right2" type="monotone" dataKey="SOI2" stroke="#2F4F4F" name="Soiling 2 (%)" />
-                <Line yAxisId="right2" type="monotone" dataKey="SOI_LS2" stroke="#708090" name="Transmission Loss 2 (%)" />
-                <Line yAxisId="right3" type="monotone" dataKey="WND_SPD" stroke="#6A5ACD" name="Wind Speed (m/s)" />
-                <Line yAxisId="right4" type="monotone" dataKey="WND_DIR" stroke="#9370DB" name="Wind Direction (°)" />
-                <Brush
-                  dataKey="Date_Time"
-                  height={20}
-                  stroke="#8884d8"
-                  onMouseDown={() => onZoomChange(true)}
-                  onMouseUp={() => onZoomChange(false)}
-                  onChange={handleBrushChange}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          <HighchartsReact
+  highcharts={Highcharts} 
+  options={highChartsMultiYAxisLine(zoomedData)} 
+  containerProps={{ style: { height: "100%", width: "100%" } }}
+/>
+</div>
 
           <div className="chart-container">
             <HighchartsReact

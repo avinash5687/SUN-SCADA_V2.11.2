@@ -129,7 +129,7 @@ html, body {
  .input-group input {
    padding: 4px;
    margin-top: 4px;
-   font-size: 16px;
+   font-size: 14px;
    border-radius: 6px;
  }
 
@@ -144,6 +144,29 @@ html, body {
 }
  
 }
+
+@media (min-width: 1241px) and (max-width: 1400px) {
+  .input-group {
+    font-size: 8px;
+  }
+ 
+  .input-group label {
+    margin-bottom: 2px;
+    font-weight: bold;
+    font-size: 10px;
+  }
+
+  .input-group select, 
+ .input-group input {
+   padding: 4px;
+   margin-top: 4px;
+   font-size: 12px;
+   border-radius: 6px;
+ }
+  
+
+}
+
 
 @media (min-width: 1024px) and (max-width: 1240px) {
   .trend-container {
