@@ -25,17 +25,19 @@ const CustomTrend = () => {
   const [trendData, setTrendData] = useState([]);
   const chartRef = useRef(null);
   const [chartHeight, setChartHeight] = useState(getChartHeight());
+  const [showForm, setShowForm] = useState(true);
+
 
   function getChartHeight() {
     const width = window.innerWidth;
-    if (width <= 1230) return 200;
-    if (width <= 1280) return 155;
-    if (width <= 1396) return 210;
-    if (width <= 1440) return 220;
-    if (width <= 1536) return 230;
-    if (width <= 1707) return 320;
-    if (width <= 1920) return 420;
-    return 440;
+    if (width <= 1230) return 440;
+    if (width <= 1280) return 440;
+    if (width <= 1396) return 500;
+    if (width <= 1440) return 500;
+    if (width <= 1536) return 590;
+    if (width <= 1707) return 670;
+    if (width <= 1920) return 750;
+    return 840;
   }
 
   useEffect(() => {
@@ -94,6 +96,7 @@ const CustomTrend = () => {
       });
 
       setTrendData(formatted);
+      setShowForm(false);  // hide form after data fetched
     } catch (error) {
       console.error("Fetch trend data error:", error);
     }
@@ -182,60 +185,65 @@ const CustomTrend = () => {
     <Layout>
       <div className="trend-container">
         <h2 style={{ fontSize: '20px' }}>📈 Custom Trend Analysis</h2>
-        <div className="form-grid">
-          <div className="input-group">
-            <label>Select Table 1:</label>
-            <select value={selectedTable1} onChange={(e) => setSelectedTable1(e.target.value)}>
-              <option value="">-- Select Table --</option>
-              {tables.map(table => <option key={table} value={table}>{table}</option>)}
-            </select>
-          </div>
-
-          {selectedTable1 && (
+        {showForm && (
+          <div className="form-grid">
             <div className="input-group">
-              <label>Select Columns for Table 1:</label>
-              <select multiple value={selectedColumns1} onChange={(e) =>
-                setSelectedColumns1([...e.target.selectedOptions].map(o => o.value))
-              }>
-                {columns1.map(col => <option key={col} value={col}>{col}</option>)}
+              <label>Select Table 1:</label>
+              <select value={selectedTable1} onChange={(e) => setSelectedTable1(e.target.value)}>
+                <option value="">-- Select Table --</option>
+                {tables.map(table => <option key={table} value={table}>{table}</option>)}
               </select>
             </div>
-          )}
 
-          <div className="input-group">
-            <label>Select Table 2 (Optional):</label>
-            <select value={selectedTable2} onChange={(e) => setSelectedTable2(e.target.value)}>
-              <option value="">-- Select Table --</option>
-              {tables.map(table => <option key={table} value={table}>{table}</option>)}
-            </select>
-          </div>
+            {selectedTable1 && (
+              <div className="input-group">
+                <label>Select Columns for Table 1:</label>
+                <select multiple value={selectedColumns1} onChange={(e) =>
+                  setSelectedColumns1([...e.target.selectedOptions].map(o => o.value))
+                }>
+                  {columns1.map(col => <option key={col} value={col}>{col}</option>)}
+                </select>
+              </div>
+            )}
 
-          {selectedTable2 && (
             <div className="input-group">
-              <label>Select Columns for Table 2:</label>
-              <select multiple value={selectedColumns2} onChange={(e) =>
-                setSelectedColumns2([...e.target.selectedOptions].map(o => o.value))
-              }>
-                {columns2.map(col => <option key={col} value={col}>{col}</option>)}
+              <label>Select Table 2 (Optional):</label>
+              <select value={selectedTable2} onChange={(e) => setSelectedTable2(e.target.value)}>
+                <option value="">-- Select Table --</option>
+                {tables.map(table => <option key={table} value={table}>{table}</option>)}
               </select>
             </div>
-          )}
 
-          <div className="input-group">
-            <label>Start Date:</label>
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            {selectedTable2 && (
+              <div className="input-group">
+                <label>Select Columns for Table 2:</label>
+                <select multiple value={selectedColumns2} onChange={(e) =>
+                  setSelectedColumns2([...e.target.selectedOptions].map(o => o.value))
+                }>
+                  {columns2.map(col => <option key={col} value={col}>{col}</option>)}
+                </select>
+              </div>
+            )}
+
+            <div className="input-group">
+              <label>Start Date:</label>
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            </div>
+
+            <div className="input-group">
+              <label>End Date:</label>
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            </div>
           </div>
-
-          <div className="input-group">
-            <label>End Date:</label>
-            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-          </div>
-
-          <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
+        )}
+        <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
+          {!trendData.length && (
             <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
+          )}
+          {trendData.length > 0 && (
             <button onClick={exportCSV} className="secondary">📥 Export CSV</button>
-            <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
-          </div>
+          )}
+          <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
         </div>
 
         {trendData.length > 0 && (

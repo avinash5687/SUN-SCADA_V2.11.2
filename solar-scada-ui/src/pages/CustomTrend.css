@@ -17,6 +17,7 @@
 
 .trend-container h2 {
   font-size: 20px;
+  padding: 4px;
 }
 
 /* ✅ Ensure Form Fields are Visible */
@@ -61,7 +62,7 @@
   justify-content: center;
   gap: 12px;
   /* flex-wrap: wrap; */
-  margin-top: 3px;
+  margin: 8px;
 }
 
 .button-group button {
@@ -105,7 +106,7 @@
 .chart-container {
   flex-grow: 1; /* Allow chart to expand inside the container */
   width:100%;
-  max-height: 50vh; /* ✅ Prevent overflow and unnecessary scrolling */
+  max-height: 100vh; /* ✅ Prevent overflow and unnecessary scrolling */
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -221,7 +222,7 @@ html, body {
   }
 
   .chart-container {
-      max-height: 45vh; /* ✅ Keep chart size smaller on tablets */
+      max-height: 100vh; /* ✅ Keep chart size smaller on tablets */
   }
 
   .input-group {
