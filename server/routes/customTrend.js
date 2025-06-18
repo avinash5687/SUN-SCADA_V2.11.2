@@ -12,7 +12,7 @@ const poolPromise = getDbPool();
 router.get("/getTables", async (req, res) => {
   try {
     const pool = await getDbPool();
-    const result = await pool.request().query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE' AND TABLE_NAME <> 'Alarms' AND TABLE_NAME <> 'Daily_Target_Production' AND TABLE_NAME <> 'DynamicDataDisplay' AND TABLE_NAME <> 'DynamicTableData' AND TABLE_NAME <> 'Monthly_Target_Production' AND TABLE_NAME <> 'sysdiagrams' AND TABLE_NAME <> 'TEST_Table' AND TABLE_NAME <> 'TEST_Table_1' AND TABLE_NAME <> 'TestTable' AND TABLE_NAME <> 'Users' AND TABLE_NAME <> 'Yearly_Target_Production' ORDER BY TABLE_NAME");
+    const result = await pool.request().query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='VIEW' AND TABLE_NAME <> 'BAC_PortRoot' AND TABLE_NAME <> 'DeletedObjects_View' AND TABLE_NAME <> 'IDSequences_View' AND TABLE_NAME <> 'INVERTER' AND TABLE_NAME <> 'INVERTER_TOP1' AND TABLE_NAME <> 'MFM' AND TABLE_NAME <> 'MFM_TOP1' AND TABLE_NAME <> 'NCU' AND TABLE_NAME <> 'SMB' AND TABLE_NAME <> 'SPC' AND TABLE_NAME <> 'TableIDs_View' AND TABLE_NAME <> 'TRAFO' AND TABLE_NAME <> 'TRAFO_TOP1' AND TABLE_NAME <> 'UNIT' AND TABLE_NAME <> 'TRAFO1' AND TABLE_NAME <> 'TRAFO2' ORDER BY TABLE_NAME");
     res.json(result.recordset.map(row => row.TABLE_NAME));
   } catch (error) {
     console.error("❌ Database Error:", error);

@@ -10,7 +10,6 @@ const BASE_URL =
     ? "http://localhost:5000"
     : "http://103.102.234.177:5000";
 
-
 const API_BASE_URL = `${BASE_URL}/api/custom-trend`;
 
 const CustomTrend = () => {
@@ -24,31 +23,46 @@ const CustomTrend = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [trendData, setTrendData] = useState([]);
-   const chartRef = useRef(null);
-    const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const chartRef = useRef(null);
+  const [chartHeight, setChartHeight] = useState(getChartHeight());
+
+  function getChartHeight() {
+    const width = window.innerWidth;
+    if (width <= 1230) return 200;
+    if (width <= 1280) return 155;
+    if (width <= 1396) return 210;
+    if (width <= 1440) return 220;
+    if (width <= 1536) return 230;
+    if (width <= 1707) return 320;
+    if (width <= 1920) return 420;
+    return 440;
+  }
 
   useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}/getTables`)
-      .then((response) => setTables(response.data))
-      .catch((error) => console.error("Error fetching tables:", error));
+    const handleResize = () => setChartHeight(getChartHeight());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    axios.get(`${API_BASE_URL}/getTables`)
+      .then((res) => setTables(res.data))
+      .catch((err) => console.error("Tables fetch error:", err));
   }, []);
 
   useEffect(() => {
     if (selectedTable1) {
-      axios
-        .get(`${API_BASE_URL}/getColumns/${selectedTable1}`)
-        .then((response) => setColumns1(response.data))
-        .catch((error) => console.error("Error fetching columns:", error));
+      axios.get(`${API_BASE_URL}/getColumns/${selectedTable1}`)
+        .then((res) => setColumns1(res.data))
+        .catch((err) => console.error("Columns1 fetch error:", err));
     }
   }, [selectedTable1]);
 
   useEffect(() => {
     if (selectedTable2) {
-      axios
-        .get(`${API_BASE_URL}/getColumns/${selectedTable2}`)
-        .then((response) => setColumns2(response.data))
-        .catch((error) => console.error("Error fetching columns:", error));
+      axios.get(`${API_BASE_URL}/getColumns/${selectedTable2}`)
+        .then((res) => setColumns2(res.data))
+        .catch((err) => console.error("Columns2 fetch error:", err));
     }
   }, [selectedTable2]);
 
@@ -59,30 +73,29 @@ const CustomTrend = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/getTableData`, {
+      const res = await axios.post(`${API_BASE_URL}/getTableData`, {
         table1: selectedTable1,
         columns1: selectedColumns1,
         table2: selectedTable2,
         columns2: selectedColumns2,
         startDate,
-        endDate,
+        endDate
       });
 
-      // Format the data to include table names in the keys
-      const formattedData = response.data.map((item) => {
-        const newItem = { Date_Time: item.Date_Time };
-        selectedColumns1.forEach((col) => {
-          newItem[`${selectedTable1}_${col}`] = item[col];
+      const formatted = res.data.map(row => {
+        const newRow = { Date_Time: row.Date_Time };
+        selectedColumns1.forEach(col => {
+          newRow[`${selectedTable1}_${col}`] = row[col];
         });
-        selectedColumns2.forEach((col) => {
-          newItem[`${selectedTable2}_${col}`] = item[col];
+        selectedColumns2.forEach(col => {
+          newRow[`${selectedTable2}_${col}`] = row[col];
         });
-        return newItem;
+        return newRow;
       });
 
-      setTrendData(formattedData);
+      setTrendData(formatted);
     } catch (error) {
-      console.error("Error fetching trend data:", error);
+      console.error("Fetch trend data error:", error);
     }
   };
 
@@ -93,100 +106,77 @@ const CustomTrend = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/exportCSV`,
-        {
-          table1: selectedTable1,
-          columns1: selectedColumns1,
-          table2: selectedTable2,
-          columns2: selectedColumns2,
-          startDate,
-          endDate,
-        },
-        { responseType: "blob" }
-      );
+      const res = await axios.post(`${API_BASE_URL}/exportCSV`, {
+        table1: selectedTable1,
+        columns1: selectedColumns1,
+        table2: selectedTable2,
+        columns2: selectedColumns2,
+        startDate,
+        endDate
+      }, { responseType: "blob" });
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `Trend_${selectedTable1}_${startDate}_to_${endDate}.csv`
-      );
-      document.body.appendChild(link);
-      link.click();
+      const blob = new Blob([res.data]);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.setAttribute("download", `Trend_${selectedTable1}_${startDate}_to_${endDate}.csv`);
+      document.body.appendChild(a);
+      a.click();
     } catch (error) {
-      console.error("Error exporting CSV:", error);
+      console.error("Export CSV error:", error);
     }
   };
- 
 
-  const getChartHeight = () => {
-    const width = window.innerWidth;
-    if (width <= 1230) return 200;
-    if (width <= 1280) return 155;
-    if (width <= 1396) return 210;
-    if (width <= 1440) return 220;
-    if (width <= 1536) return 230;
-    if (width <= 1707) return 320;
-    if (width <= 1920) return 420;
-    return 440;
-  };
-  
-  const [chartHeight, setChartHeight] = useState(getChartHeight());
+  // Build dynamic yAxis and series
+  const allColumns = [
+    ...selectedColumns1.map(col => ({ table: selectedTable1, column: col })),
+    ...selectedColumns2.map(col => ({ table: selectedTable2, column: col }))
+  ];
 
-  useEffect(() => {
-    const handleResize = () => setChartHeight(getChartHeight());
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const yAxis = allColumns.map((colObj, index) => ({
+    title: { text: `${colObj.column}` },
+    opposite: index % 2 !== 0,
+    lineColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    labels: {
+      style: {
+        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`
+      }
+    }
+  }));
 
+  const series = allColumns.map((colObj, index) => ({
+    name: `${colObj.column}`,
+    data: trendData.map(row => [new Date(row.Date_Time).getTime(), row[`${colObj.table}_${colObj.column}`]]),
+    yAxis: index,
+    color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    marker: { enabled: false }
+  }));
 
-  const options = {
+  const chartOptions = {
     chart: {
       type: 'line',
       animation: { duration: 1000 },
       zoomType: 'x',
-      animation: { duration: 1000 },
-    height: chartHeight // or '100%' if the parent container controls the height
-      // spacing: [10, 10, 10, 10]
+      height: chartHeight
     },
-    title: {
-      text: ''
-    },
+    title: { text: '' },
     xAxis: {
       type: 'datetime',
-      title: { text: 'Date' }
+      title: { text: 'Time' }
     },
-    yAxis: {
-      title: { text: 'Value' },
-      lineWidth: 1,
-      tickWidth: 2,
-      gridLineWidth: 0
- 
-    },
+    yAxis,
     tooltip: {
       shared: true,
       xDateFormat: '%d-%b %Y %H:%M'
     },
-    series:[
-      ...selectedColumns1.map(col => ({
-        name: `${selectedTable1}_${col}`,
-        data: trendData.map(item => [item.Date_Time, item[`${selectedTable1}_${col}`]]),
-        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        animation: { duration: 1000 }
-      })),
-      ...selectedColumns2.map(col => ({
-        name: `${selectedTable2}_${col}`,
-        data: trendData.map(item => [item.Date_Time, item[`${selectedTable2}_${col}`]]),
-        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        animation: { duration: 1000 }
-      }))
-    ],
-    credits: { enabled: false }
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    credits: { enabled: false },
+    series
   };
-  
-  
 
   return (
     <Layout>
@@ -195,95 +185,51 @@ const CustomTrend = () => {
         <div className="form-grid">
           <div className="input-group">
             <label>Select Table 1:</label>
-            <select
-              value={selectedTable1}
-              onChange={(e) => setSelectedTable1(e.target.value)}
-            >
+            <select value={selectedTable1} onChange={(e) => setSelectedTable1(e.target.value)}>
               <option value="">-- Select Table --</option>
-              {tables.map((table) => (
-                <option key={table} value={table}>
-                  {table}
-                </option>
-              ))}
+              {tables.map(table => <option key={table} value={table}>{table}</option>)}
             </select>
           </div>
-
 
           {selectedTable1 && (
             <div className="input-group">
               <label>Select Columns for Table 1:</label>
-              <select
-                multiple
-                value={selectedColumns1}
-                onChange={(e) =>
-                  setSelectedColumns1(
-                    [...e.target.selectedOptions].map((o) => o.value)
-                  )
-                }
-              >
-                {columns1.map((col) => (
-                  <option key={col} value={col}>
-                    {col}
-                  </option>
-                ))}
+              <select multiple value={selectedColumns1} onChange={(e) =>
+                setSelectedColumns1([...e.target.selectedOptions].map(o => o.value))
+              }>
+                {columns1.map(col => <option key={col} value={col}>{col}</option>)}
               </select>
             </div>
           )}
 
           <div className="input-group">
             <label>Select Table 2 (Optional):</label>
-            <select
-              value={selectedTable2}
-              onChange={(e) => setSelectedTable2(e.target.value)}
-            >
+            <select value={selectedTable2} onChange={(e) => setSelectedTable2(e.target.value)}>
               <option value="">-- Select Table --</option>
-              {tables.map((table) => (
-                <option key={table} value={table}>
-                  {table}
-                </option>
-              ))}
+              {tables.map(table => <option key={table} value={table}>{table}</option>)}
             </select>
           </div>
 
           {selectedTable2 && (
             <div className="input-group">
               <label>Select Columns for Table 2:</label>
-              <select
-                multiple
-                value={selectedColumns2}
-                onChange={(e) =>
-                  setSelectedColumns2(
-                    [...e.target.selectedOptions].map((o) => o.value)
-                  )
-                }
-              >
-                {columns2.map((col) => (
-                  <option key={col} value={col}>
-                    {col}
-                  </option>
-                ))}
+              <select multiple value={selectedColumns2} onChange={(e) =>
+                setSelectedColumns2([...e.target.selectedOptions].map(o => o.value))
+              }>
+                {columns2.map(col => <option key={col} value={col}>{col}</option>)}
               </select>
             </div>
           )}
 
           <div className="input-group">
             <label>Start Date:</label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           </div>
 
           <div className="input-group">
             <label>End Date:</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
+            <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
           </div>
-
 
           <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
             <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
@@ -295,13 +241,12 @@ const CustomTrend = () => {
         {trendData.length > 0 && (
           <div className="chart-container">
             <h3>Trend Graph</h3>
-           
-
-<HighchartsReact
-      highcharts={Highcharts}
-      options={options}
-      containerProps={{ style: { height: "100%", width: "100%" } }} 
-    />
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={chartOptions}
+              containerProps={{ style: { height: "100%", width: "100%" } }}
+              ref={chartRef}
+            />
           </div>
         )}
       </div>
