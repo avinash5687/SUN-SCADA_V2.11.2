@@ -1,9 +1,6 @@
-// Inverter.js
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Inverter.css";
-// --- STEP 1: Import the image ---
 import inverterImage from '../assets/Sungrow_inv.png';
 
 const API_BASE_URL =
@@ -74,15 +71,15 @@ const Inverter = () => {
           {[
             { name: "Timestamp", key: "Date_Time", unit: "" },
             { name: "Active Power", key: "Active_Power", unit: "kW" },
-            { name: "Reactive Power", key: "Reactive_Power", unit: "kVAr" },
+            { name: "Reactive Power", key: "React_Power", unit: "kVAr" },
             { name: "DC Power", key: "DC_Power", unit: "kW" },
             { name: "DC Capacity", key: "DC_Capacity", unit: "kWp" },
             { name: "Power Factor", key: "PF", unit: "" },
             { name: "Frequency", key: "Frequency", unit: "Hz" },
             { name: "Efficiency", key: "Efficiancy", unit: "%" },
-            { name: "RY Voltage", key: "Voltage_RY", unit: "V" },
-            { name: "YB Voltage", key: "Voltage_YB", unit: "V" },
-            { name: "BR Voltage", key: "Voltage_BR", unit: "V" },
+            { name: "RY Voltage", key: "Voltage_RY", unit: "kV" },
+            { name: "YB Voltage", key: "Voltage_YB", unit: "kV" },
+            { name: "BR Voltage", key: "Voltage_BR", unit: "kV" },
             { name: "R Current", key: "Current_R", unit: "A" },
             { name: "Y Current", key: "Current_Y", unit: "A" },
             { name: "B Current", key: "Current_B", unit: "A" },

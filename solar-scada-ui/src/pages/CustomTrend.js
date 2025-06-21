@@ -12,6 +12,39 @@ const BASE_URL =
 
 const API_BASE_URL = `${BASE_URL}/api/custom-trend`;
 
+// Primary and secondary color palettes (distinct, visible, no white)
+const PRIMARY_COLORS = [
+  '#1976D2', // Blue
+  '#E53935', // Red
+  '#43A047', // Green
+  '#FB8C00', // Orange
+  '#8E24AA', // Purple
+  '#00897B', // Teal
+  '#6D4C41', // Brown
+];
+
+const SECONDARY_COLORS = [
+  '#3949AB', // Indigo
+  '#FDD835', // Yellow (dark)
+  '#D81B60', // Pink
+  '#00ACC1', // Cyan
+  '#F4511E', // Deep Orange
+  '#7CB342', // Light Green
+  '#C0CA33', // Lime
+  '#5E35B1', // Deep Purple
+  '#039BE5', // Light Blue
+];
+
+// Shuffle helper to randomize color order
+function shuffle(array) {
+  let arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 const CustomTrend = () => {
   const [tables, setTables] = useState([]);
   const [columns1, setColumns1] = useState([]);
@@ -136,13 +169,16 @@ const CustomTrend = () => {
     ...selectedColumns2.map(col => ({ table: selectedTable2, column: col }))
   ];
 
+  // Combine and shuffle primary and secondary colors
+  const colorList = [...shuffle(PRIMARY_COLORS), ...shuffle(SECONDARY_COLORS)];
+
   const yAxis = allColumns.map((colObj, index) => ({
     title: { text: `${colObj.column}` },
     opposite: index % 2 !== 0,
-    lineColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    lineColor: colorList[index % colorList.length],
     labels: {
       style: {
-        color: `#${Math.floor(Math.random() * 16777215).toString(16)}`
+        color: colorList[index % colorList.length]
       }
     }
   }));
@@ -151,7 +187,7 @@ const CustomTrend = () => {
     name: `${colObj.column}`,
     data: trendData.map(row => [new Date(row.Date_Time).getTime(), row[`${colObj.table}_${colObj.column}`]]),
     yAxis: index,
-    color: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+    color: colorList[index % colorList.length],
     marker: { enabled: false }
   }));
 

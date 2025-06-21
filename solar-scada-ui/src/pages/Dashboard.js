@@ -1,19 +1,17 @@
-  import React, { useState, useEffect, useCallback, useRef } from "react";
-  import axios from "axios";
-  import DeviceStatusPopup from "../components/DeviceStatusPopup";
-  import KIPCard from "../components/KIPCard";
-  import { PieChart, Pie, Cell } from "recharts";
-  import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from "recharts";
-  import "./Dashboard.css";
-  import CylinderChart from "../components/CylinderChart";
-  import Highcharts from 'highcharts';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import axios from "axios";
+import DeviceStatusPopup from "../components/DeviceStatusPopup";
+import KIPCard from "../components/KIPCard";
+import { PieChart, Pie, Cell } from "recharts";
+import "./Dashboard.css";
+import CylinderChart from "../components/CylinderChart";
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-  
- 
 
 // Highcharts3D.default(Highcharts); 
 
 const Dashboard = () => {
+
   const [plantKPI, setPlantKPI] = useState({});
   const [currentPower, setCurrentPower] = useState(0);
   const [performanceRatio, setPerformanceRatio] = useState(0);
@@ -30,14 +28,9 @@ const Dashboard = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
   const chartRef = useRef(null);
-     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    
-    
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:5000"
-      : "http://103.102.234.177:5000";
+  const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:5000" : "http://103.102.234.177:5000";
 
   const fetchData = useCallback(async () => {
     try {
@@ -54,7 +47,6 @@ const Dashboard = () => {
       setLineChartData((prev) => (JSON.stringify(prev) !== JSON.stringify(lineData) ? lineData : prev));
 
       console.log("Line chart data:", lineChartData);
-
 
       const { data: wmsResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/WMSDATA-DASH`);
       const newWMSData = wmsResponse?.[0] || {};
@@ -134,9 +126,6 @@ const Dashboard = () => {
       : percentValue.toFixed(1).replace(/\.0$/, "");
     }
 
-   
-    
-
     return (
       <div className="gauge-wrapper">
         <PieChart width={outerRadius * 2 + 20} height={outerRadius * 2}>
@@ -196,18 +185,16 @@ const Dashboard = () => {
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
 
-
   const getLineChartOptions = (data, height, spacing, onZoomChange) => {
-   
 
     const poaSeries = data.map(d => d.POA);
-const activePowerSeries = data.map(d => d.ACTIVE_POWER);
-const categories = data.map(d => d.Date_Time);
+    const activePowerSeries = data.map(d => d.ACTIVE_POWER);
+    const categories = data.map(d => d.Date_Time);
 
-    
-    
+    // ✅ Define these before using them
+    const maxPOA = Math.max(...poaSeries, 0); 
+    const maxActivePower = Math.max(...activePowerSeries, 0);
 
-  
     return {
       chart: {
         type: 'line',
@@ -221,7 +208,6 @@ const categories = data.map(d => d.Date_Time);
           }
         }
       },
-      
       title: { text: '' },
       xAxis: {
         type: 'datetime',
@@ -235,7 +221,7 @@ const categories = data.map(d => d.Date_Time);
           lineWidth: 2,
           labels: { style: { color: '#ff7300' } },
           min: 0,
-          max: 2000
+          max: Math.ceil(maxPOA * 1.1)  // Add 10% buffer
         },
         {
           title: { text: 'ACTIVE_POWER' },
@@ -244,7 +230,7 @@ const categories = data.map(d => d.Date_Time);
           lineWidth: 2,
           labels: { style: { color: '#387908' } },
           min: 0,
-          max: 20000
+          max: Math.ceil(maxActivePower * 1.1)  // Add 10% buffer
         }
       ],
       legend: { align: 'center', verticalAlign: 'bottom', y: 20 },
@@ -255,7 +241,6 @@ const categories = data.map(d => d.Date_Time);
       ]
     };
   };
-  
   
   return (
     <div className="dashboard-container">
@@ -306,21 +291,20 @@ const categories = data.map(d => d.Date_Time);
               </span> MWh
             </h6>
             <div className="bar-chart">
-  <CylinderChart data={barChartData}/>
-</div>
-
+              <CylinderChart data={barChartData}/>
+            </div>
           </div>
         </div>
 
         <div className="chart">
           <h4 className="component-title">Active Power & POA Trend</h4>
           <HighchartsReact
-  highcharts={Highcharts}
-  options={getLineChartOptions(lineChartData, height, spacing, (zoomed) => {
-    console.log('Zoom changed:', zoomed);
-  })}
-  ref={chartRef}
-/>
+            highcharts={Highcharts}
+            options={getLineChartOptions(lineChartData, height, spacing, (zoomed) => {
+              console.log('Zoom changed:', zoomed);
+              })}
+            ref={chartRef}
+          />
         </div>
       </div>
 

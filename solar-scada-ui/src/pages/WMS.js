@@ -126,32 +126,32 @@ const WMS = () => {
 
   const chartHeight = Math.max(250, windowHeight * 0.4);
 
-
   const highchartsAreaOptions = {
     chart: {
       type: 'area',
       zoomType: 'x',
-      height:chartHeight, // or '100%' if the parent container controls the height
-      spacing: [10, 10, 10, 10] ,
+      height: chartHeight,
+      spacing: [10, 10, 10, 10],
       backgroundColor: '#fff',
     },
     title: {
-      text: 'Energy vs Loss Due to Soiling',
+      text: 'Loss Due to Soiling',
       align: 'center',
       margin: 5,
       style: { fontSize: '16px' }
     },
+    subtitle: {
+      text: 'Shadow impact may vary the data',
+      align: 'center',
+      style: { fontSize: '12px', color: '#666' }
+    },
     xAxis: {
       type: 'datetime',
-      title: { text: 'Date' }, 
+      title: { text: 'Date' },
     },
     yAxis: [{
-      title: { text: 'Energy (kWh)' },
-      opposite: false
-    }, {
       title: { text: 'Loss Due to Soil (%)' },
-      opposite: true
-
+      opposite: false
     }],
     tooltip: {
       shared: true,
@@ -181,22 +181,16 @@ const WMS = () => {
     },
     series: [
       {
-        name: 'Energy (kWh)',
-        data: energyVsSoilData.map(d => [d.time, d.energy]),
-        yAxis: 0,
-        type: 'area',
-        color: '#00BFFF'
-      },
-      {
         name: 'Loss Due to Soil (%)',
         data: energyVsSoilData.map(d => [d.time, d.soilLoss]),
-        yAxis: 1,
+        yAxis: 0,
         type: 'area',
         color: '#483D8B'
       }
     ],
     credits: { enabled: false }
   };
+
   const highChartsMultiYAxisLine = (data) => ({
     chart: {
       type: 'line',

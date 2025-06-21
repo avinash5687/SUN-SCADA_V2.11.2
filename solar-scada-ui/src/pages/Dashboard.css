@@ -42,7 +42,7 @@ html, body, #root {
 }
 
 .dashboard-title {
-  font-size: clamp(1.5rem, 2vw, 2.5rem);
+  font-size: clamp(1.25rem, 1.75vw, 2.25rem);
   font-weight: bolder;
   margin: 0;
 }
