@@ -69,10 +69,12 @@ const MFM = () => {
               { name: "Apparent Power", key: "APP_PWR", unit: "kVA" },
               { name: "Frequency", key: "FRQ", unit: "Hz" },
               { name: "Power Factor", key: "PF", unit: "" },
-              { name: "Total Active Export", key: "TOT_EXP_KWh", unit: "kWh" },
-              { name: "Total Active Import", key: "TOT_IMP_KWh", unit: "kWh" },
+              { name: "Total Active Export", key: "TOT_IMP_KWh", unit: "kWh" },
+              { name: "Total Active Import", key: "TOT_EXP_KWh", unit: "kWh" },
               { name: "Total Reactive Export", key: "TOT_EXP_KVArh", unit: "kVArh" },
               { name: "Total Reactive Import", key: "TOT_IMP_KVArh", unit: "kVArh" },
+              { name: "Today Active Export", key: "TODAY_IMP_KWh", unit: "kWh" },
+              { name: "Today Active Import", key: "TODAY_EXP_KWh", unit: "kWh" },
             ].map((param, idx) => (
               <tr key={idx}>
                 <td>{param.name}</td>
