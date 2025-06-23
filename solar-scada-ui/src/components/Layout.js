@@ -147,7 +147,10 @@ const Layout = ({ children }) => {
       icon: faFileAlt,
       text: "Report",
       isExternal: true,
-      url: "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fJINDAL_21MW%2fIndex_Page&rs:Command=Render",
+      url:
+        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
+          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
     },
     { path: "/formula", icon: faCalculator, text: "Formula" },
   ];
