@@ -267,7 +267,7 @@ const Dashboard = () => {
           {renderGauge(cuf, "CUF", 25, "value")}
         </div>
         <div>
-          <h6>Active Power (MWp)</h6>
+          <h6>Active Power (MW)</h6>
           {renderGauge(currentPower, "Active Power", 21.5, "value")}
         </div>
       </div>
