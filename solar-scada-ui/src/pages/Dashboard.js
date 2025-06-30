@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import DeviceStatusPopup from "../components/DeviceStatusPopup";
-import KIPCard from "../components/KIPCard";
+// import KIPCard from "../components/KIPCard";
 import { PieChart, Pie, Cell } from "recharts";
 import "./Dashboard.css";
 import CylinderChart from "../components/CylinderChart";
@@ -59,6 +59,7 @@ const Dashboard = () => {
 
       const { data: deviceResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/device-status`);
       setDeviceStatus(deviceResponse);
+
     } catch (error) {
       console.error("API Error:", error);
     }
@@ -204,7 +205,7 @@ const Dashboard = () => {
         animation: { duration: 1200 },
         events: {
           selection: function(event) {
-            // onZoomChange?.(!!event.xAxis);
+            onZoomChange?.(!!event.xAxis);
           }
         }
       },
@@ -224,7 +225,7 @@ const Dashboard = () => {
           max: Math.ceil(maxPOA * 1.1)  // Add 10% buffer
         },
         {
-          title: { text: 'ACTIVE_POWER' },
+          title: { text: 'ACTIVE POWER' },
           opposite: true,
           lineColor: '#387908',
           lineWidth: 2,
@@ -238,7 +239,10 @@ const Dashboard = () => {
       series: [
         { name: 'POA', data: poaSeries, yAxis: 0, color: '#ff7300', marker: { enabled: false } },
         { name: 'ACTIVE_POWER', data: activePowerSeries, yAxis: 1, color: '#387908', marker: { enabled: false } }
-      ]
+      ],
+      credits: {
+        enabled: false  // ✅ This removes the "Highcharts.com" text
+      }
     };
   };
   
@@ -401,13 +405,54 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="kip-cards-container">
-        <KIPCard title="Plant Export" value={plantKPI.P_EXP || 0} unit="kWh" />
-        <KIPCard title="Plant Import" value={plantKPI.P_IMP || 0} unit="kWh" />
-        <KIPCard title="Start Time" value={plantKPI.P_START || "00:00"} unit="Hrs" />
-        <KIPCard title="Stop Time" value={plantKPI.P_STOP || "00:00"} unit="Hrs" />
-        <KIPCard title="Running Time" value={plantKPI.P_RUN || "00:00"} unit="Hrs" />
-        <KIPCard title="Grid Downtime" value={plantKPI.P_DOWN || "00:00"} unit="Hrs" />
+      <div className="account-overview">
+        <div className="metric-card green">
+          <div className="metric-icon">🌟</div>
+          <div className="metric-content">
+            <div className="metric-label">Plant Export</div>
+            <div className="metric-value">{plantKPI.P_EXP || 0} kWh</div>
+          </div>
+        </div>
+
+        <div className="metric-card red">
+          <div className="metric-icon">⚡</div>
+          <div className="metric-content">
+            <div className="metric-label">Plant Import</div>
+            <div className="metric-value">{plantKPI.P_IMP || 0} kWh</div>
+          </div>
+        </div>
+
+        <div className="metric-card blue">
+          <div className="metric-icon">🌄</div>
+          <div className="metric-content">
+            <div className="metric-label">Start Time</div>
+            <div className="metric-value">{plantKPI.P_START || "00:00"} Hrs</div>
+          </div>
+        </div>
+
+        <div className="metric-card orange">
+          <div className="metric-icon">🌃</div>
+          <div className="metric-content">
+            <div className="metric-label">Stop Time</div>
+            <div className="metric-value">{plantKPI.P_STOP || "00:00"} Hrs</div>
+          </div>
+        </div>
+
+        <div className="metric-card purple">
+          <div className="metric-icon">⏳</div>
+          <div className="metric-content">
+            <div className="metric-label">Running Time</div>
+            <div className="metric-value">{plantKPI.P_RUN || "00:00"} Hrs</div>
+          </div>
+        </div>
+
+        <div className="metric-card gray">
+          <div className="metric-icon">⚠️</div>
+          <div className="metric-content">
+            <div className="metric-label">Grid Downtime</div>
+            <div className="metric-value">{plantKPI.P_DOWN || "00:00"} Hrs</div>
+          </div>
+        </div>
       </div>
     </div>
   );
