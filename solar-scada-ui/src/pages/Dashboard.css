@@ -309,7 +309,7 @@ button:focus {
 }
 
 .metric-card {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -387,6 +387,7 @@ button:focus {
 /* Color variants remain the same */
 .metric-card.green {
   border-left-color: #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
 }
 
 .metric-card.green .metric-icon {
@@ -395,6 +396,7 @@ button:focus {
 
 .metric-card.red {
   border-left-color: #ef4444;
+  background: linear-gradient(135deg, #fef2f2 0%, #fef2f2 100%);
 }
 
 .metric-card.red .metric-icon {
@@ -403,6 +405,7 @@ button:focus {
 
 .metric-card.blue {
   border-left-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
 }
 
 .metric-card.blue .metric-icon {
@@ -411,6 +414,7 @@ button:focus {
 
 .metric-card.orange {
   border-left-color: #f97316;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
 }
 
 .metric-card.orange .metric-icon {
@@ -419,6 +423,7 @@ button:focus {
 
 .metric-card.purple {
   border-left-color: #8b5cf6;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
 }
 
 .metric-card.purple .metric-icon {
@@ -427,6 +432,7 @@ button:focus {
 
 .metric-card.gray {
   border-left-color: #6b7280;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
 }
 
 .metric-card.gray .metric-icon {

@@ -423,6 +423,14 @@ const Dashboard = () => {
         </div>
 
         <div className="metric-card blue">
+          <div className="metric-icon">⚠️</div>
+          <div className="metric-content">
+            <div className="metric-label">Grid Downtime</div>
+            <div className="metric-value">{plantKPI.P_DOWN || "00:00"} Hrs</div>
+          </div>
+        </div>
+
+        <div className="metric-card orange">
           <div className="metric-icon">🌄</div>
           <div className="metric-content">
             <div className="metric-label">Start Time</div>
@@ -430,7 +438,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="metric-card orange">
+        <div className="metric-card gray">
           <div className="metric-icon">🌃</div>
           <div className="metric-content">
             <div className="metric-label">Stop Time</div>
@@ -445,15 +453,7 @@ const Dashboard = () => {
             <div className="metric-value">{plantKPI.P_RUN || "00:00"} Hrs</div>
           </div>
         </div>
-
-        <div className="metric-card gray">
-          <div className="metric-icon">⚠️</div>
-          <div className="metric-content">
-            <div className="metric-label">Grid Downtime</div>
-            <div className="metric-value">{plantKPI.P_DOWN || "00:00"} Hrs</div>
-          </div>
-        </div>
-      </div>
+      </div>        
     </div>
   );
 };
