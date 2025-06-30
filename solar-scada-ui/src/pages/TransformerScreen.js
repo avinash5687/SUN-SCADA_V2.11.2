@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './TransformerScreen.css'; // Make sure to include CSS below in this file or your CSS file
+import './TransformerScreen.css';
 
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL ||
@@ -12,14 +12,12 @@ const TransformerScreen = () => {
   const [transformerData, setTransformerData] = useState([]);
   const [error, setError] = useState(null);
 
-  // Helper to parse numeric value from "42.00 °C"
   const getNumericValue = (str) => {
     if (!str) return 0;
     const num = parseFloat(str);
     return isNaN(num) ? 0 : num;
   };
 
-  // Fetch data from API and format
   const fetchData = async () => {
     try {
       setError(null);
@@ -46,73 +44,94 @@ const TransformerScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Inline SVG for half gauge
-  const renderHalfGauge = (value, max, label, color) => {
-    const percentage = Math.min(Math.max(value / max, 0), 1);
+  const renderHalfGauge = (value, max, label) => {
+    const clampedValue = Math.max(0, Math.min(value, max));
+    const percentage = clampedValue / max;
     const angle = percentage * 180;
-    const radius = 60;
-    const cx = 70;
-    const cy = 70;
-    // Calculate end point of arc
+
+    const radius = 45;
+    const cx = 60;
+    const cy = 60;
+
     const rad = Math.PI * (1 - percentage);
-    const startX = cx - radius;
-    const startY = cy;
     const endX = cx + radius * Math.cos(rad);
     const endY = cy - radius * Math.sin(rad);
-
-    // Large arc flag for SVG path
     const largeArcFlag = angle > 90 ? 1 : 0;
 
+    const needleLength = radius - 8;
+    const needleX = cx + needleLength * Math.cos(rad);
+    const needleY = cy - needleLength * Math.sin(rad);
+
+    const arcColor = clampedValue <= 90 ? '#2ecc71' : '#e74c3c';
+
     return (
-      <svg width="140" height="80" viewBox="0 0 140 80" aria-label={`${label} gauge`}>
-        {/* Background arc */}
-        <path
-          d="M10,70 A60,60 0 0,1 130,70"
-          fill="none"
-          stroke="#eee"
-          strokeWidth="12"
-        />
-        {/* Value arc */}
-        <path
-          d={`M10,70 A60,60 0 ${largeArcFlag},1 ${endX},${endY}`}
-          fill="none"
-          stroke={color}
-          strokeWidth="12"
-          strokeLinecap="round"
-        />
-        {/* Value Text */}
-        <text x="70" y="60" textAnchor="middle" fontSize="20" fill={color} fontWeight="bold">
-          {value.toFixed(1)}
-        </text>
-        {/* Label */}
-        <text x="70" y="78" textAnchor="middle" fontSize="12" fill="#333">
-          {label}
-        </text>
-      </svg>
+      <div style={{ marginBottom: '5px' }}>
+        <svg width="120" height="90" viewBox="0 0 120 90" aria-label={`${label} gauge`}>
+          {/* Background Arc */}
+          <path
+            d={`M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}`}
+            fill="none"
+            stroke="#eee"
+            strokeWidth="10"
+          />
+
+          {/* Value Arc */}
+          <path
+            d={`M${cx - radius},${cy} A${radius},${radius} 0 ${largeArcFlag},1 ${endX},${endY}`}
+            fill="none"
+            stroke={arcColor}
+            strokeWidth="10"
+            strokeLinecap="round"
+          />
+
+          {/* Needle */}
+          <line
+            x1={cx}
+            y1={cy}
+            x2={needleX}
+            y2={needleY}
+            stroke={arcColor}
+            strokeWidth="2"
+          />
+          <circle cx={cx} cy={cy} r="3" fill={arcColor} />
+
+          {/* Value */}
+          <text x={cx} y={cy - 10} textAnchor="middle" fontSize="14" fill="#000" fontWeight="bold">
+            {clampedValue.toFixed(1)}
+          </text>
+
+          {/* Label */}
+          <text x={cx} y={cy + 25} textAnchor="middle" fontSize="11" fill="#333" fontWeight="500">
+            {label}
+          </text>
+        </svg>
+      </div>
     );
   };
 
   return (
     <>
-      {/* Background Image */}
       <div className="background-image"></div>
-
       <div className="transformer-container">
         {error && <div className="error-message">{error}</div>}
         {transformerData.length === 0 && !error && <div className="loading-message">Loading...</div>}
 
         {transformerData.map((transformer) => {
           const lv1Value = getNumericValue(transformer.values['LV1 Winding Temperature']);
+          const lv2Value = getNumericValue(transformer.values['LV2 Winding Temperature']);
+          const hvValue = getNumericValue(transformer.values['HV Winding Temperature']);
           const oilValue = getNumericValue(transformer.values['Oil Temperature']);
 
           return (
             <div className="transformer-card" key={transformer.title}>
               <div className="gauges-wrapper">
-                {renderHalfGauge(lv1Value, 150, 'LV1 Winding', '#128686')}
-                {renderHalfGauge(oilValue, 150, 'Oil Temp', '#f39c12')}
+                {renderHalfGauge(lv1Value, 150, 'LV1 Winding')}
+                {renderHalfGauge(oilValue, 150, 'Oil Temp')}
+                {renderHalfGauge(lv2Value, 150, 'LV2 Winding')}
+                {renderHalfGauge(hvValue, 150, 'HV Winding')}
               </div>
 
-              <div className="card-header">{transformer.title}</div>
+              <div className="card-header">{transformer.title.replace(/_/g, ' ')}</div>
 
               <div className="card-table">
                 <div className="table-header">
