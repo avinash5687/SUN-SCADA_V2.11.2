@@ -4,6 +4,11 @@ import sldImage from '../assets/Plant_SLD_21MWp.png';
 import axios from 'axios';
 import './sldScreen.css';
 
+const API_BASE_URL =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : 'http://103.102.234.177:5000';
+
 const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
   const [mfmStatus, setMFMStatus] = useState({});
@@ -16,9 +21,9 @@ const SLDScreen = () => {
       const mfmIds = [1, 2, 3, 4, 5, 6, 7, 8];
 
       const inverterStatusPromises = inverterIds.map(id =>
-        axios.get(`http://localhost:5000/api/inverter?id=${id}`)
+        axios.get(`${API_BASE_URL}/api/inverter?id=${id}`)
       );
-      const mfmStatusAll = await axios.get(`http://localhost:5000/api/mfm`);
+      const mfmStatusAll = await axios.get(`${API_BASE_URL}/api/mfm`);
 
       const inverterResponses = await Promise.all(inverterStatusPromises);
       const inverterStatusObj = {};
@@ -89,7 +94,7 @@ const SLDScreen = () => {
       };
     }
 
-    return Object.entries(rawData).map(([key, value]) => {
+    const dataEntries = Object.entries(rawData).map(([key, value]) => {
       const map = paramMap[key];
       return map
         ? {
@@ -99,16 +104,32 @@ const SLDScreen = () => {
           }
         : null;
     }).filter(Boolean);
+
+    // 🔹 Add PR to inverter popup
+    if (type === 'inverter') {
+      const energy = parseFloat(rawData.E_Today || 0);
+      const dcCapacity = parseFloat(rawData.DC_Capacity || 0);
+      const poa = parseFloat(rawData.POA || 0);
+      if (dcCapacity > 0 && poa > 0) {
+        const pr = (energy / (dcCapacity * poa)) * 100;
+        dataEntries.push({
+          parameter: 'Performance Ratio',
+          value: pr.toFixed(2),
+          unit: '%',
+        });
+      }
+    }
+
+    return dataEntries;
   };
 
   const handleClick = (type, id, event) => {
     const raw = type === 'inverter' ? inverterStatus[id] : mfmStatus[id];
     if (!raw) return;
     const formatted = formatDataForPopup(raw, type);
-    const rect = event.target.getBoundingClientRect();
     const title = raw?.Name || raw?.ICR || (type.toUpperCase() + ' ' + id);
-    const centerX = window.innerWidth / 2 - 200; // Adjust width offset (~popup width)
-    const centerY = window.innerHeight / 2 - 220; // Adjust height offset (~popup height)
+    const centerX = window.innerWidth / 2 - 200;
+    const centerY = window.innerHeight / 2 - 220;
     setPopupPosition({ x: centerX, y: centerY });
     setPopupData({ data: formatted, title });
   };
@@ -142,22 +163,15 @@ const SLDScreen = () => {
             {mfmPositions.map(pos => {
               const status = mfmStatus[pos.id];
               const isRed = status && status.CUM_STS > 0;
-
-              // Custom size for MFM ID 2 and 6
               const isWide = pos.id === 2 || pos.id === 6;
               const width = isWide ? '63px' : '35px';
-              const height = isWide ? '20px' : '18px'; // custom height for 2 and 6 only
+              const height = isWide ? '20px' : '18px';
 
               return (
                 <div
                   key={`mfm-${pos.id}`}
                   className={`click-zone mfm ${isRed ? 'red-border' : 'green-border'}`}
-                  style={{
-                    top: pos.top,
-                    left: pos.left,
-                    width,
-                    height,
-                  }}
+                  style={{ top: pos.top, left: pos.left, width, height }}
                   onClick={(e) => handleClick('mfm', pos.id, e)}
                   title={status?.ICR || `MFM ${pos.id}`}
                 />
@@ -190,16 +204,16 @@ const SLDScreen = () => {
               <thead>
                 <tr>
                   <th>PARAMETER</th>
-                  <th>VALUE</th>
-                  <th>UNIT</th>
+                  <th style={{ textAlign: 'center' }}>VALUE</th>
+                  <th style={{ textAlign: 'center' }}>UNIT</th>
                 </tr>
               </thead>
               <tbody>
                 {popupData.data.map((item, index) => (
                   <tr key={index}>
                     <td>{item.parameter}</td>
-                    <td className="value-cell">{item.value}</td>
-                    <td>{item.unit}</td>
+                    <td style={{ textAlign: 'center' }}>{item.value}</td>
+                    <td style={{ textAlign: 'center' }}>{item.unit}</td>
                   </tr>
                 ))}
               </tbody>
