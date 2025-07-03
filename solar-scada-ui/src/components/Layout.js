@@ -3,22 +3,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { IconButton, Tooltip } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBell,
-  faVolumeMute,
-  faVolumeUp,
-  faHome,
-  faSolarPanel,
-  faBolt,
-  faWind,
-  faPlug,
-  faFileAlt,
-  faSignOutAlt,
-  faLineChart,
-  faDiagramProject,
-  faCamera,
-  faPrint,
-  faUser,
-  faCalculator
+  faBell, faVolumeMute, faVolumeUp, faHome, faSolarPanel,
+  faBolt, faWind, faPlug, faFileAlt, faSignOutAlt,
+  faLineChart, faDiagramProject, faCamera, faPrint,
+  faUser, faCalculator
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -26,6 +14,28 @@ import { Howl } from "howler";
 import html2canvas from "html2canvas";
 import "./Layout.css";
 import logo from "../assets/logo.png";
+
+// 🧠 Helpers
+const getOrdinalSuffix = (day) => {
+  if (day > 3 && day < 21) return "th";
+  switch (day % 10) {
+    case 1: return "st";
+    case 2: return "nd";
+    case 3: return "rd";
+    default: return "th";
+  }
+};
+
+const formatDateTime = (date) => {
+  const day = date.getDate();
+  const suffix = getOrdinalSuffix(day);
+  const formattedDay = `${day}${suffix}`;
+  const formattedDate = date.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+  const formattedTime = date.toLocaleTimeString("en-US", {
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true
+  });
+  return `${formattedDay} ${formattedDate} | ${formattedTime} |`;
+};
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
@@ -42,6 +52,9 @@ const Layout = ({ children }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [activeAlarmCount, setActiveAlarmCount] = useState(0);
   const navigate = useNavigate();
+
+  const user = sessionStorage.getItem("username") || "Guest";
+  const role = sessionStorage.getItem("role") || "";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -67,7 +80,6 @@ const Layout = ({ children }) => {
         const response = await axios.get("http://localhost:5000/api/alarm");
         const activeAlarms = response.data.filter((alarm) => alarm.status === "ON");
         setActiveAlarmCount(activeAlarms.length);
-
         if (activeAlarms.length > 0) {
           setHasNewAlarm(true);
           if (!isMuted) sound?.play();
@@ -94,7 +106,6 @@ const Layout = ({ children }) => {
     setIsMuted((prevMuted) => {
       const newMuted = !prevMuted;
       localStorage.setItem("alarmMuted", JSON.stringify(newMuted));
-
       if (newMuted) {
         sound?.stop();
       } else {
@@ -110,57 +121,12 @@ const Layout = ({ children }) => {
     });
   };
 
-  function formatDateTime(date) {
-    let day = date.getDate();
-    let suffix = getOrdinalSuffix(day);
-    let formattedDay = `${day}${suffix}`;
-    let formattedDate = date.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
-    let formattedTime = date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true });
-
-    return `${formattedDay} ${formattedDate} | ${formattedTime} |`;
-  }
-
-  function getOrdinalSuffix(day) {
-    if (day > 3 && day < 21) return "th";
-    switch (day % 10) {
-      case 1: return "st";
-      case 2: return "nd";
-      case 3: return "rd";
-      default: return "th";
-    }
-  }
-
-  const [user, setUser] = useState(() => localStorage.getItem("username") || "Guest");
-
-  const navItems = [
-    { path: "/dashboard", icon: faHome, text: "Dashboard" },
-    { path: "/SLDTemplate", icon: faDiagramProject, text: "SLD" },
-    { path: "/inverter", icon: faSolarPanel, text: "Inverter" },
-    { path: "/heatmap", icon: faDiagramProject, text: "Heatmap" },
-    { path: "/mfm", icon: faBolt, text: "MFM" },
-    { path: "/wms", icon: faWind, text: "WMS" },
-    { path: "/TransformerScreen", icon: faPlug, text: "Transformer" },
-    { path: "/AlarmScreen", icon: faBell, text: "Alarm" },
-    { path: "/CustomTrend", icon: faLineChart, text: "Custom Trend" },
-    {
-      path: "/report",
-      icon: faFileAlt,
-      text: "Report",
-      isExternal: true,
-      url:
-        window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
-          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
-    },
-    { path: "/formula", icon: faCalculator, text: "Formula" },
-  ];
-
   const handleNavigation = (item) => {
     if (item.isExternal) {
       window.open(item.url, "_blank");
     } else {
       setLastVisitedPath(activePath);
-      window.location.href = item.path;
+      navigate(item.path);
       setActivePath(item.path);
     }
   };
@@ -176,9 +142,9 @@ const Layout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    window.location.href = "/";
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate("/");
   };
 
   const handlePrintScreen = () => {
@@ -201,6 +167,41 @@ const Layout = ({ children }) => {
   const navigateToMap = () => {
     navigate("/leaflet-map");
   };
+
+  const navItems = [
+    { path: "/dashboard", icon: faHome, text: "Dashboard" },
+    ...(role === "Administrator" ? [
+      { path: "/SLDTemplate", icon: faDiagramProject, text: "SLD" },
+      { path: "/inverter", icon: faSolarPanel, text: "Inverter" },
+      { path: "/heatmap", icon: faDiagramProject, text: "Heatmap" },
+      { path: "/mfm", icon: faBolt, text: "MFM" },
+      { path: "/wms", icon: faWind, text: "WMS" },
+      { path: "/TransformerScreen", icon: faPlug, text: "Transformer" },
+      { path: "/AlarmScreen", icon: faBell, text: "Alarm" },
+      { path: "/CustomTrend", icon: faLineChart, text: "Custom Trend" },
+      { path: "/formula", icon: faCalculator, text: "Formula" },
+      {
+        path: "/report",
+        icon: faFileAlt,
+        text: "Report",
+        isExternal: true,
+        url: window.location.hostname.includes("localhost")
+          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
+          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
+      }
+    ] : role === "Operator" ? [
+      { path: "/AlarmScreen", icon: faBell, text: "Alarm" },
+      {
+        path: "/report",
+        icon: faFileAlt,
+        text: "Report",
+        isExternal: true,
+        url: window.location.hostname.includes("localhost")
+          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
+          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
+      }
+    ] : []) // Technician only sees Dashboard
+  ];
 
   return (
     <div className="layout-container">
@@ -230,7 +231,7 @@ const Layout = ({ children }) => {
               <FontAwesomeIcon icon={faUser} className="user-icon icon-large" />
               {showUserMenu && (
                 <div className="user-menu">
-                  <p>{user}</p>
+                  <p><strong>User:</strong> {user}</p>
                   <button onClick={handleLogout}>
                     <FontAwesomeIcon icon={faSignOutAlt} /> Logout
                   </button>
@@ -255,7 +256,9 @@ const Layout = ({ children }) => {
           </ul>
         </nav>
       </aside>
-      <main className={`main-content ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>{children}</main>
+      <main className={`main-content ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
+        {children}
+      </main>
     </div>
   );
 };

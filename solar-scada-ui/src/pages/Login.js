@@ -3,25 +3,28 @@ import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/BACKGROUND.jpeg";
 import logo from "../assets/logo.png";
 
+const baseUrl =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000"
+    : "http://103.102.234.177:5000";
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [energyData, setEnergyData] = useState(null); // Store energy data
+  const [energyData, setEnergyData] = useState(null);
   const navigate = useNavigate();
 
-  // Redirect to dashboard if already logged in (sessionStorage)
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
       navigate("/leaflet-map");
     }
   }, [navigate]);
 
-  // Function to Fetch Energy Data from API
   useEffect(() => {
     const fetchEnergyData = async () => {
       try {
-        const response = await fetch("http://103.102.234.177:5000/api/data/energy-data");
+        const response = await fetch(`${baseUrl}/api/data/energy-data`);
         const data = await response.json();
         if (response.ok) {
           setEnergyData(data);
@@ -32,54 +35,40 @@ const Login = () => {
         console.error("Server error:", error);
       }
     };
-  
-    // Fetch initially
+
     fetchEnergyData();
-  
-    // Set interval to fetch data every 30 seconds
     const interval = setInterval(fetchEnergyData, 30000);
-  
-    // Cleanup function to clear interval on unmount
     return () => clearInterval(interval);
   }, []);
 
-  // Handle Login
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-  
+
     try {
-      console.log("🔍 Sending login request...");
-  
-      const response = await fetch("http://103.102.234.177:5000/api/auth/login", {
+      const response = await fetch(`${baseUrl}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-  
-      console.log("🔍 Response received:", response);
-  
-      // Read response text (in case it's not valid JSON)
+
       const text = await response.text();
-      console.log("🔍 Response text:", text);
-  
-      // inside handleLogin success block
+
       if (response.ok) {
         const data = JSON.parse(text);
         sessionStorage.setItem("token", data.token);
         sessionStorage.setItem("username", username);
+        sessionStorage.setItem("role", data.role);
         navigate("/leaflet-map");
-      }
-      else {
+      } else {
         setError(text || "Invalid credentials");
       }
     } catch (error) {
-      console.error("❌ Login Error:", error);
+      console.error("Login Error:", error);
       setError("Server error. Try again later.");
     }
   };
-  
-  
+
   return (
     <div
       style={{
@@ -112,7 +101,7 @@ const Login = () => {
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.6)",
           padding: "20px",
-          opacity:"90%",
+          opacity: "90%",
           borderRadius: "10px",
           width: "60%",
           display: "flex",
