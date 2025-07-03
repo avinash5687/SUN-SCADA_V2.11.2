@@ -14,6 +14,7 @@ import HeatmapScreen from "./pages/HeatmapScreen";
 import FormulaScreen from "./pages/FormulaScreen";
 import TransformerScreen from "./pages/TransformerScreen";
 import LeafletMap from "./pages/LeafletMap";
+import PrivateRoute from "./components/PrivateRoute"; // <-- Import here
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -27,77 +28,125 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
-        
+
+        {/* Protected Routes */}
         <Route
           path="/leaflet-map"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <LeafletMap />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <LeafletMap />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/dashboard"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <Dashboard />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <Dashboard />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/inverter"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <Inverter />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <Inverter />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/mfm"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <MFM />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <MFM />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/wms"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <WMS />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <WMS />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/AlarmScreen"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <Alarm />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <Alarm />
+              </Layout>
+            </PrivateRoute>
           }
         />
         <Route
           path="/report"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <Report />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <Report />
+              </Layout>
+            </PrivateRoute>
           }
-        />        
-        <Route path="/CustomTrend" element={<CustomTrend />} />
-        <Route path="/SLDTemplate" element={<SLDScreen />} />
-        <Route path="/heatmap" element={<Layout><HeatmapScreen /></Layout>} />
-        <Route path="/formula" element={<FormulaScreen />} />
+        />
+        <Route
+          path="/CustomTrend"
+          element={
+            <PrivateRoute>
+              <CustomTrend />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/SLDTemplate"
+          element={
+            <PrivateRoute>
+              <SLDScreen />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/heatmap"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <HeatmapScreen />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/formula"
+          element={
+            <PrivateRoute>
+              <FormulaScreen />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/TransformerScreen"
           element={
-            <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-              <TransformerScreen />
-            </Layout>
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <TransformerScreen />
+              </Layout>
+            </PrivateRoute>
           }
-        /> 
+        />
       </Routes>
     </Router>
   );

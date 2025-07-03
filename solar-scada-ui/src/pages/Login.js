@@ -10,6 +10,13 @@ const Login = () => {
   const [energyData, setEnergyData] = useState(null); // Store energy data
   const navigate = useNavigate();
 
+  // Redirect to dashboard if already logged in (sessionStorage)
+  useEffect(() => {
+    if (sessionStorage.getItem("token")) {
+      navigate("/leaflet-map");
+    }
+  }, [navigate]);
+
   // Function to Fetch Energy Data from API
   useEffect(() => {
     const fetchEnergyData = async () => {
@@ -59,9 +66,9 @@ const Login = () => {
       // inside handleLogin success block
       if (response.ok) {
         const data = JSON.parse(text);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", username);
-        navigate("/leaflet-map"); // <-- Redirect to map instead of dashboard
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem("username", username);
+        navigate("/leaflet-map");
       }
       else {
         setError(text || "Invalid credentials");
