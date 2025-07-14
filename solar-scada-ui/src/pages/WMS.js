@@ -1,4 +1,3 @@
-// (No change at top imports)
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
@@ -35,6 +34,16 @@ const parametersConfig = [
   { name: "Transmission Loss 2", key: "SOI_LS2", unit: "%", max: 100 },
 ];
 
+const plantKPIList = [
+  { label: "Export", key: "P_EXP", unit: "kWh" },
+  { label: "Import", key: "P_IMP", unit: "kWh" },
+  { label: "PR", key: "PR", unit: "%" },
+  { label: "POA", key: "POA", unit: "kWh/m²" },
+  { label: "CUF", key: "CUF", unit: "%" },
+  { label: "PA", key: "PA", unit: "%" },
+  { label: "GA", key: "GA", unit: "%" },
+];
+
 const WMS = () => {
   const [wmsData, setWmsData] = useState([]);
   const [chartData, setChartData] = useState([]);
@@ -43,58 +52,44 @@ const WMS = () => {
   const [isZooming, setIsZooming] = useState(false);
   const chartRef = useRef(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const onZoomChange = (zooming) => setIsZooming(zooming)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [plantKPI, setPlantKPI] = useState({});
 
   useEffect(() => {
     const fetchAllData = async () => {
       try {
-        const [wmsRes, chartRes, soilRes] = await Promise.all([
+        const [wmsRes, chartRes, soilRes, kpiRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/wms`),
           axios.get(`${API_BASE_URL}/api/wms/WMS-CHART`),
-          axios.get(`${API_BASE_URL}/api/wms/SOIL-CHART`)
+          axios.get(`${API_BASE_URL}/api/wms/SOIL-CHART`),
+          axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`)
         ]);
+
         setWmsData(wmsRes.data);
         setChartData(chartRes.data);
         setZoomedData(chartRes.data);
         setSoilChartData(soilRes.data);
+        setPlantKPI(Array.isArray(kpiRes.data) && kpiRes.data.length > 0 ? kpiRes.data[0] : {});
       } catch (error) {
         console.error("Error fetching WMS data:", error);
       }
     };
+
     fetchAllData();
     const interval = setInterval(() => { if (!isZooming) fetchAllData(); }, 30000);
     return () => clearInterval(interval);
   }, [isZooming]);
-
-  const handleBrushChange = (range) => {
-    if (range && range.startIndex !== undefined && range.endIndex !== undefined) {
-      setZoomedData(chartData.slice(range.startIndex, range.endIndex + 1));
-    }
-  };
-
-  const energyVsSoilData = soilChartData.map(row => ({
-    time: new Date(row.Date).getTime(),
-    energy: Number(row.Energy) || 0,
-    soilLoss: Number(row.Loss_Due_To_Soil) || 0,
-  }));
 
   useEffect(() => {
     const handleResize = () => {
       if (chartRef.current) {
         chartRef.current.chart.reflow();
         setWindowHeight(window.innerHeight);
+        setWindowWidth(window.innerWidth);
       }
     };
-  
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
- useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const getSpacingForWidth = (width) => {
@@ -116,15 +111,20 @@ const WMS = () => {
     else if (width <= 1396) return 350;
     else if (width <= 1440) return 380;
     else if (width <= 1536) return 400;
-    else if (width <= 1707) return 420
+    else if (width <= 1707) return 420;
     else if (width <= 1920) return 440;
     else return 450;
   };
 
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
-
   const chartHeight = Math.max(250, windowHeight * 0.4);
+
+  const energyVsSoilData = soilChartData.map(row => ({
+    time: new Date(row.Date).getTime(),
+    energy: Number(row.Energy) || 0,
+    soilLoss: Number(row.Loss_Due_To_Soil) || 0,
+  }));
 
   const highchartsAreaOptions = {
     chart: {
@@ -195,107 +195,61 @@ const WMS = () => {
     chart: {
       type: 'line',
       zoomType: 'x',
-      height:height,
-      spacing: spacing,
-      animation: {
-        duration: 1500,
-        easing: 'easeOutBounce' // You can try 'easeOutBounce', 'easeOutElastic', 'easeOutBack', etc.
-      }
+      height: height,
+      spacing: spacing
     },
-    title: {
-      text: ''
-    },
+    title: { text: '' },
     xAxis: {
       categories: data.map(item => item.Date_Time),
       gridLineWidth: 1,
-      title: { text: '' },
-      tickmarkPlacement: 'on',
-  //     min: 0.5,        // Add this
-  // max: data.length - 0.5  
     },
     yAxis: [
-      {
-        title: { text: 'W/m²' },
-        lineColor: '#8884d8',
-        lineWidth: 2,
-        labels: { style: { color: '#8884d8' } , }
-      },
-      {
-        title: { text: 'kWh/m²' },
-        lineColor: '#82ca9d',
-        lineWidth: 2,
-        labels: { style: { color: '#82ca9d' } },
-        opposite: true
-      },
-      {
-        title: { text: '°C / %' },
-        lineColor: '#ff7300',
-        lineWidth: 2,
-        labels: { style: { color: '#ff7300' } },
-        opposite: true
-      },
-      {
-        title: { text: 'm/s' },
-        lineColor: '#6A5ACD',
-        lineWidth: 1,
-        labels: { style: { color: '#6A5ACD' } },
-        opposite: true
-      },
-      {
-        title: { text: '°' },
-        lineColor: '#9370DB',
-        lineWidth: 1,
-        labels: { style: { color: '#9370DB' } },
-        opposite: true
-      }
+      { title: { text: 'W/m²' }, lineColor: '#8884d8', labels: { style: { color: '#8884d8' } } },
+      { title: { text: 'kWh/m²' }, opposite: true, labels: { style: { color: '#82ca9d' } } },
+      { title: { text: '°C / %' }, opposite: true, labels: { style: { color: '#ff7300' } } },
+      { title: { text: 'm/s' }, opposite: true, labels: { style: { color: '#6A5ACD' } } },
+      { title: { text: '°' }, opposite: true, labels: { style: { color: '#9370DB' } } }
     ],
-    tooltip: {
-      shared: true,
-      crosshairs: true
-    },
+    tooltip: { shared: true },
     legend: {
       layout: 'horizontal',
       align: 'center',
       verticalAlign: 'bottom',
-      itemStyle: {
-        fontSize: '13px'  // smaller text to fit better
-      }
+      itemStyle: { fontSize: '13px' }
     },
     series: [
-      { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8', animation: { duration: 1000, easing: 'easeOutElastic' } },
+      { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8' },
       { name: 'POA (W/m²)', data: data.map(d => d.POA), yAxis: 0, color: '#82ca9d' },
       { name: 'DHI (W/m²)', data: data.map(d => d.DHI), yAxis: 0, color: '#1E90FF' },
-  
       { name: 'GHI Cumulative (kWh/m²)', data: data.map(d => d.CUM_GHI), yAxis: 1, color: '#FFD700' },
       { name: 'POA Cumulative (kWh/m²)', data: data.map(d => d.CUM_POA), yAxis: 1, color: '#A0E7E5' },
       { name: 'DHI Cumulative (kWh/m²)', data: data.map(d => d.DHI_CUMM), yAxis: 1, color: '#B19CD9' },
-  
-      { name: 'Module Temperature 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500' },
-      { name: 'Module Temperature 2 (°C)', data: data.map(d => d.MOD_TEMP2), yAxis: 2, color: '#DA70D6' },
-      { name: 'Ambient Temperature (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32' },
+      { name: 'Module Temp 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500' },
+      { name: 'Ambient Temp (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32' },
       { name: 'Humidity (%)', data: data.map(d => d.RH), yAxis: 2, color: '#FFDAB9' },
-      { name: 'Soiling 1 (%)', data: data.map(d => d.SOI1), yAxis: 2, color: '#556B2F' },
-      { name: 'Transmission Loss 1 (%)', data: data.map(d => d.SOI_LS1), yAxis: 2, color: '#8B4513' },
-      { name: 'Soiling 2 (%)', data: data.map(d => d.SOI2), yAxis: 2, color: '#2F4F4F' },
-      { name: 'Transmission Loss 2 (%)', data: data.map(d => d.SOI_LS2), yAxis: 2, color: '#708090' },
-  
       { name: 'Wind Speed (m/s)', data: data.map(d => d.WND_SPD), yAxis: 3, color: '#6A5ACD' },
-      { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB' },
-    ],
-    plotOptions: {
-      series: {
-        animation: {
-          duration: 1500,
-          easing: 'easeOutBounce' 
-        }
-      }
-    }
+      { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB' }
+    ]
   });
-  
 
   return (
     <div className="wms-container-fullscreen">
-      <h2 className="wms-title">Weather Monitoring Station Overview</h2>
+      <h2 className="wms-title"></h2>
+
+      {/* ✅ Plant KPI Summary Bar */}
+      <div className="plant-kpi-bar1">
+        {plantKPIList.map(({ label, key, unit }) => (
+          <div key={label} className="kpi-box1">
+            <span className="kpi-label1">{label}</span>
+            <span className="kpi-value1">
+              {plantKPI[key] !== undefined && plantKPI[key] !== null
+                ? `${parseFloat(plantKPI[key]).toFixed(2)} ${unit}`
+                : "--"}
+            </span>
+          </div>
+        ))}
+      </div>
+
       <div className="wms-grid-content">
         <div className="wms-table-container">
           <table className="wms-table">
@@ -332,26 +286,19 @@ const WMS = () => {
         </div>
 
         <div className="charts-stack">
-         
           <div className="chart-container">
-          <HighchartsReact
-  highcharts={Highcharts} 
-  options={highChartsMultiYAxisLine(zoomedData)} 
-  containerProps={{ style: { height: "100%", width: "100%" } }}
-/>
-</div>
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={highChartsMultiYAxisLine(zoomedData)}
+              containerProps={{ style: { height: "100%", width: "100%" } }}
+            />
+          </div>
 
           <div className="chart-container">
             <HighchartsReact
               highcharts={Highcharts}
-              options={{
-                ...highchartsAreaOptions,
-                // chart: {
-                //   ...highchartsAreaOptions.chart,
-                //   height: 600, // Increase height (you can adjust this)
-                // },
-              }}
-              containerProps={{ style: { height: "100%", width: "100%" } }} // Increase height & width
+              options={highchartsAreaOptions}
+              containerProps={{ style: { height: "100%", width: "100%" } }}
               ref={chartRef}
             />
           </div>

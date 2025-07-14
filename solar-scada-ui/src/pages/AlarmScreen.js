@@ -2,10 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AlarmScreen.css";
 
-  const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:5000"
-      : "http://103.102.234.177:5000";
+const API_BASE_URL =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000"
+    : "http://103.102.234.177:5000";
+
+// ✅ KPI Config
+const plantKPIList = [
+  { label: "Export", key: "P_EXP", unit: "kWh" },
+  { label: "Import", key: "P_IMP", unit: "kWh" },
+  { label: "PR", key: "PR", unit: "%" },
+  { label: "POA", key: "POA", unit: "kWh/m²" },
+  { label: "CUF", key: "CUF", unit: "%" },
+  { label: "PA", key: "PA", unit: "%" },
+  { label: "GA", key: "GA", unit: "%" },
+];
 
 const AlarmScreen = () => {
   const [alarms, setAlarms] = useState([]);
@@ -13,8 +24,9 @@ const AlarmScreen = () => {
   const [selectedAlarmId, setSelectedAlarmId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [isBulkAcknowledge, setIsBulkAcknowledge] = useState(false);
+  const [plantKPI, setPlantKPI] = useState({});
 
-  // ✅ Fetch Alarms
+  // ✅ Fetch alarms
   const fetchAlarms = async () => {
     try {
       const response = await axios.get(API_BASE_URL);
@@ -24,20 +36,37 @@ const AlarmScreen = () => {
     }
   };
 
-  // ✅ Open Acknowledge Popup (for individual or bulk)
+  // ✅ Fetch KPI
+  const fetchKPI = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
+      setPlantKPI(Array.isArray(res.data) && res.data.length > 0 ? res.data[0] : {});
+    } catch (error) {
+      console.error("❌ Error fetching KPI:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAlarms();
+    fetchKPI();
+    const interval = setInterval(() => {
+      fetchAlarms();
+      fetchKPI();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const openAckPopup = (id = null, isBulk = false) => {
     setSelectedAlarmId(id);
     setIsBulkAcknowledge(isBulk);
     setShowPopup(true);
   };
 
-  // ✅ Close Acknowledge Popup
   const closePopup = () => {
     setShowPopup(false);
     setComment("");
   };
 
-  // ✅ Acknowledge an Individual Alarm
   const acknowledgeAlarm = async () => {
     if (!comment.trim()) {
       alert("Please enter a comment before acknowledging the alarm.");
@@ -53,7 +82,6 @@ const AlarmScreen = () => {
     }
   };
 
-  // ✅ Acknowledge All Active Alarms (Bulk)
   const acknowledgeAllActiveAlarms = async () => {
     const activeAlarms = alarms.filter((alarm) => alarm.status === "ON");
     const alarmIds = activeAlarms.map((alarm) => alarm.id);
@@ -77,7 +105,6 @@ const AlarmScreen = () => {
     }
   };
 
-  // ✅ Clear an Individual Alarm
   const clearAlarm = async (id) => {
     try {
       await axios.put(`${API_BASE_URL}/clear/${id}`);
@@ -87,7 +114,6 @@ const AlarmScreen = () => {
     }
   };
 
-  // ✅ Clear All Active Alarms
   const clearAllActiveAlarms = async () => {
     const activeAlarms = alarms.filter((alarm) => alarm.status === "ON");
     for (const alarm of activeAlarms) {
@@ -96,14 +122,23 @@ const AlarmScreen = () => {
     fetchAlarms();
   };
 
-  // ✅ Fetch alarms every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(fetchAlarms, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="alarm-container">
+
+      {/* ✅ PLANT KPI BAR */}
+      <div className="plant-kpi-bar1">
+        {plantKPIList.map(({ label, key, unit }) => (
+          <div key={label} className="kpi-box1">
+            <span className="kpi-label1">{label}</span>
+            <span className="kpi-value1">
+              {plantKPI[key] !== undefined && plantKPI[key] !== null
+                ? `${parseFloat(plantKPI[key]).toFixed(2)} ${unit}`
+                : "--"}
+            </span>
+          </div>
+        ))}
+      </div>
+
       <div className="table-wrapper">
         <table className="alarm-table">
           <thead>
@@ -122,10 +157,7 @@ const AlarmScreen = () => {
             {alarms.length > 0 ? (
               alarms.map((alarm) => (
                 <tr key={alarm.id} className={alarm.status === "ON" ? "active-alarm" : ""}>
-                  <td>
-                    {alarm.status === "ON" ? "🔔 " : ""}
-                    {alarm.description}
-                  </td>
+                  <td>{alarm.status === "ON" ? "🔔 " : ""}{alarm.description}</td>
                   <td>{alarm.activeAt}</td>
                   <td>{alarm.ackAt || "--"}</td>
                   <td>{alarm.timeOff || "--"}</td>
@@ -143,21 +175,17 @@ const AlarmScreen = () => {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="8">No alarms found</td>
-              </tr>
+              <tr><td colSpan="8">No alarms found</td></tr>
             )}
           </tbody>
         </table>
       </div>
 
-      {/* ✅ Overall Acknowledge and Clear Buttons */}
       <div className="button-container">
         <button onClick={() => openAckPopup(null, true)} className="ack-button">✔ Acknowledge All</button>
         <button onClick={clearAllActiveAlarms} className="clear-button">✖ Clear All</button>
       </div>
 
-      {/* ✅ Acknowledge Popup */}
       {showPopup && (
         <div className="popup">
           <div className="popup-content">

@@ -14,6 +14,7 @@ const SLDScreen = () => {
   const [mfmStatus, setMFMStatus] = useState({});
   const [popupData, setPopupData] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 100, y: 100 });
+  const [plantKPI, setPlantKPI] = useState({});
 
   const fetchStatuses = async () => {
     try {
@@ -45,9 +46,25 @@ const SLDScreen = () => {
     }
   };
 
+  const fetchPlantKPI = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setPlantKPI(res.data[0]); // ✅ FIX HERE
+      }
+    } catch (err) {
+      console.error('Error fetching plant KPI', err);
+    }
+  };
+
+
   useEffect(() => {
     fetchStatuses();
-    const interval = setInterval(fetchStatuses, 30000);
+    fetchPlantKPI();
+    const interval = setInterval(() => {
+      fetchStatuses();
+      fetchPlantKPI();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -105,7 +122,6 @@ const SLDScreen = () => {
         : null;
     }).filter(Boolean);
 
-    // 🔹 Add PR to inverter popup
     if (type === 'inverter') {
       const energy = parseFloat(rawData.E_Today || 0);
       const dcCapacity = parseFloat(rawData.DC_Capacity || 0);
@@ -136,6 +152,32 @@ const SLDScreen = () => {
 
   const closePopup = () => setPopupData(null);
 
+  const kpiMappings = [
+    { label: 'Export', key: 'P_EXP' },
+    { label: 'Import', key: 'P_IMP' },
+    { label: 'PR', key: 'PR' },
+    { label: 'POA', key: 'POA' },
+    { label: 'CUF', key: 'CUF' },
+    { label: 'PA', key: 'PA' },
+    { label: 'GA', key: 'GA' },
+  ];
+  const getUnit = (key) => {
+  switch (key) {
+    case 'P_EXP':
+    case 'P_IMP':
+      return 'kWh';
+    case 'PR':
+    case 'CUF':
+    case 'PA':
+    case 'GA':
+      return '%';
+    case 'POA':
+      return 'W/m²';
+    default:
+      return '';
+  }
+};
+
   const mfmPositions = [
     { id: 1, top: '52.7%', left: '34.75%' },
     { id: 2, top: '72.89%', left: '23.4%' },
@@ -156,6 +198,17 @@ const SLDScreen = () => {
 
   return (
     <Layout>
+      <div className="plant-kpi-bar">
+        {kpiMappings.map(({ label, key }) => (
+          <div key={label} className="kpi-box">
+            <span className="kpi-label">{label}</span>
+            <span className="kpi-value">
+              {plantKPI[key] !== undefined ? `${parseFloat(plantKPI[key]).toFixed(2)} ${getUnit(key)}` : '--'}
+            </span>
+          </div>
+        ))}
+      </div>
+
       <div className="sld-wrapper">
         <div className="sld-container">
           <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
