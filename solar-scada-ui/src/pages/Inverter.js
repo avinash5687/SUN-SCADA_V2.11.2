@@ -11,7 +11,6 @@ const API_BASE_URL =
 const Inverter = () => {
   const [inverterData, setInverterData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [plantKPI, setPlantKPI] = useState({});
 
   const fetchInverterData = () => {
     axios
@@ -26,27 +25,9 @@ const Inverter = () => {
       });
   };
 
-const fetchPlantKPI = async () => {
-  try {
-    const res = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
-    if (Array.isArray(res.data) && res.data.length > 0) {
-      setPlantKPI(res.data[0]);  // ✅ Use first object from array
-    } else {
-      setPlantKPI({});
-    }
-  } catch (err) {
-    console.error("Error fetching plant KPI", err);
-    setPlantKPI({});
-  }
-};
-
   useEffect(() => {
     fetchInverterData();
-    fetchPlantKPI();
-    const interval = setInterval(() => {
-      fetchInverterData();
-      fetchPlantKPI();
-    }, 30000);
+    const interval = setInterval(fetchInverterData, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -60,27 +41,9 @@ const fetchPlantKPI = async () => {
 
   return (
     <div className="inverter-container">
-      {/* KPI BAR */}
-      <div className="plant-kpi-bar1">
-        {[
-          { label: 'Export', key: 'P_EXP', unit: 'kWh' },
-          { label: 'Import', key: 'P_IMP', unit: 'kWh' },
-          { label: 'PR', key: 'PR', unit: '%' },
-          { label: 'POA', key: 'POA', unit: 'kWh/m²' },
-          { label: 'CUF', key: 'CUF', unit: '%' },
-          { label: 'PA', key: 'PA', unit: '%' },
-          { label: 'GA', key: 'GA', unit: '%' },
-         ].map(({ label, key, unit }) => (
-          <div key={label} className="kpi-box1">
-            <span className="kpi-label1">{label}</span>
-            <span className="kpi-value1">
-              {plantKPI[key] !== undefined ? parseFloat(plantKPI[key]).toFixed(2) : '--'} {unit}
-            </span>
-          </div>
-        ))}
-      </div>
-      <h2 className="inverter-title"></h2>
+      <h2 className="inverter-title">Inverter Data Overview</h2>
       <table className="inverter-table">
+        {/* --- STEP 2: Restructure the table header --- */}
         <thead>
           <tr>
             <th>Parameters</th>
@@ -91,7 +54,9 @@ const fetchPlantKPI = async () => {
                   <div className="header-text-status">
                     <span className="header-name">{inv.Name || `INV ${idx + 1}`}</span>
                     <div
-                      className={`status-indicator ${inv.CUM_STS === 1 ? "status-green" : "status-red"}`}
+                      className={`status-indicator ${
+                        inv.CUM_STS === 1 ? "status-green" : "status-red"
+                      }`}
                       title={inv.CUM_STS === 1 ? 'Online' : 'Offline'}
                     ></div>
                   </div>
@@ -102,6 +67,7 @@ const fetchPlantKPI = async () => {
           </tr>
         </thead>
         <tbody>
+          {/* --- STEP 3: The "Communication Status" row is now completely removed --- */}
           {[
             { name: "Timestamp", key: "Date_Time", unit: "" },
             { name: "Active Power", key: "Active_Power", unit: "kW" },

@@ -8,19 +8,8 @@ const API_BASE_URL =
     ? "http://localhost:5000"
     : "http://103.102.234.177:5000");
 
-const plantKPIList = [
-  { label: "Export", key: "P_EXP", unit: "kWh" },
-  { label: "Import", key: "P_IMP", unit: "kWh" },
-  { label: "PR", key: "PR", unit: "%" },
-  { label: "POA", key: "POA", unit: "kWh/m²" },
-  { label: "CUF", key: "CUF", unit: "%" },
-  { label: "PA", key: "PA", unit: "%" },
-  { label: "GA", key: "GA", unit: "%" },
-];
-
 const TransformerScreen = () => {
   const [transformerData, setTransformerData] = useState([]);
-  const [plantKPI, setPlantKPI] = useState({});
   const [error, setError] = useState(null);
 
   const getNumericValue = (str) => {
@@ -32,12 +21,8 @@ const TransformerScreen = () => {
   const fetchData = async () => {
     try {
       setError(null);
-      const [transformerRes, kpiRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/api/transformer`),
-        axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`)
-      ]);
-
-      const formattedData = transformerRes.data.map((item) => ({
+      const res = await axios.get(`${API_BASE_URL}/api/transformer`);
+      const formattedData = res.data.map((item) => ({
         title: item.NAME,
         values: {
           'LV1 Winding Temperature': item.LV1_WT != null ? `${item.LV1_WT.toFixed(2)} °C` : 'N/A',
@@ -47,11 +32,9 @@ const TransformerScreen = () => {
         }
       }));
       setTransformerData(formattedData);
-
-      setPlantKPI(Array.isArray(kpiRes.data) && kpiRes.data.length > 0 ? kpiRes.data[0] : {});
     } catch (error) {
-      setError('Failed to fetch transformer or KPI data.');
-      console.error('Error:', error);
+      setError('Failed to fetch transformer data.');
+      console.error('Error fetching transformer data:', error);
     }
   };
 
@@ -84,12 +67,15 @@ const TransformerScreen = () => {
     return (
       <div style={{ marginBottom: '5px' }}>
         <svg width="120" height="90" viewBox="0 0 120 90" aria-label={`${label} gauge`}>
+          {/* Background Arc */}
           <path
             d={`M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}`}
             fill="none"
             stroke="#eee"
             strokeWidth="10"
           />
+
+          {/* Value Arc */}
           <path
             d={`M${cx - radius},${cy} A${radius},${radius} 0 ${largeArcFlag},1 ${endX},${endY}`}
             fill="none"
@@ -97,11 +83,24 @@ const TransformerScreen = () => {
             strokeWidth="10"
             strokeLinecap="round"
           />
-          <line x1={cx} y1={cy} x2={needleX} y2={needleY} stroke={arcColor} strokeWidth="2" />
+
+          {/* Needle */}
+          <line
+            x1={cx}
+            y1={cy}
+            x2={needleX}
+            y2={needleY}
+            stroke={arcColor}
+            strokeWidth="2"
+          />
           <circle cx={cx} cy={cy} r="3" fill={arcColor} />
+
+          {/* Value */}
           <text x={cx} y={cy - 10} textAnchor="middle" fontSize="14" fill="#000" fontWeight="bold">
             {clampedValue.toFixed(1)}
           </text>
+
+          {/* Label */}
           <text x={cx} y={cy + 25} textAnchor="middle" fontSize="11" fill="#333" fontWeight="500">
             {label}
           </text>
@@ -113,21 +112,6 @@ const TransformerScreen = () => {
   return (
     <>
       <div className="background-image"></div>
-
-      {/* ✅ PLANT KPI BAR */}
-      <div className="plant-kpi-bar1">
-        {plantKPIList.map(({ label, key, unit }) => (
-          <div key={label} className="kpi-box1">
-            <span className="kpi-label1">{label}</span>
-            <span className="kpi-value1">
-              {plantKPI[key] !== undefined && plantKPI[key] !== null
-                ? `${parseFloat(plantKPI[key]).toFixed(2)} ${unit}`
-                : "--"}
-            </span>
-          </div>
-        ))}
-      </div>
-
       <div className="transformer-container">
         {error && <div className="error-message">{error}</div>}
         {transformerData.length === 0 && !error && <div className="loading-message">Loading...</div>}

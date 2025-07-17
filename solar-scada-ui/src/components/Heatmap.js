@@ -8,17 +8,7 @@ const heatmapCategories = [
   { key: "PR", deviationKey: "Dev_Per_PR", label: "PR" },
 ];
 
-const kpiMap = [
-  { key: "P_EXP", label: "Export", unit: "kWh" },
-  { key: "P_IMP", label: "Import", unit: "kWh" },
-  { key: "PR", label: "PR", unit: "%" },
-  { key: "POA", label: "POA", unit: "W/m²" },
-  { key: "CUF", label: "CUF", unit: "%" },
-  { key: "PA", label: "PA", unit: "%" },
-  { key: "GA", label: "GA", unit: "%" },
-];
-
-const Heatmap = ({ data, plantKPI }) => {
+const Heatmap = ({ data }) => {
   const tooltipRef = useRef(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipContent, setTooltipContent] = useState("");
@@ -45,6 +35,7 @@ const Heatmap = ({ data, plantKPI }) => {
       <strong>Status:</strong> ${status}
     `);
 
+    // Center tooltip above the cell
     const cellRect = event.currentTarget.getBoundingClientRect();
     const tooltip = tooltipRef.current;
 
@@ -53,15 +44,22 @@ const Heatmap = ({ data, plantKPI }) => {
         const tooltipRect = tooltip.getBoundingClientRect();
         let left = cellRect.left + (cellRect.width / 2) - (tooltipRect.width / 2);
         let top = cellRect.top - tooltipRect.height - 8;
-        if (top < 0) top = cellRect.bottom + 8;
+        // If not enough space above, show below
+        if (top < 0) {
+          top = cellRect.bottom + 8;
+        }
+        // Prevent overflow right
         if (left + tooltipRect.width > window.innerWidth) {
           left = window.innerWidth - tooltipRect.width - 8;
         }
+        // Prevent overflow left
         if (left < 0) left = 8;
         setTooltipStyle({ left, top });
       }
     }, 0);
   };
+
+  const handleMouseMove = () => {}; // Not needed with this positioning
 
   const handleMouseOut = () => {
     setTooltipVisible(false);
@@ -88,7 +86,10 @@ const Heatmap = ({ data, plantKPI }) => {
         <h4>Legend:</h4>
         {legendData.map((item, index) => (
           <div key={index} className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: item.color }}></div>
+            <div
+              className="legend-color"
+              style={{ backgroundColor: item.color }}
+            ></div>
             <span>{item.label}</span>
           </div>
         ))}
@@ -98,20 +99,9 @@ const Heatmap = ({ data, plantKPI }) => {
 
   return (
     <div className="heatmap-root">
-      <div className="plant-kpi-bar1">
-        {kpiMap.map(({ key, label, unit }) => (
-          <div className="kpi-box1" key={key}>
-            <span className="kpi-label1">{label}</span>
-            <span className="kpi-value1">
-              {plantKPI[key] !== undefined ? parseFloat(plantKPI[key]).toFixed(2) : '--'} {unit}
-            </span>
-          </div>
-        ))}
-      </div>
       <div className="heatmap-legend-row">
         <Legend />
       </div>
-
       <div className="heatmap-main-grid heatmap-main-grid-rowwise">
         {heatmapCategories.map((category) => (
           <div key={category.key} className="heatmap-grid-row">

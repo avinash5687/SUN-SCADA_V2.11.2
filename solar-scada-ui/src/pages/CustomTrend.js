@@ -11,21 +11,31 @@ const BASE_URL =
     : "http://103.102.234.177:5000";
 
 const API_BASE_URL = `${BASE_URL}/api/custom-trend`;
-const KPI_URL = `${BASE_URL}/api/dashboard/plant-kpi`;
 
-const plantKPIList = [
-  { label: "Export", key: "P_EXP", unit: "kWh" },
-  { label: "Import", key: "P_IMP", unit: "kWh" },
-  { label: "PR", key: "PR", unit: "%" },
-  { label: "POA", key: "POA", unit: "kWh/m²" },
-  { label: "CUF", key: "CUF", unit: "%" },
-  { label: "PA", key: "PA", unit: "%" },
-  { label: "GA", key: "GA", unit: "%" },
+// Primary and secondary color palettes (distinct, visible, no white)
+const PRIMARY_COLORS = [
+  '#1976D2', // Blue
+  '#E53935', // Red
+  '#43A047', // Green
+  '#FB8C00', // Orange
+  '#8E24AA', // Purple
+  '#00897B', // Teal
+  '#6D4C41', // Brown
 ];
 
-const PRIMARY_COLORS = ['#1976D2', '#E53935', '#43A047', '#FB8C00', '#8E24AA', '#00897B', '#6D4C41'];
-const SECONDARY_COLORS = ['#3949AB', '#FDD835', '#D81B60', '#00ACC1', '#F4511E', '#7CB342', '#C0CA33', '#5E35B1', '#039BE5'];
+const SECONDARY_COLORS = [
+  '#3949AB', // Indigo
+  '#FDD835', // Yellow (dark)
+  '#D81B60', // Pink
+  '#00ACC1', // Cyan
+  '#F4511E', // Deep Orange
+  '#7CB342', // Light Green
+  '#C0CA33', // Lime
+  '#5E35B1', // Deep Purple
+  '#039BE5', // Light Blue
+];
 
+// Shuffle helper to randomize color order
 function shuffle(array) {
   let arr = array.slice();
   for (let i = arr.length - 1; i > 0; i--) {
@@ -46,10 +56,10 @@ const CustomTrend = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [trendData, setTrendData] = useState([]);
-  const [plantKPI, setPlantKPI] = useState({});
   const chartRef = useRef(null);
   const [chartHeight, setChartHeight] = useState(getChartHeight());
   const [showForm, setShowForm] = useState(true);
+
 
   function getChartHeight() {
     const width = window.innerWidth;
@@ -91,21 +101,6 @@ const CustomTrend = () => {
     }
   }, [selectedTable2]);
 
-  useEffect(() => {
-    const fetchKPI = async () => {
-      try {
-        const res = await axios.get(`${KPI_URL}?_=${Date.now()}`);
-        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          setPlantKPI(res.data[0]);
-        }
-      } catch (error) {
-        console.error("Error fetching plant KPI:", error);
-      }
-    };
-
-    fetchKPI();
-  }, []);
-
   const fetchTrendData = async () => {
     if (!selectedTable1 || selectedColumns1.length === 0 || !startDate || !endDate) {
       alert("Please select at least one table, columns, and date range!");
@@ -134,7 +129,7 @@ const CustomTrend = () => {
       });
 
       setTrendData(formatted);
-      setShowForm(false);
+      setShowForm(false);  // hide form after data fetched
     } catch (error) {
       console.error("Fetch trend data error:", error);
     }
@@ -168,11 +163,13 @@ const CustomTrend = () => {
     }
   };
 
+  // Build dynamic yAxis and series
   const allColumns = [
     ...selectedColumns1.map(col => ({ table: selectedTable1, column: col })),
     ...selectedColumns2.map(col => ({ table: selectedTable2, column: col }))
   ];
 
+  // Combine and shuffle primary and secondary colors
   const colorList = [...shuffle(PRIMARY_COLORS), ...shuffle(SECONDARY_COLORS)];
 
   const yAxis = allColumns.map((colObj, index) => ({
@@ -222,20 +219,6 @@ const CustomTrend = () => {
 
   return (
     <Layout>
-      {/* ✅ KPI BAR */}
-      <div className="plant-kpi-bar1">
-        {plantKPIList.map(({ label, key, unit }) => (
-          <div key={label} className="kpi-box1">
-            <span className="kpi-label1">{label}</span>
-            <span className="kpi-value1">
-              {plantKPI[key] !== undefined && plantKPI[key] !== null
-                ? `${parseFloat(plantKPI[key]).toFixed(2)} ${unit}`
-                : "--"}
-            </span>
-          </div>
-        ))}
-      </div>
-
       <div className="trend-container">
         <h2 style={{ fontSize: '20px' }}>📈 Custom Trend Analysis</h2>
         {showForm && (
@@ -289,7 +272,6 @@ const CustomTrend = () => {
             </div>
           </div>
         )}
-
         <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
           {!trendData.length && (
             <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>

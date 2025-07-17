@@ -1,7 +1,9 @@
+// MFM.js
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./MFM.css";
-import mfmImage from "../assets/Meter.jpg";
+import "./MFM.css"; // All styles will come from this file
+import mfmImage from '../assets/Meter.jpg'; // Make sure this path is correct
 
 const API_BASE_URL =
   window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
@@ -10,7 +12,6 @@ const API_BASE_URL =
 
 const MFM = () => {
   const [mfmData, setMfmData] = useState([]);
-  const [plantKPI, setPlantKPI] = useState({});
 
   const fetchMFMData = () => {
     axios
@@ -19,56 +20,17 @@ const MFM = () => {
       .catch((error) => console.error("Error fetching MFM data:", error));
   };
 
-  const fetchPlantKPI = async () => {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
-      if (Array.isArray(res.data) && res.data.length > 0) {
-        setPlantKPI(res.data[0]); // assuming it's an array with 1 object
-      } else {
-        setPlantKPI({});
-      }
-    } catch (err) {
-      console.error("Error fetching plant KPI", err);
-      setPlantKPI({});
-    }
-  };
-
   useEffect(() => {
     fetchMFMData();
-    fetchPlantKPI();
-    const interval = setInterval(() => {
-      fetchMFMData();
-      fetchPlantKPI();
-    }, 30000);
+    const interval = setInterval(fetchMFMData, 30000);
     return () => clearInterval(interval);
   }, []);
 
-  const plantKPIList = [
-    { label: "Export", key: "P_EXP", unit: "kWh" },
-    { label: "Import", key: "P_IMP", unit: "kWh" },
-    { label: "PR", key: "PR", unit: "%" },
-    { label: "POA", key: "POA", unit: "kWh/m²" },
-    { label: "CUF", key: "CUF", unit: "%" },
-    { label: "PA", key: "PA", unit: "%" },
-    { label: "GA", key: "GA", unit: "%" },
-  ];
-
   return (
     <div className="mfm-container">
-      {/* ✅ Plant KPI Section */}
-      <div className="plant-kpi-bar1">
-        {plantKPIList.map(({ label, key, unit }) => (
-          <div key={label} className="kpi-box1">
-            <span className="kpi-label1">{label}</span>
-            <span className="kpi-value1">
-              {plantKPI[key] !== undefined && plantKPI[key] !== null
-                ? `${parseFloat(plantKPI[key]).toFixed(2)} ${unit}`
-                : "--"}
-            </span>
-          </div>
-        ))}
-      </div>
-      <h2 className="mfm-title"></h2>
+      <h2 className="mfm-title">MFM Data Overview</h2>
+
+      {/* This wrapper enables horizontal scrolling for the wide table */}
       <div className="mfm-table-wrapper">
         <table className="mfm-table">
           <thead>
@@ -84,7 +46,7 @@ const MFM = () => {
                         className={`status-indicator ${
                           meter.CUM_STS === 1 ? "status-green" : "status-red"
                         }`}
-                        title={meter.CUM_STS === 1 ? "Online" : "Offline"}
+                        title={meter.CUM_STS === 1 ? 'Online' : 'Offline'}
                       ></div>
                     </div>
                   </div>
