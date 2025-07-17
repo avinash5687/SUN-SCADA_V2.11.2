@@ -17,12 +17,13 @@ const AlarmScreen = () => {
   // ✅ Fetch Alarms
   const fetchAlarms = async () => {
     try {
-      const response = await axios.get(API_BASE_URL);
+      const response = await axios.get(`${API_BASE_URL}/api/alarm`);
       setAlarms(response.data);
     } catch (error) {
       console.error("❌ Error fetching alarms:", error);
     }
   };
+
 
   // ✅ Open Acknowledge Popup (for individual or bulk)
   const openAckPopup = (id = null, isBulk = false) => {
@@ -80,10 +81,12 @@ const AlarmScreen = () => {
   // ✅ Clear an Individual Alarm
   const clearAlarm = async (id) => {
     try {
-      await axios.put(`${API_BASE_URL}/clear/${id}`);
+      console.log("Clearing alarm ID:", id);
+      await axios.put(`${API_BASE_URL}/api/alarm/clear/${id}`);  // ✅ fixed
       fetchAlarms();
     } catch (error) {
       console.error(`❌ Error clearing alarm ID ${id}:`, error);
+      alert("Failed to clear the alarm. Please try again.");
     }
   };
 
@@ -91,7 +94,7 @@ const AlarmScreen = () => {
   const clearAllActiveAlarms = async () => {
     const activeAlarms = alarms.filter((alarm) => alarm.status === "ON");
     for (const alarm of activeAlarms) {
-      await axios.put(`${API_BASE_URL}/clear/${alarm.id}`);
+      await axios.put(`${API_BASE_URL}/api/alarm/clear/${alarm.id}`); // ✅ fixed
     }
     fetchAlarms();
   };

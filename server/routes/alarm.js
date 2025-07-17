@@ -95,13 +95,20 @@ router.put("/ack-all", async (req, res) => {
 });
 
 // ✅ Clear Alarm
+// alarmRoutes.js or wherever your routes are defined
+
 router.put("/clear/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const pool = await getDbPool();
-    await pool.request().query(`UPDATE Alarms SET timeOff = GETDATE(), status = 'OFF' WHERE id = ${id}`);
+    await pool
+      .request()
+      .input("id", sql.Int, id)
+      .query("UPDATE Alarms SET timeOff = GETDATE(), status = 'OFF' WHERE id = @id");
+
     res.json({ message: "Alarm Cleared" });
   } catch (error) {
+    console.error("Error clearing alarm:", error);
     res.status(500).json({ message: "Error clearing alarm", error });
   }
 });

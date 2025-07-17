@@ -15,6 +15,11 @@ import html2canvas from "html2canvas";
 import "./Layout.css";
 import logo from "../assets/logo.png";
 
+const API_BASE_URL =
+  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5000"
+    : "http://103.102.234.177:5000";
+
 // 🧠 Helpers
 const getOrdinalSuffix = (day) => {
   if (day > 3 && day < 21) return "th";
@@ -74,23 +79,24 @@ const Layout = ({ children }) => {
     setSound(alarmSound);
   }, []);
 
-  useEffect(() => {
-    const checkForAlarms = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/api/alarm");
-        const activeAlarms = response.data.filter((alarm) => alarm.status === "ON");
-        setActiveAlarmCount(activeAlarms.length);
-        if (activeAlarms.length > 0) {
-          setHasNewAlarm(true);
-          if (!isMuted) sound?.play();
-        } else {
-          setHasNewAlarm(false);
-          sound?.stop();
-        }
-      } catch (error) {
-        console.error("Error fetching alarms:", error);
+useEffect(() => {
+  const checkForAlarms = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/alarm`);
+      const activeAlarms = response.data.filter((alarm) => alarm.status === "ON");
+      setActiveAlarmCount(activeAlarms.length);
+
+      if (activeAlarms.length > 0) {
+        setHasNewAlarm(true);
+        if (!isMuted) sound?.play();
+      } else {
+        setHasNewAlarm(false);
+        sound?.stop();
       }
-    };
+    } catch (error) {
+      console.error("Error fetching alarms:", error);
+    }
+  };
 
     const alarmInterval = setInterval(checkForAlarms, 5000);
     return () => clearInterval(alarmInterval);
@@ -102,24 +108,26 @@ const Layout = ({ children }) => {
     localStorage.setItem("sidebarState", JSON.stringify(newState));
   };
 
-  const toggleMute = () => {
-    setIsMuted((prevMuted) => {
-      const newMuted = !prevMuted;
-      localStorage.setItem("alarmMuted", JSON.stringify(newMuted));
-      if (newMuted) {
-        sound?.stop();
-      } else {
-        axios.get("http://localhost:5000/api/alarm")
-          .then((response) => {
-            if (response.data.some((alarm) => alarm.status === "ON")) {
-              sound?.play();
-            }
-          })
-          .catch((error) => console.error("Error checking alarms:", error));
-      }
-      return newMuted;
-    });
-  };
+const toggleMute = () => {
+  setIsMuted((prevMuted) => {
+    const newMuted = !prevMuted;
+    localStorage.setItem("alarmMuted", JSON.stringify(newMuted));
+
+    if (newMuted) {
+      sound?.stop();
+    } else {
+      axios.get(`${API_BASE_URL}/api/alarm`)
+        .then((response) => {
+          if (response.data.some((alarm) => alarm.status === "ON")) {
+            sound?.play();
+          }
+        })
+        .catch((error) => console.error("Error checking alarms:", error));
+    }
+
+    return newMuted;
+  });
+};
 
   const handleNavigation = (item) => {
     if (item.isExternal) {
