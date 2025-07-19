@@ -8,9 +8,16 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ Single CORS configuration
+// ✅ UPDATED: Single CORS configuration allowing both HTTP and HTTPS for production domains
 app.use(cors({ 
-  origin: ["http://localhost:3000", "http://103.102.234.177:3000"], 
+  origin: [
+    "http://localhost:3000",             // For local development
+    "http://103.102.234.177:3000",       // Production IP (HTTP)
+    "https://103.102.234.177:3000",      // Production IP (HTTPS)
+    "http://sun-scada.com:3000",         // Production Domain (HTTP)
+    "https://sun-scada.com",             // NEW: Production Domain (HTTPS, standard port)
+    "https://sun-scada.com:3000"         // NEW: Production Domain (HTTPS, port 3000)
+  ], 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]

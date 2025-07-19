@@ -83,16 +83,19 @@ useEffect(() => {
   const checkForAlarms = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/alarm`);
-      const activeAlarms = response.data.filter((alarm) => alarm.status === "ON");
-      setActiveAlarmCount(activeAlarms.length);
+      const activeUnacknowledgedAlarms = response.data.filter(
+        (alarm) => alarm.status === "ON" && !alarm.acknowledged
+      );
 
-      if (activeAlarms.length > 0) {
-        setHasNewAlarm(true);
+      setActiveAlarmCount(activeUnacknowledgedAlarms.length);
+      setHasNewAlarm(activeUnacknowledgedAlarms.length > 0);
+
+      if (activeUnacknowledgedAlarms.length > 0) {
         if (!isMuted) sound?.play();
       } else {
-        setHasNewAlarm(false);
-        sound?.stop();
+        sound?.stop(); // Stop sound if no unacknowledged alarms
       }
+
     } catch (error) {
       console.error("Error fetching alarms:", error);
     }
@@ -118,7 +121,7 @@ const toggleMute = () => {
     } else {
       axios.get(`${API_BASE_URL}/api/alarm`)
         .then((response) => {
-          if (response.data.some((alarm) => alarm.status === "ON")) {
+          if (response.data.some((alarm) => alarm.status === "ON" && !alarm.acknowledged)) {
             sound?.play();
           }
         })

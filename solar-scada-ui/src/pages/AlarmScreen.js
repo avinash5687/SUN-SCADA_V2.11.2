@@ -46,7 +46,7 @@ const AlarmScreen = () => {
     }
 
     try {
-      await axios.put(`${API_BASE_URL}/ack/${selectedAlarmId}`, { ackComment: comment });
+      await axios.put(`${API_BASE_URL}/api/alarm/ack/${selectedAlarmId}`, { ackComment: comment });
       fetchAlarms();
       closePopup();
     } catch (error) {
@@ -70,7 +70,7 @@ const AlarmScreen = () => {
     }
 
     try {
-      await axios.put(`${API_BASE_URL}/ack-all`, { alarmIds, ackComment: comment });
+      await axios.put(`${API_BASE_URL}/api/alarm/ack-all`, { alarmIds, ackComment: comment });
       fetchAlarms();
       closePopup();
     } catch (error) {
