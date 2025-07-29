@@ -8,11 +8,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import "./WMS.css";
 import ProgressBarCell from './ProgressBarCell';
-
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const parametersConfig = [
   { name: "Timestamp", key: "Date_Time", unit: "", max: null },
@@ -50,9 +46,9 @@ const WMS = () => {
     const fetchAllData = async () => {
       try {
         const [wmsRes, chartRes, soilRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/wms`),
-          axios.get(`${API_BASE_URL}/api/wms/WMS-CHART`),
-          axios.get(`${API_BASE_URL}/api/wms/SOIL-CHART`)
+          axios.get(API_ENDPOINTS.wms.getAll),
+          axios.get(API_ENDPOINTS.wms.chart),
+          axios.get(API_ENDPOINTS.wms.soilChart)
         ]);
         setWmsData(wmsRes.data);
         setChartData(chartRes.data);

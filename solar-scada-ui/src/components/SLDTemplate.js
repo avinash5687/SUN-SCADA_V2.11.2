@@ -3,11 +3,7 @@ import Layout from './Layout';
 import sldImage from '../assets/Plant_SLD_21MWp.png';
 import axios from 'axios';
 import './sldScreen.css';
-
-const API_BASE_URL =
-  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000'
-    : 'http://103.102.234.177:5000';
+import { API_ENDPOINTS } from '../apiConfig';
 
 const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
@@ -21,9 +17,9 @@ const SLDScreen = () => {
       const mfmIds = [1, 2, 3, 4, 5, 6, 7, 8];
 
       const inverterStatusPromises = inverterIds.map(id =>
-        axios.get(`${API_BASE_URL}/api/inverter?id=${id}`)
+        axios.get(API_ENDPOINTS.inverter.getAll, { params: { id } })
       );
-      const mfmStatusAll = await axios.get(`${API_BASE_URL}/api/mfm`);
+      const mfmStatusAll = await axios.get(API_ENDPOINTS.mfm.getAll);
 
       const inverterResponses = await Promise.all(inverterStatusPromises);
       const inverterStatusObj = {};

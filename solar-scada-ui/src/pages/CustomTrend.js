@@ -3,14 +3,8 @@ import axios from "axios";
 import Layout from "../components/Layout";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { API_ENDPOINTS } from "../apiConfig";
 import "./CustomTrend.css";
-
-const BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
-
-const API_BASE_URL = `${BASE_URL}/api/custom-trend`;
 
 // Primary and secondary color palettes (distinct, visible, no white)
 const PRIMARY_COLORS = [
@@ -80,14 +74,14 @@ const CustomTrend = () => {
   }, []);
 
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/getTables`)
+    axios.get(API_ENDPOINTS.customTrend.getTables)
       .then((res) => setTables(res.data))
       .catch((err) => console.error("Tables fetch error:", err));
   }, []);
 
   useEffect(() => {
     if (selectedTable1) {
-      axios.get(`${API_BASE_URL}/getColumns/${selectedTable1}`)
+      axios.get(API_ENDPOINTS.customTrend.getColumns(selectedTable1))
         .then((res) => setColumns1(res.data))
         .catch((err) => console.error("Columns1 fetch error:", err));
     }
@@ -95,7 +89,7 @@ const CustomTrend = () => {
 
   useEffect(() => {
     if (selectedTable2) {
-      axios.get(`${API_BASE_URL}/getColumns/${selectedTable2}`)
+      axios.get(API_ENDPOINTS.customTrend.getColumns(selectedTable2))
         .then((res) => setColumns2(res.data))
         .catch((err) => console.error("Columns2 fetch error:", err));
     }
@@ -108,7 +102,7 @@ const CustomTrend = () => {
     }
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/getTableData`, {
+      const res = await axios.post(API_ENDPOINTS.customTrend.getTableData, {
         table1: selectedTable1,
         columns1: selectedColumns1,
         table2: selectedTable2,
@@ -142,7 +136,7 @@ const CustomTrend = () => {
     }
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/exportCSV`, {
+      const res = await axios.post(API_ENDPOINTS.customTrend.exportCsv, {
         table1: selectedTable1,
         columns1: selectedColumns1,
         table2: selectedTable2,

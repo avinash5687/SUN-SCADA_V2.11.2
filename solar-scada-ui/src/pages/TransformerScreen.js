@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './TransformerScreen.css';
-
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL ||
-  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000");
+import { API_ENDPOINTS } from '../apiConfig';
 
 const TransformerScreen = () => {
   const [transformerData, setTransformerData] = useState([]);
@@ -21,7 +16,7 @@ const TransformerScreen = () => {
   const fetchData = async () => {
     try {
       setError(null);
-      const res = await axios.get(`${API_BASE_URL}/api/transformer`);
+      const res = await axios.get(API_ENDPOINTS.transformer.getAll);
       const formattedData = res.data.map((item) => ({
         title: item.NAME,
         values: {

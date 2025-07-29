@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/BACKGROUND.jpeg";
 import logo from "../assets/logo.png";
-
-const baseUrl =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -24,7 +20,7 @@ const Login = () => {
   useEffect(() => {
     const fetchEnergyData = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/data/energy-data`);
+        const response = await fetch(API_ENDPOINTS.data.energyData);
         const data = await response.json();
         if (response.ok) {
           setEnergyData(data);
@@ -46,7 +42,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch(`${baseUrl}/api/auth/login`, {
+      const response = await fetch(API_ENDPOINTS.auth.login, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

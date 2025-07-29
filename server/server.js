@@ -1,22 +1,30 @@
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+
+// ✅ Load environment variables first, specifying the path to your .env file
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
 const { getDbPool } = require("./db");
-const sql = require("mssql");
-dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 8443; // Use a non-privileged port for development
+const HTTP_PORT = process.env.HTTP_PORT || 5000;   // Default to 5000 for local development
 
-// ✅ UPDATED: Single CORS configuration allowing both HTTP and HTTPS for production domains
+// --- Middleware ---
+// A more secure CORS configuration.
+// This allows requests from your local dev environment and your production domain over HTTPS.
 app.use(cors({ 
   origin: [
-    "http://localhost:3000",             // For local development
-    "http://103.102.234.177:3000",       // Production IP (HTTP)
-    "https://103.102.234.177:3000",      // Production IP (HTTPS)
-    "http://sun-scada.com:3000",         // Production Domain (HTTP)
-    "https://sun-scada.com",             // NEW: Production Domain (HTTPS, standard port)
-    "https://sun-scada.com:3000"         // NEW: Production Domain (HTTPS, port 3000)
+    "https://localhost:3000",      // For local React development server
+    "https://sun-scada.com",      // Your production domain
+    "https://www.sun-scada.com",   // Optional: if you use the 'www' subdomain
+    "https://103.102.234.177",    // Your server's public IP (HTTPS)
+    "http://103.102.234.177"      // Your server's public IP (HTTP)
   ], 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -25,6 +33,11 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- Serve React App ---
+// This serves your production-built React app.
+const uiBuildPath = path.join(__dirname, '..', 'solar-scada-ui', 'build');
+app.use(express.static(uiBuildPath));
 
 // ✅ Error handling middleware
 app.use((err, req, res, next) => {
@@ -40,7 +53,7 @@ getDbPool()
     // Attach pool to app locals
     app.locals.db = pool;
 
-    // ✅ Route imports
+    // --- API Routes ---
     app.use("/api/auth", require("./routes/authRoutes"));
     app.use("/api/data", require("./routes/dataRoutes"));
     app.use("/api/inverter", require("./routes/inverter"));
@@ -51,17 +64,44 @@ getDbPool()
     app.use("/api/custom-trend", require("./routes/customTrend"));
     app.use("/api/transformer", require("./routes/transformer"));
 
-    // ✅ Add server startup error handling
-    const server = app.listen(port, () => {
-      console.log(`🚀 Server running on http://localhost:${port}`);
+    // --- React Catch-all Route ---
+    // This must be AFTER your API routes. It serves the index.html for any
+    // request that doesn't match an API route, enabling client-side routing.
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(uiBuildPath, 'index.html'));
     });
 
-    server.on("error", (error) => {
-      if (error.code === "EADDRINUSE") {
-        console.error(`Port ${port} is already in use`);
+    // --- Server Startup Logic ---
+    if (process.env.NODE_ENV === 'production') {
+      // --- Production: Start HTTPS Server ---
+      try {
+        const certsDir = path.resolve(__dirname, 'SSL_certificate');
+        const privateKey = fs.readFileSync(path.join(certsDir, 'private.key'), 'utf8');
+        const certificate = fs.readFileSync(path.join(certsDir, 'certificate.crt'), 'utf8');
+        const caBundle = fs.readFileSync(path.join(certsDir, 'ca_bundle.crt'), 'utf8');
+        const credentials = { key: privateKey, cert: certificate, ca: caBundle };
+
+        const httpsServer = https.createServer(credentials, app);
+        httpsServer.listen(HTTPS_PORT, () => {
+          console.log(`🚀 HTTPS Server running on port ${HTTPS_PORT}`);
+        });
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          console.error('❌ SSL Certificate Error: Could not find certificate files for production.');
+          console.error(`   Searched in: ${error.path}`);
+        } else {
+          console.error('❌ Failed to start HTTPS server:', error);
+        }
+        process.exit(1);
       }
-      process.exit(1);
-    });
+    } else {
+      // --- Development: Start HTTP Server ---
+      http.createServer(app).listen(HTTP_PORT, () => {
+        console.log(`🚀 HTTP Development Server running on port ${HTTP_PORT}`);
+        console.log(`   UI proxy is set to "http://localhost:${HTTP_PORT}"`);
+      });
+    }
+
   })
   .catch((error) => {
     console.error("❌ Failed to Connect to Database. Exiting...", error);

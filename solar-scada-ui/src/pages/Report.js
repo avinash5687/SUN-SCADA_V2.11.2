@@ -1,13 +1,14 @@
 import React from "react";
 import { Container, Button, Typography } from "@mui/material";
 import "./Report.css";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const Report = () => {
   const getReportURL = () => {
-    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-    return isLocal
-      ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
-      : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render";
+    // Use environment variables for flexibility. Fallback to local for development.
+    return process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_REPORT_SERVER_URL
+      : API_ENDPOINTS.report.local;
   };
 
   const handleOpenReport = () => {

@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Inverter.css";
 import inverterImage from '../assets/Sungrow_inv.png';
-
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const Inverter = () => {
   const [inverterData, setInverterData] = useState([]);
@@ -14,7 +10,7 @@ const Inverter = () => {
 
   const fetchInverterData = () => {
     axios
-      .get(`${API_BASE_URL}/api/inverter`)
+      .get(API_ENDPOINTS.inverter.getAll)
       .then((response) => {
         setInverterData(response.data);
         setLoading(false);

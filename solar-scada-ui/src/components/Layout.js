@@ -14,11 +14,7 @@ import { Howl } from "howler";
 import html2canvas from "html2canvas";
 import "./Layout.css";
 import logo from "../assets/logo.png";
-
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 // 🧠 Helpers
 const getOrdinalSuffix = (day) => {
@@ -82,7 +78,7 @@ const Layout = ({ children }) => {
 useEffect(() => {
   const checkForAlarms = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/alarm`);
+      const response = await axios.get(API_ENDPOINTS.alarm.getAll);
       const activeUnacknowledgedAlarms = response.data.filter(
         (alarm) => alarm.status === "ON" && !alarm.acknowledged
       );
@@ -119,7 +115,7 @@ const toggleMute = () => {
     if (newMuted) {
       sound?.stop();
     } else {
-      axios.get(`${API_BASE_URL}/api/alarm`)
+      axios.get(API_ENDPOINTS.alarm.getAll)
         .then((response) => {
           if (response.data.some((alarm) => alarm.status === "ON" && !alarm.acknowledged)) {
             sound?.play();
@@ -197,8 +193,8 @@ const toggleMute = () => {
         text: "Report",
         isExternal: true,
         url: window.location.hostname.includes("localhost")
-          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
-          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
+          ? API_ENDPOINTS.report.local
+          : API_ENDPOINTS.report.production,
       }
     ] : role === "Operator" ? [
       { path: "/AlarmScreen", icon: faBell, text: "Alarm" },
@@ -208,8 +204,8 @@ const toggleMute = () => {
         text: "Report",
         isExternal: true,
         url: window.location.hostname.includes("localhost")
-          ? "http://localhost/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render"
-          : "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
+          ? API_ENDPOINTS.report.local
+          : API_ENDPOINTS.report.production,
       }
     ] : []) // Technician only sees Dashboard
   ];

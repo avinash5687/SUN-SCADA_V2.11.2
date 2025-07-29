@@ -4,18 +4,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./MFM.css"; // All styles will come from this file
 import mfmImage from '../assets/Meter.jpg'; // Make sure this path is correct
-
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"
-    : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const MFM = () => {
   const [mfmData, setMfmData] = useState([]);
 
   const fetchMFMData = () => {
     axios
-      .get(`${API_BASE_URL}/api/mfm`)
+      .get(API_ENDPOINTS.mfm.getAll)
       .then((response) => setMfmData(response.data))
       .catch((error) => console.error("Error fetching MFM data:", error));
   };

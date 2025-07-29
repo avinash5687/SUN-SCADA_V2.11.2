@@ -1,7 +1,4 @@
 const sql = require("mssql");
-const dotenv = require("dotenv");
-
-dotenv.config();
 
 const dbConfig = {
     server: process.env.DB_SERVER,
@@ -14,7 +11,7 @@ const dbConfig = {
         trustServerCertificate: true, 
         enableArithAbort: true
     },
-    requestTimeout: 0, // 🔥 Set SQL timeout to unlimited
+    requestTimeout: 30000, // Set timeout to 30 seconds
     pool: {
     max: 10,
     min: 0,
@@ -34,6 +31,7 @@ async function getDbPool() {
         } catch (error) {
             console.error("❌ DB Connection Error:", error);
             poolPromise = null;
+            throw error; // Re-throw the error to be caught by the caller
         }
     }
     return poolPromise;

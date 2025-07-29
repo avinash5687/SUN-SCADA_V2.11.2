@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import DeviceStatusPopup from "../components/DeviceStatusPopup";
+import { API_ENDPOINTS } from "../apiConfig";
 // import KIPCard from "../components/KIPCard";
 import { PieChart, Pie, Cell } from "recharts";
 import "./Dashboard.css";
@@ -30,11 +31,11 @@ const Dashboard = () => {
   const chartRef = useRef(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:5000" : "http://103.102.234.177:5000";
-
   const fetchData = useCallback(async () => {
     try {
-      const { data: plantData } = await axios.get(`${API_BASE_URL}/api/dashboard/plant-kpi?_=${Date.now()}`);
+      const { data: plantData } = await axios.get(API_ENDPOINTS.dashboard.plantKpi, {
+        params: { _: Date.now() },
+      });
       const newKPI = plantData?.[0] || {};
       setPlantKPI((prev) => (JSON.stringify(prev) !== JSON.stringify(newKPI) ? newKPI : prev));
       setCurrentPower(newKPI.currentPower || 0);
@@ -43,12 +44,12 @@ const Dashboard = () => {
       setGridAvailability(newKPI.GA || 0);
       setCUF(newKPI.CUF || 0);
 
-      const { data: lineData } = await axios.get(`${API_BASE_URL}/api/dashboard/line-chart`);
+      const { data: lineData } = await axios.get(API_ENDPOINTS.dashboard.lineChart);
       setLineChartData((prev) => (JSON.stringify(prev) !== JSON.stringify(lineData) ? lineData : prev));
 
       console.log("Line chart data:", lineChartData);
 
-      const { data: wmsResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/WMSDATA-DASH`);
+      const { data: wmsResponse } = await axios.get(API_ENDPOINTS.dashboard.wmsData);
       const newWMSData = wmsResponse?.[0] || {};
       setWMSData((prev) => (JSON.stringify(prev) !== JSON.stringify(newWMSData) ? newWMSData : prev));
 
@@ -57,20 +58,20 @@ const Dashboard = () => {
         setLastUpdated(`Last Data updated on :  ${newWMSData.Date_Time}`);
       }
 
-      const { data: deviceResponse } = await axios.get(`${API_BASE_URL}/api/dashboard/device-status`);
+      const { data: deviceResponse } = await axios.get(API_ENDPOINTS.dashboard.deviceStatus);
       setDeviceStatus(deviceResponse);
 
     } catch (error) {
       console.error("API Error:", error);
     }
-  }, [API_BASE_URL]);
+  }, []);
 
   const fetchBarChartData = useCallback(async () => {
-    let apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart`;
+    let apiUrl = API_ENDPOINTS.dashboard.barChart;
 
-    if (trendType === "week") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart1`;
-    else if (trendType === "month") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart2`;
-    else if (trendType === "year") apiUrl = `${API_BASE_URL}/api/dashboard/bar-chart3`;
+    if (trendType === "week") apiUrl = API_ENDPOINTS.dashboard.barChartWeek;
+    else if (trendType === "month") apiUrl = API_ENDPOINTS.dashboard.barChartMonth;
+    else if (trendType === "year") apiUrl = API_ENDPOINTS.dashboard.barChartYear;
 
     try {
       const { data } = await axios.get(apiUrl, { params: { date: selectedDate } });
@@ -78,7 +79,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("API Error:", error);
     }
-  }, [trendType, selectedDate, API_BASE_URL]);
+  }, [trendType, selectedDate]);
 
   useEffect(() => {
     fetchData();

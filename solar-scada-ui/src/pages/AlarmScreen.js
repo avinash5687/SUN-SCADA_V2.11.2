@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./AlarmScreen.css";
-
-  const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-      ? "http://localhost:5000"
-      : "http://103.102.234.177:5000";
+import { API_ENDPOINTS } from "../apiConfig";
 
 const AlarmScreen = () => {
   const [alarms, setAlarms] = useState([]);
@@ -17,7 +13,7 @@ const AlarmScreen = () => {
   // ✅ Fetch Alarms
   const fetchAlarms = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/alarm`);
+      const response = await axios.get(API_ENDPOINTS.alarm.getAll);
       setAlarms(response.data);
     } catch (error) {
       console.error("❌ Error fetching alarms:", error);
@@ -46,7 +42,7 @@ const AlarmScreen = () => {
     }
 
     try {
-      await axios.put(`${API_BASE_URL}/api/alarm/ack/${selectedAlarmId}`, { ackComment: comment });
+      await axios.put(API_ENDPOINTS.alarm.acknowledge(selectedAlarmId), { ackComment: comment });
       fetchAlarms();
       closePopup();
     } catch (error) {
@@ -70,7 +66,7 @@ const AlarmScreen = () => {
     }
 
     try {
-      await axios.put(`${API_BASE_URL}/api/alarm/ack-all`, { alarmIds, ackComment: comment });
+      await axios.put(API_ENDPOINTS.alarm.acknowledgeAll, { alarmIds, ackComment: comment });
       fetchAlarms();
       closePopup();
     } catch (error) {
@@ -82,7 +78,7 @@ const AlarmScreen = () => {
   const clearAlarm = async (id) => {
     try {
       console.log("Clearing alarm ID:", id);
-      await axios.put(`${API_BASE_URL}/api/alarm/clear/${id}`);  // ✅ fixed
+      await axios.put(API_ENDPOINTS.alarm.clear(id));
       fetchAlarms();
     } catch (error) {
       console.error(`❌ Error clearing alarm ID ${id}:`, error);
@@ -94,7 +90,7 @@ const AlarmScreen = () => {
   const clearAllActiveAlarms = async () => {
     const activeAlarms = alarms.filter((alarm) => alarm.status === "ON");
     for (const alarm of activeAlarms) {
-      await axios.put(`${API_BASE_URL}/api/alarm/clear/${alarm.id}`); // ✅ fixed
+      await axios.put(API_ENDPOINTS.alarm.clear(alarm.id));
     }
     fetchAlarms();
   };
