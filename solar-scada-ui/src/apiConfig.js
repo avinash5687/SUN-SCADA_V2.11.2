@@ -68,6 +68,6 @@ export const API_ENDPOINTS = {
 
   // Report Server
   report: {
-    local: "http://103.102.234.177/ReportServer/Pages/ReportViewer.aspx?%2fReport+Parts%2fIndex_Page&rs:Command=Render",
+    local: process.env.REACT_APP_LOCAL_REPORT_SERVER_URL,
   }
 };
