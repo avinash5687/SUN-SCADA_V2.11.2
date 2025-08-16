@@ -6,7 +6,7 @@
   --primary-color: #1f77b4;
   --hover-color: #555;
   --font-base: Arial;
-  --font-size-base: clamp(0.75rem, 0.9vw, 1rem); 
+  --font-size-base: clamp(0.75rem, 0.9vw, 1rem);
   --table-hover: #e0f7ff;
 }
 
@@ -22,14 +22,14 @@ html, body, #root {
 }
 
 .dashboard-container {
-  padding: 10px 20px 20px 20px; 
+  padding: 10px 20px 20px 20px;
   margin-top: -20px;
   background-color: var(--primary-bg);
   font-family: var(--font-base);
   display: flex;
   box-sizing: border-box;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 100vh;
   overflow: hidden;
   font-size: 0.85rem;
 }
@@ -99,7 +99,7 @@ html, body, #root {
   overflow-x: auto;
 }
 
-.gauge-container > div {  
+.gauge-container > div {
   flex: 1 1 18%;
   min-width: 160px;
   max-width: 200px;
@@ -107,7 +107,7 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  
+
 }
 
 .gauge-wrapper {
@@ -143,7 +143,7 @@ html, body, #root {
   padding: 4px;
   border-radius: 4px;
   overflow: hidden;
-  min-width: 300px;   
+  min-width: 300px;
 }
 
 .bar-chart-container {
@@ -577,15 +577,15 @@ button:focus {
   .bar-chart-container {
     padding: 1px 0;
   }
-  
+
   .generation-total {
     font-size: 0.7rem;
-  } 
+  }
 
   .bar-chart {
     font-size: 8px;
   }
-  
+
   .chart-header {
     padding-top: .5px;
     margin-bottom: 2px;
@@ -596,7 +596,7 @@ button:focus {
     padding-bottom: 1px;
     font-size: 10px;
   }
-  
+
   .equipment-wms-container {
     height: 170px;
     margin-top: 30px;
@@ -621,7 +621,7 @@ button:focus {
   .equipment-status-header, h4.component-title {
     font-size: .8rem;
     padding: 3px;
-  } 
+  }
 
   .kip-cards-container {
     margin-top: 0px;
@@ -663,15 +663,15 @@ button:focus {
   .bar-chart-container {
     padding: 1px 0;
   }
-  
+
   .generation-total {
     font-size: 0.7rem;
-  } 
+  }
 
   .bar-chart {
     font-size: 8px;
   }
-  
+
   .chart-header {
     padding-top: .5px;
     margin-bottom: 2px;
@@ -682,7 +682,7 @@ button:focus {
     padding-bottom: 1px;
     font-size: 10px;
   }
-  
+
   .equipment-wms-container {
     height: 185px;
     margin-top: 40px;
@@ -707,7 +707,7 @@ button:focus {
   .equipment-status-header, h4.component-title {
     font-size: .8rem;
     padding: 4px;
-  } 
+  }
 
   .kip-cards-container {
     margin-top: 0px;
@@ -734,13 +734,13 @@ button:focus {
 
   .generation-total {
     font-size: 0.9rem;
-  } 
+  }
 
   .chart {
     flex: 1 1 45%;
     max-height: 14rem;
   }
-  
+
   /* .bar-chart {
     height: 170px;
     padding-bottom: 1px;
@@ -773,7 +773,7 @@ button:focus {
   }
 
   .open-popup-btn, .chart-controls {
-    
+
   font-size: .8rem;
   }
 
@@ -784,7 +784,7 @@ button:focus {
   }
 
 
-  
+
 }
 
 @media (min-width: 1601px) and (max-width: 1920px) {
@@ -813,7 +813,7 @@ button:focus {
     flex: 1 1 48%;
     font-size: 20px;
     height: 280px;
-   
+
   }
 
   .chart-header {
@@ -834,11 +834,11 @@ button:focus {
   .bar-chart-container {
     padding: 4px 0;
   }
-  
+
   .generation-total {
     margin-bottom: .5px;
     font-size: 1.2rem;
-  } 
+  }
 
   .bar-chart {
     height: 180px;
@@ -870,7 +870,7 @@ button:focus {
 
   .equipment-status-header, h4.component-title {
   font-size: 1.3rem;
-} 
+}
 
 }
 
@@ -957,7 +957,7 @@ button:focus {
 
   .equipment-status-header, h4.component-title {
     font-size: 1.5rem;
-  } 
+  }
 }
 
 
