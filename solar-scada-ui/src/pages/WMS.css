@@ -2,10 +2,11 @@
 .wms-container-fullscreen {
   /* width: calc(100vw - 97px); */
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 50px);
   background-color: #f0f4f8;
   padding: 10px;
   box-sizing: border-box;
+  border-radius: 8px;
   overflow: hidden; /* Prevent the main page from scrolling */
   display: flex;
   flex-direction: column;

@@ -1,11 +1,13 @@
 .heatmap-root {
-  width: 99%;
-  height: 95vh;
+  width: 100%;
+  height: calc(100vh - 50px); /* Subtract exact header height */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   background: #fafbfc;
   overflow: hidden;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 /* Legend at the top, horizontal */

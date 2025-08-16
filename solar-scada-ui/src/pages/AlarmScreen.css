@@ -2,10 +2,11 @@
     max-width: 100%;
     text-align: center;
     background-color: rgb(10, 7, 7);
-    padding: 18px;
+    padding: 10px;
     height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
 }
 
 /* ✅ Restrict Table Height & Enable Scroll */

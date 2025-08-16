@@ -1,6 +1,7 @@
 // src/components/FormulaBox.jsx
 import React from "react";
 
+
 const FormulaBox = ({ title, text, formula }) => {
   return (
     <div

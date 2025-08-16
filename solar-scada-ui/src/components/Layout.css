@@ -42,8 +42,8 @@
 
 /* Modern Toggle Button Design */
 .modern-toggle-button {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,7 +130,7 @@
 }
 
 .brand-name {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   margin: 0;
   background: linear-gradient(135deg, #87ceeb, #4682b4);
@@ -156,7 +156,7 @@
 /* Bolder Project Name */
 .project-title {
   font-weight: 900 !important; /* Increased from 700 to 900 for extra boldness */
-  font-size: 13px !important;
+  font-size: 14px !important;
   letter-spacing: 0.3px; /* Slightly increased for better readability */
   margin: 0;
   white-space: nowrap;
@@ -238,13 +238,13 @@
   height: 32px; /* Increased from 24px to 32px */
   width: auto;
   border-radius: 6px;
-  margin-left: 6px;
+  margin-left: 0px;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
 }
 
 .header-logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.20);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -391,7 +391,7 @@
   position: fixed;
   left: 0;
   top: 38px;
-  width: 200px;
+  width: 160px;
   height: calc(100vh - 38px);
   background: linear-gradient(180deg,
     rgba(26, 54, 93, 0.95) 0%,
@@ -406,7 +406,7 @@
 }
 
 .modern-sidebar.collapsed {
-  width: 60px;
+  width: 55px;
 }
 
 .modern-sidebar.mobile-closed {
@@ -417,22 +417,22 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  padding: 8px 0;
 }
 
 .nav-items {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 0 8px;
+  gap: 4px;
+  padding: 0 6px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
+  gap: 6px;
+  padding: 6px 8px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
@@ -459,7 +459,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 15px;
   flex-shrink: 0;
 }
 
@@ -470,7 +470,7 @@
 
 .nav-item-text {
   font-weight: 500;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   opacity: 0.9;
 }
@@ -488,7 +488,7 @@
 /* Main Content Area */
 .modern-main-content {
   flex: 1;
-  margin-left: 200px;
+  margin-left: 160px;
   margin-top: 38px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: calc(100vh - 38px);
@@ -498,7 +498,7 @@
 }
 
 .modern-main-content.sidebar-collapsed {
-  margin-left: 60px;
+  margin-left: 55px;
 }
 
 .modern-main-content.mobile {
@@ -506,12 +506,12 @@
 }
 
 .content-wrapper {
-  padding: 10px;
+  padding: 5px;
   height: 100%;
   background: rgba(240, 248, 255, 0.03);
   backdrop-filter: blur(8px);
   border-radius: 8px 0 0 0;
-  margin: 4px 0 0 0;
+  /* margin: 5px; */
   min-height: calc(100vh - 42px);
   overflow-y: auto;
 }

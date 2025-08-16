@@ -1,9 +1,11 @@
-/* MFM Container */
+/* ================================
+   MFM Container
+================================= */
 .mfm-container {
   width: 100%;
-  height: 91vh;
+  min-height: calc(100vh - 60px); /* Subtract exact header height */
   background: white;
-  padding: 15px;
+  padding: 10px;
   border-radius: 8px;
   background-color: #f0f4f8; /* Soft, professional background */
   overflow: auto;
@@ -11,33 +13,268 @@
   flex-direction: column;
 }
 
-/* Title */
-.mfm-title {
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: #1a3b5d;
-  margin-bottom: 15px;
+/* ================================
+   Header Section with Block Controls - REDUCED SIZE
+================================= */
+.mfm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px; /* Reduced from 20px */
+  padding-bottom: 8px;  /* Reduced from 15px */
+  border-bottom: 1px solid #e9ecef; /* Reduced from 2px */
 }
 
-/* Table Wrapper for horizontal scrolling */
+/* Title - SMALLER */
+.mfm-title {
+  font-weight: 600;
+  font-size: 1.1rem; /* Reduced from 1.25rem */
+  color: #1a3b5d;
+  margin-bottom: 0;
+}
+
+.block-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Reduced from 20px */
+}
+
+.block-buttons {
+  display: flex;
+  gap: 4px; /* Reduced from 8px */
+  background: #f8f9fa;
+  padding: 2px; /* Reduced from 4px */
+  border-radius: 6px; /* Reduced from 10px */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.block-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Reduced from 8px */
+  padding: 6px 10px; /* Reduced from 10px 16px */
+  background: transparent;
+  border: none;
+  border-radius: 4px; /* Reduced from 8px */
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.75rem; /* Reduced from 0.9rem */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 28px; /* Set fixed small height */
+}
+
+.block-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(44, 62, 80, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.block-btn:hover::before {
+  left: 100%;
+}
+
+.block-btn:hover {
+  color: #2c3e50;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Reduced shadow */
+}
+
+.block-btn.active {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  box-shadow: 0 2px 10px rgba(44, 62, 80, 0.3); /* Reduced shadow */
+}
+
+.block-btn.active::before {
+  display: none;
+}
+
+.block-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; /* Reduced from -6px */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent; /* Reduced from 6px */
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #2c3e50;
+}
+
+.block-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  font-size: 0.9em; /* Reduced from 1.1em */
+  transition: transform 0.3s ease;
+}
+
+.block-btn:hover .btn-icon {
+  transform: scale(1.1); /* Reduced from 1.2 */
+}
+
+/* Data Info Section - SMALLER */
+.data-info {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Reduced from 15px */
+}
+
+.active-block-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px; /* Reduced from 2px */
+}
+
+.block-status {
+  font-weight: 700;
+  font-size: 0.75rem; /* Reduced from 0.85rem */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.block-status.block1 {
+  color: #2c3e50;
+}
+
+.block-status.block2 {
+  color: #27ae60;
+}
+
+.meter-count {
+  font-size: 0.65rem; /* Reduced from 0.75rem */
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Reduced from 8px */
+  color: #6c757d;
+  font-size: 0.7rem; /* Reduced from 0.8rem */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.loading-spinner {
+  width: 12px; /* Reduced from 16px */
+  height: 12px;
+  border: 1px solid #f3f3f3; /* Reduced from 2px */
+  border-top: 1px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================
+   No Data Message
+================================= */
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.no-data-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.no-data-message h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.no-data-message p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  max-width: 400px;
+}
+
+.retry-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.retry-btn:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* ================================
+   Table Wrapper - WITH FIXED HEADER
+================================= */
 .mfm-table-wrapper {
   width: 100%;
   overflow-x: auto;
+  overflow-y: auto; /* Add vertical scroll */
   border-radius: 10px;
+  transition: opacity 0.3s ease;
+  flex: 1; /* Take remaining space */
+  max-height: 82vh; /* Set max height for scrolling */
 }
 
-/* Table Styling */
+/* ================================
+   Table Styling - WITH FIXED HEADER & TAHOMA FONT
+================================= */
 .mfm-table {
-  width: 100%;/* ensures consistent structure */
+  width: 100%;
   border-collapse: collapse;
   text-align: center;
   background-color: #ffffff;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-  font-size: 10px;
+  font-size: 12px;
   border: 1px solid #000000;
-  margin-bottom: 20px;
-  height: 79vh;
-  overflow: hidden;
+  margin-bottom: 10px;
+  overflow: visible; /* Change from hidden */
+  font-family: Tahoma, Arial, sans-serif; /* CHANGED TO TAHOMA */
 }
 
 .mfm-table th,
@@ -47,27 +284,79 @@
   white-space: nowrap;
 }
 
-/* Header Styling */
+/* Header Styling - FIXED HEADER WITH CENTER ALIGNMENT */
 .mfm-table th {
-  background-color: #2c3e50;/* Dark, professional blue-gray header */
+  background-color: #2c3e50;
   color: #ffffff;
-  padding: 10px 10px;
+  padding: 10px 30px;
   vertical-align: middle;
-  font-size: 1rem; /* Ensures "Parameters" and "UNIT" match other headers */
+  text-align: center; /* FIXED CENTER ALIGNMENT */
+  font-size: 1.rem;
   border-bottom: 4px solid #3498db;
-  
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Tahoma, Arial, sans-serif; /* TAHOMA FONT */
 }
 
-/* Data Cells (td) */
+/* Enhanced header styling for Parameters and Unit columns - FIXED */
+.parameter-header,
+.unit-header {
+  background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 11 !important; /* Higher than regular headers */
+  text-align: center !important; /* FIXED CENTER ALIGNMENT */
+  font-family: Tahoma, Arial, sans-serif !important; /* TAHOMA FONT */
+}
+
+/* Data Cells (td) - TAHOMA FONT, NO BOLD */
 .mfm-table td {
   padding: 5px;
   vertical-align: middle;
   color: #495057;
   font-size: .80rem;
-  font-weight: 500;
-  /* Adds a black horizontal line above every data cell row */
+  font-weight: 400; /* CHANGED FROM 500 TO NORMAL */
   border-top: 1px solid #000000;
   overflow: hidden;
+  text-align: center; /* CENTER ALIGN ALL DATA */
+  font-family: Tahoma, Arial, sans-serif; /* TAHOMA FONT */
+}
+
+/* Data cell styling - TAHOMA FONT, NO BOLD */
+.data-cell {
+  font-family: Tahoma, Arial, sans-serif; /* CHANGED FROM COURIER NEW */
+  font-weight: 400; /* CHANGED FROM 800 TO NORMAL */
+  position: relative;
+  color: #2c3e50; /* Darker color for better readability */
+  text-align: center; /* CENTER ALIGN */
+}
+
+.data-cell strong {
+  font-weight: 400; /* REMOVED BOLD - CHANGED FROM 900 TO NORMAL */
+  color: #1a1a1a; /* Very dark for maximum contrast */
+}
+
+.parameter-name {
+  background: linear-gradient(135deg, #ecf0f1, #bdc3c7) !important;
+  font-weight: 700 !important;
+  color: #2c3e50 !important;
+  text-align: left !important; /* Keep parameters left-aligned */
+  font-family: Tahoma, Arial, sans-serif !important; /* TAHOMA FONT */
+}
+
+.unit-cell {
+  background: #f8f9fa !important;
+  font-weight: 600;
+  color: #495057;
+  font-style: italic;
+  text-align: center !important; /* CENTER ALIGN UNITS */
+  font-family: Tahoma, Arial, sans-serif !important; /* TAHOMA FONT */
 }
 
 /* Remove the extra border on the far right of the table */
@@ -76,27 +365,37 @@
   border-right: none;
 }
 
-/* Zebra Striping and Hover Effect (Preserved) */
+/* Zebra Striping and Hover Effect */
 .mfm-table tbody tr {
   transition: background-color 0.2s ease-in-out;
 }
-.mfm-table tbody tr:nth-child(even) {
+
+.mfm-table tbody tr:nth-child(even),
+.param-row.even {
   background-color: #e9f0f7;
 }
-.mfm-table tbody tr:hover {
-  background-color: #cfe8ff; /* Distinct blue hover effect */
+
+.mfm-table tbody tr:hover,
+.param-row:hover {
+  background-color: #cfe8ff;
 }
 
-/* First column (parameters) styling */
+.param-row:hover .data-cell {
+  background: rgba(52, 152, 219, 0.1) !important;
+}
+
+/* First column (parameters) styling - LEFT ALIGNED */
 .mfm-table tbody tr td:first-child {
-  text-align: left;
+  text-align: left !important; /* KEEP PARAMETERS LEFT ALIGNED */
   font-weight: 700;
   padding-left: 5px;
   color: #2c3e50;
+  font-family: Tahoma, Arial, sans-serif; /* TAHOMA FONT */
 }
 
-
- /*========== MFM-Specific Header Content (Preserved) ========== */
+/* ================================
+   MFM-Specific Header Content
+================================= */
 .mfm-header-content {
   display: flex;
   flex-direction: column;
@@ -114,13 +413,13 @@
 }
 
 .header-text-status, .header-name, .status-indicator {
-  /* These styles are preserved and work with the new grid */
   display: flex;
   align-items: center;
   gap: 1px;
   font-weight: 500;
   font-size: 0.65rem;
   white-space: nowrap;
+  font-family: Tahoma, Arial, sans-serif; /* TAHOMA FONT */
 }
 
 .status-indicator {
@@ -129,29 +428,74 @@
   border-radius: 50%;
   border: 2px solid #ffffff;
 }
-.status-green { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
-.status-red { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
 
-/* Responsive Design */
+.status-green { 
+  background-color: #2ecc71; 
+  box-shadow: 0 0 8px #2ecc71; 
+}
+
+.status-red { 
+  background-color: #e74c3c; 
+  box-shadow: 0 0 8px #e74c3c; 
+}
+
+/* ================================
+   Accessibility Improvements
+================================= */
+.block-btn:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* ================================
+   Responsive Design - SMALLER
+================================= */
+
 /* For typical laptops and tablets (up to 1024px) */
 @media (max-width: 1024px) {
   .mfm-container {
-    /* Make height more flexible */
     height: auto;
-    padding: 12px 10px;
+    padding: 10px 8px; /* Reduced padding */
+  }
+
+  .mfm-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px; /* Reduced from 15px */
+    margin-bottom: 8px; /* Reduced */
+    padding-bottom: 6px; /* Reduced */
+  }
+
+  .block-controls {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px; /* Reduced */
+  }
+
+  .block-buttons {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .block-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 5px 8px; /* Reduced */
+    font-size: 0.7rem; /* Reduced */
   }
 
   .mfm-title {
-    font-size: 16px; /* slightly bigger for readability */
+    font-size: 1rem; /* Reduced from 16px */
   }
 
   .mfm-table-wrapper {
-    overflow-x: auto; /* horizontal scrolling remains */
+    overflow-x: auto;
   }
 
   .mfm-table {
-    min-width: 900px; /* reduce from 1200px for better fit */
-    font-size: 12px;  /* increase font size for better readability */
+    min-width: 900px;
+    font-size: 12px;
+    max-height: 80vh; /* Increased for tablet */
   }
 
   .mfm-table th,
@@ -163,25 +507,75 @@
 /* For smaller laptops and bigger tablets (up to 768px) */
 @media (max-width: 768px) {
   .mfm-container {
-    padding: 8px 6px;
+    padding: 6px 4px; /* Reduced padding */
     height: auto;
   }
 
+  .mfm-header {
+    gap: 8px; /* Reduced */
+  }
+
+  .block-controls {
+    flex-direction: column;
+    gap: 8px; /* Reduced */
+    align-items: stretch;
+  }
+
+  .data-info {
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px; /* Reduced */
+  }
+
+  .active-block-indicator {
+    align-items: flex-start;
+  }
+
+  .block-btn {
+    font-size: 0.65rem; /* Reduced */
+    padding: 4px 8px; /* Reduced */
+  }
+
   .mfm-title {
-    font-size: 14px;
+    font-size: 0.9rem; /* Reduced */
   }
 
   .mfm-table {
-    min-width: 700px; /* further reduce for narrow devices */
+    min-width: 700px;
     font-size: 11px;
+    max-height: 78vh; /* Increased for mobile */
   }
 
   .mfm-table th,
   .mfm-table td {
     padding: 5px 6px;
   }
-  .mfm-table th,
-  .mfm-table td {
-    padding: 6px;
+
+  .no-data-message {
+    padding: 30px 15px; /* Reduced */
+  }
+
+  .no-data-message h3 {
+    font-size: 1.1rem; /* Reduced */
+  }
+}
+
+@media (max-width: 480px) {
+  .mfm-title {
+    font-size: 0.85rem; /* Reduced */
+  }
+
+  .block-btn {
+    font-size: 0.6rem; /* Reduced */
+    padding: 4px 6px; /* Reduced */
+  }
+
+  .btn-icon {
+    font-size: 0.8em; /* Show but smaller */
+  }
+
+  .mfm-header {
+    margin-bottom: 6px; /* Reduced */
+    padding-bottom: 4px; /* Reduced */
   }
 }
