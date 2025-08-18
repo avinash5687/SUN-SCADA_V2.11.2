@@ -1,216 +1,469 @@
-.heatmap-root {
+/* ================================
+   Modern Heatmap Container
+================================= */
+.modern-heatmap-container {
   width: 100%;
-  height: calc(100vh - 50px); /* Subtract exact header height */
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  background: #fafbfc;
-  overflow: hidden;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-/* Legend at the top, horizontal */
-.heatmap-legend-row {
-  width: 95vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px 0 0 0;
-  background: #fff;
-  z-index: 2;
-  position: sticky;
-  top: 0;
-}
-
-.legend.legend-horizontal {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: static;
-  box-shadow: none;
-  border: 1px solid #ddd;
-  background: #f5f5f5;
-  border-radius: 6px;
-  padding: 6px 10px;
-  height: auto;
-  width: auto;
-  margin: 0;
-}
-
-.legend h4 {
-  margin: 0 12px 0 0;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  margin: 0 12px 0 0;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.legend-color {
-  width: 15px;
-  height: 15px;
-  margin-right: 6px;
-  border-radius: 4px;
-}
-
-/* Main grid: 4 rows (row-wise) */
-.heatmap-main-grid-rowwise {
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  width: 107%;
   height: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  background: #fafbfc;
-  overflow: hidden;
-}
-
-/* Each row = category */
-.heatmap-grid-row {
-  flex: 1 1 0;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  min-height: 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 20px;
-}
-.heatmap-grid-row:last-child {
-  border-bottom: none;
+  flex-direction: column;
+  background: #f8f9fa;
+  overflow: hidden;
+  position: relative;
 }
 
-.heatmap-row-title {
-  width: 100px;
-  min-width: 110px;
-  text-align: left;
-  padding-right: 10px;
-  font-size: 16px;
+.heatmap-screen-wrapper {
+  background: #f8f9fa;
+}
+
+/* ================================
+   Header Actions
+================================= */
+.heatmap-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.last-updated-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6c757d;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.update-icon {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ================================
+   Modern Legend Section
+================================= */
+.heatmap-legend-section {
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.legend-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.legend-icon {
+  font-size: 1.2rem;
+}
+
+.legend-items {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.modern-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.modern-legend-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.legend-indicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.legend-text {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #222;
-  white-space: nowrap;
+  color: #2c3e50;
 }
 
-.heatmap-row-cells {
-  flex: 1 1 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1px;
-  align-items: center;
-  height: 100%;
-  padding: 1px 0;
-  margin-right: 80px;
+/* ================================
+   Modern Heatmap Grid
+================================= */
+.modern-heatmap-grid {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Heatmap cells fill the available grid cell */
-.heatmap-cell {
-  width: 90%;
-  height: 90px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+.heatmap-category-row {
   display: flex;
+  align-items: stretch;
+  margin-bottom: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.heatmap-category-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.category-header {
+  min-width: 150px;
+  padding: 20px;
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.category-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.category-unit {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.heatmap-cells-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  padding: 16px;
+  align-items: center;
+}
+
+/* ================================
+   Modern Heatmap Cells
+================================= */
+.modern-heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.heatmap-cell:hover {
-  transform: scale(1.07);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
-
-/* Tooltip styling */
-.tooltip {
-  background-color: rgba(15, 8, 8, 0.95);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 6px;
-  font-size: 15px;
-  min-width: 220px;
-  max-width: 320px;
-  z-index: 1000;
-  visibility: hidden;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   opacity: 0;
-  transition: opacity 0.15s ease;
-  white-space: normal;
-  pointer-events: none;
-  position: fixed;
+  animation: cellFadeIn 0.6s ease-out forwards;
 }
-.tooltip.visible {
-  visibility: visible;
-  opacity: 1;
+
+@keyframes cellFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotateY(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
 }
-.tooltip::after {
-  content: "";
+
+.modern-heatmap-cell::before {
+  content: '';
   position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 8px 0 8px;
-  border-color: rgba(15, 8, 8, 0.95) transparent transparent transparent;
-  left: 50%;
-  top: 100%;
-  transform: translateX(-50%);
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
 }
 
-/* Responsive: stack*/
+.modern-heatmap-cell:hover::before {
+  left: 100%;
+}
 
-@media (min-width: 1601px) and (max-width: 1920px) {
+.modern-heatmap-cell:hover {
+  transform: scale(1.05) rotateY(5deg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  z-index: 10;
+}
 
-  .heatmap-grid-row {
-    margin-bottom: 15px;
-  }
-  .heatmap-row-title {
-    font-size: 17px;
-  }
-  .legend h4 {
-    margin: 0 18px 0 0;
-    font-size: 18px;
-  }
+.modern-heatmap-cell.active {
+  transform: scale(1.08);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+  border-color: #3498db;
+  z-index: 15;
+}
 
-  .legend-item {
-    margin: 0 18px 0 0;
-    font-size: 18px;
-    font-weight: bold;
-  }
+.cell-value {
+  font-size: 1rem;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2px;
+}
 
-  .heatmap-cell {
-    width: 85%;
+.cell-device {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+/* ================================
+   Smart Tooltip
+================================= */
+.smart-tooltip {
+  position: fixed;
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.9) translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  max-width: 320px;
+  min-width: 280px;
+}
+
+.smart-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1) translateY(0);
+}
+
+.smart-tooltip-header {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  padding: 12px 16px;
+  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.device-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.smart-tooltip-metrics {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 6px 0;
+}
+
+.metric-row.primary {
+  background: rgba(52, 152, 219, 0.2);
+  margin: -6px -8px 8px -8px;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.metric-value.deviation.excellent { color: #2ecc71; }
+.metric-value.deviation.good { color: #f1c40f; }
+.metric-value.deviation.warning { color: #f39c12; }
+.metric-value.deviation.critical { color: #e74c3c; }
+
+.metric-value.performance.top { color: #e67e22; }
+.metric-value.performance.high { color: #27ae60; }
+.metric-value.performance.average { color: #f39c12; }
+.metric-value.performance.low { color: #e74c3c; }
+
+.smart-tooltip-comparison {
+  padding: 12px 16px;
+}
+
+.comparison-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 0.75rem;
+}
+
+.comp-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.comp-value {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ================================
+   No Data State
+================================= */
+.no-data-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.no-data-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.no-data-message h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.no-data-message p {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  max-width: 400px;
+}
+
+/* ================================
+   Responsive Design
+================================= */
+@media (max-width: 1024px) {
+  .heatmap-category-row {
+    flex-direction: column;
+  }
+  
+  .category-header {
+    min-width: unset;
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .heatmap-cells-container {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 6px;
+    padding: 12px;
+  }
+  
+  .modern-legend {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .legend-items {
+    gap: 12px;
   }
 }
 
-@media (max-width: 900px) {
-  .heatmap-row-title {
-    width: 100%;
-    text-align: left;
-    padding: 8px 0 0 8px;
-    font-size: 16px;
+@media (max-width: 768px) {
+  .heatmap-legend-section {
+    padding: 12px 16px;
   }
-  .heatmap-row-cells {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
-    padding: 12px 0;
+  
+  .modern-heatmap-grid {
+    padding: 12px;
   }
-  .heatmap-cell {
-    height: 60px;
+  
+  .heatmap-category-row {
+    margin-bottom: 16px;
   }
-  .legend.legend-horizontal {
-    flex-wrap: wrap;
+  
+  .heatmap-cells-container {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 4px;
     padding: 8px;
   }
-  .tooltip {
-    font-size: 13px;
-    min-width: 140px;
-    max-width: 220px;
+  
+  .smart-tooltip {
+    max-width: 280px;
+    min-width: 240px;
+  }
+  
+  .heatmap-header-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .last-updated-info {
+    font-size: 0.75rem;
+    padding: 4px 8px;
   }
 }
-
-
