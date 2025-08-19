@@ -1,30 +1,20 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  IconButton,
-  Tooltip,
-  Avatar,
-  Badge,
-  Chip,
-  Fade,
-  Slide,
-  useTheme,
-  useMediaQuery,
-  Typography,
-  Box,
-  Divider
+  IconButton, Tooltip, Avatar, Badge, Chip, Fade, Slide,
+  useTheme, useMediaQuery, Typography, Box, Divider
 } from "@mui/material";
 import {
-  Menu as MenuIcon,
-  Close as CloseIcon,
-  KeyboardArrowDown as ArrowDownIcon
+  Menu as MenuIcon, Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon,
+  Dashboard, NotificationsActive, Timeline, Calculate,
+  Description, CameraAlt, Print, VolumeOff, VolumeUp, PowerSettingsNew, Layers,
+  AccountTree, Speed
 } from "@mui/icons-material";
+import SolarPowerIcon from '@mui/icons-material/SolarPower';
+import PowerIcon from '@mui/icons-material/Power';
+import WindPowerIcon from '@mui/icons-material/WindPower';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBell, faVolumeMute, faVolumeUp, faHome, faSolarPanel,
-  faBolt, faWind, faPlug, faFileAlt, faSignOutAlt,
-  faLineChart, faDiagramProject, faCamera, faPrint,
-  faUser, faCalculator, faCircle
-} from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Howl } from "howler";
@@ -61,7 +51,7 @@ const formatDateTime = (date) => {
   return `${formattedDay} ${formattedDate} | ${formattedTime}`;
 };
 
-// Custom hooks (same as before)
+// Custom hooks
 const useLocalStorage = (key, initialValue) => {
   const [value, setValue] = useState(() => {
     try {
@@ -131,8 +121,8 @@ const useAudio = (src) => {
   useEffect(() => {
     const audioSound = new Howl({
       src: [src],
-      format: ["wav"],
-      loop: true,
+      format: ["mp3", "wav"], // Add mp3 if needed
+      loop: false,
       volume: 1.0,
       preload: true,
     });
@@ -145,7 +135,13 @@ const useAudio = (src) => {
   }, [src]);
 
   const playAlarm = useCallback(() => {
-    sound?.play();
+    if (sound) {
+      sound.play();
+      // Change to 2.5 seconds
+      setTimeout(() => {
+        sound.stop();
+      }, 2500);
+    }
   }, [sound]);
 
   const stopAlarm = useCallback(() => {
@@ -155,17 +151,25 @@ const useAudio = (src) => {
   return { sound, playAlarm, stopAlarm };
 };
 
-// Modern Sub-components with updated designs
+// Modern Sub-components
 const ModernAlarmIndicator = ({ hasNewAlarm, activeAlarmCount, onClick }) => (
   <div className="modern-notification-container" onClick={onClick}>
     <Badge
       badgeContent={activeAlarmCount}
       color="error"
-      variant={activeAlarmCount > 99 ? "standard" : "dot"}
+      max={99}
       overlap="circular"
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
+      }}
+      sx={{
+        "& .MuiBadge-badge": {
+          fontSize: "0.5rem",      // Smaller font size
+          height: "14px",           // Smaller height
+          minWidth: "14px",         // Smaller min width
+          padding: "0 4px"          // Reduced padding
+        }
       }}
     >
       <div className={`modern-notification-icon ${hasNewAlarm ? "pulse-animation" : ""}`}>
@@ -177,6 +181,7 @@ const ModernAlarmIndicator = ({ hasNewAlarm, activeAlarmCount, onClick }) => (
     </Badge>
   </div>
 );
+
 
 const ModernUserMenu = ({ user, showMenu, onToggle, onLogout }) => {
   const getInitials = (name) => {
@@ -246,7 +251,7 @@ const ModernUserMenu = ({ user, showMenu, onToggle, onLogout }) => {
           </div>
           <Divider sx={{ my: 1 }} />
           <button className="modern-logout-btn" onClick={onLogout}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
+            <PowerSettingsNew sx={{ fontSize: '0.9rem' }} />
             <span>Sign Out</span>
           </button>
         </div>
@@ -260,16 +265,16 @@ const ModernActionButton = ({ icon, tooltip, onClick, variant = "default", badge
     <div className={`modern-action-btn ${variant}`} onClick={onClick}>
       {badge ? (
         <Badge badgeContent={badge} color="error" variant="dot">
-          <FontAwesomeIcon icon={icon} />
+          {icon}
         </Badge>
       ) : (
-        <FontAwesomeIcon icon={icon} />
+        icon
       )}
     </div>
   </Tooltip>
 );
 
-// New Modern Toggle Button Component
+// Modern Toggle Button Component
 const ModernToggleButton = ({ isOpen, onClick, isMobile }) => (
   <div className="modern-toggle-button" onClick={onClick}>
     <div className={`toggle-lines ${isOpen ? 'open' : ''}`}>
@@ -300,6 +305,9 @@ const Layout = ({ children }) => {
   const dateTime = useDateTime(DATETIME_UPDATE_INTERVAL);
   const { alarms, activeAlarmCount, hasNewAlarm } = useAlarms(ALARM_CHECK_INTERVAL);
   const { sound, playAlarm, stopAlarm } = useAudio('/alarm.wav');
+  //const { sound, playAlarm, stopAlarm } = useAudio('/gentle-chime.wav'); 
+  // or: '/notification-ping.mp3'
+
 
   // Get user info from session storage
   const user = useMemo(() => ({
@@ -307,25 +315,25 @@ const Layout = ({ children }) => {
     role: sessionStorage.getItem("role") || "Technician"
   }), []);
 
-  // Navigation items based on user role with modern icons
+  // Navigation items with modern Material-UI icons
   const navItems = useMemo(() => {
     const baseItems = [
-      { path: "/dashboard", icon: faHome, text: "Dashboard", color: "#4ecdc4" }
+      { path: "/dashboard", icon: Dashboard, text: "Dashboard", color: "#4ecdc4" }
     ];
 
     const adminItems = [
-      { path: "/SLDTemplate", icon: faDiagramProject, text: "SLD", color: "#ff6b6b" },
-      { path: "/inverter", icon: faSolarPanel, text: "Inverter", color: "#ffa726" },
-      { path: "/heatmap", icon: faDiagramProject, text: "Heatmap", color: "#ab47bc" },
-      { path: "/mfm", icon: faBolt, text: "MFM", color: "#ffee58" },
-      { path: "/wms", icon: faWind, text: "WMS", color: "#42a5f5" },
-      { path: "/TransformerScreen", icon: faPlug, text: "Transformer", color: "#66bb6a" },
-      { path: "/AlarmScreen", icon: faBell, text: "Alarm", color: "#ef5350" },
-      { path: "/CustomTrend", icon: faLineChart, text: "Custom Trend", color: "#26c6da" },
-      { path: "/formula", icon: faCalculator, text: "Formula", color: "#8bc34a" },
+      { path: "/SLDTemplate", icon: AccountTree, text: "SLD", color: "#ff6b6b" },
+      { path: "/inverter", icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
+      { path: "/heatmap", icon: Layers, text: "Heatmap", color: "#ab47bc" },
+      { path: "/mfm", icon: Speed, text: "MFM", color: "#ffee58" },
+      { path: "/wms", icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
+      { path: "/TransformerScreen", icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
+      { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
+      { path: "/CustomTrend", icon: Timeline, text: "Custom Trend", color: "#26c6da" },
+      { path: "/formula", icon: Calculate, text: "Formula", color: "#8bc34a" },
       {
         path: "/report",
-        icon: faFileAlt,
+        icon: Description,
         text: "Report",
         color: "#ff7043",
         isExternal: true,
@@ -336,10 +344,10 @@ const Layout = ({ children }) => {
     ];
 
     const operatorItems = [
-      { path: "/AlarmScreen", icon: faBell, text: "Alarm", color: "#ef5350" },
+      { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
       {
         path: "/report",
-        icon: faFileAlt,
+        icon: Description,
         text: "Report",
         color: "#ff7043",
         isExternal: true,
@@ -359,14 +367,12 @@ const Layout = ({ children }) => {
     }
   }, [user.role]);
 
-  // Handle alarm sound
+  // Handle alarm sound - play for 3 seconds only
   useEffect(() => {
     if (hasNewAlarm && !isMuted) {
       playAlarm();
-    } else {
-      stopAlarm();
     }
-  }, [hasNewAlarm, isMuted, playAlarm, stopAlarm]);
+  }, [hasNewAlarm, isMuted, playAlarm]);
 
   // Auto-collapse on mobile
   useEffect(() => {
@@ -389,12 +395,10 @@ const Layout = ({ children }) => {
       const newMuted = !prev;
       if (newMuted) {
         stopAlarm();
-      } else if (hasNewAlarm) {
-        playAlarm();
       }
       return newMuted;
     });
-  }, [setIsMuted, stopAlarm, hasNewAlarm, playAlarm]);
+  }, [setIsMuted, stopAlarm]);
 
   const handleNavigation = useCallback((item) => {
     if (item.isExternal && item.url) {
@@ -477,7 +481,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="modern-layout-container">
-      {/* Header with updated toggle button */}
+      {/* Header */}
       <header className="modern-header">
         <div className="header-content">
           <div className="header-left">
@@ -505,14 +509,14 @@ const Layout = ({ children }) => {
           <div className="header-right">
             <div className="action-buttons">
               <ModernActionButton
-                icon={faCamera}
+                icon={<CameraAlt sx={{ fontSize: '0.9rem' }} />}
                 tooltip="Take Screenshot"
                 onClick={handleScreenshot}
                 variant="screenshot"
               />
 
               <ModernActionButton
-                icon={faPrint}
+                icon={<Print sx={{ fontSize: '0.9rem' }} />}
                 tooltip="Print Page"
                 onClick={handlePrintScreen}
                 variant="print"
@@ -525,7 +529,7 @@ const Layout = ({ children }) => {
               />
 
               <ModernActionButton
-                icon={isMuted ? faVolumeMute : faVolumeUp}
+                icon={isMuted ? <VolumeOff sx={{ fontSize: '0.9rem' }} /> : <VolumeUp sx={{ fontSize: '0.9rem' }} />}
                 tooltip={isMuted ? "Unmute Alarms" : "Mute Alarms"}
                 onClick={toggleMute}
                 variant={isMuted ? "muted" : "unmuted"}
@@ -545,13 +549,12 @@ const Layout = ({ children }) => {
               onLogout={handleLogout}
             />
 
-            {/* Bigger logo */}
             <img src={logo} alt="Company Logo" className="header-logo" />
           </div>
         </div>
       </header>
 
-      {/* Sidebar (unchanged) */}
+      {/* Sidebar */}
       <Slide direction="right" in={!isMobile || isSidebarOpen} mountOnEnter unmountOnExit>
         <aside className={sidebarClassName}>
           <nav className="modern-nav">
@@ -569,7 +572,7 @@ const Layout = ({ children }) => {
                     style={{'--item-color': item.color}}
                   >
                     <div className="nav-item-icon">
-                      <FontAwesomeIcon icon={item.icon} />
+                      <item.icon sx={{ fontSize: '1rem' }} />
                     </div>
                     {(!isCollapsed || isMobile) && (
                       <span className="nav-item-text">{item.text}</span>
@@ -585,7 +588,7 @@ const Layout = ({ children }) => {
         </aside>
       </Slide>
 
-      {/* Main Content (unchanged) */}
+      {/* Main Content */}
       <main className={mainContentClassName}>
         <div className="content-wrapper">
           {children}
