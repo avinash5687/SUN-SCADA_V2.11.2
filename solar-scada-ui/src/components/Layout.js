@@ -86,10 +86,16 @@ const useDateTime = (interval = 1000) => {
   return dateTime;
 };
 
+// Global variable to persist alarm count across navigation
+let globalPreviousAlarmCount = 0;
+let isInitialAlarmLoad = true;
+let lastAlarmTriggerTime = 0;
+
 const useAlarms = (interval) => {
   const [alarms, setAlarms] = useState([]);
   const [activeAlarmCount, setActiveAlarmCount] = useState(0);
   const [hasNewAlarm, setHasNewAlarm] = useState(false);
+  const [newAlarmDetected, setNewAlarmDetected] = useState(false);
 
   useEffect(() => {
     const checkForAlarms = async () => {
@@ -99,9 +105,30 @@ const useAlarms = (interval) => {
           (alarm) => alarm.status === "ON" && !alarm.acknowledged
         );
 
+        const currentActiveCount = activeUnacknowledgedAlarms.length;
+        const currentTime = Date.now();
+
         setAlarms(response.data);
-        setActiveAlarmCount(activeUnacknowledgedAlarms.length);
-        setHasNewAlarm(activeUnacknowledgedAlarms.length > 0);
+        setActiveAlarmCount(currentActiveCount);
+        setHasNewAlarm(currentActiveCount > 0);
+
+        // Only trigger new alarm detection if:
+        // 1. Count increased from previous
+        // 2. Not initial load
+        // 3. At least 3 seconds have passed since last trigger (prevents navigation issues)
+        if (
+          currentActiveCount > globalPreviousAlarmCount && 
+          !isInitialAlarmLoad &&
+          (currentTime - lastAlarmTriggerTime) > 3000
+        ) {
+          setNewAlarmDetected(true);
+          lastAlarmTriggerTime = currentTime;
+          // Reset the detection flag after a short delay
+          setTimeout(() => setNewAlarmDetected(false), 1000);
+        }
+
+        globalPreviousAlarmCount = currentActiveCount;
+        isInitialAlarmLoad = false;
       } catch (error) {
         console.error("Error fetching alarms:", error);
       }
@@ -112,7 +139,7 @@ const useAlarms = (interval) => {
     return () => clearInterval(alarmInterval);
   }, [interval]);
 
-  return { alarms, activeAlarmCount, hasNewAlarm };
+  return { alarms, activeAlarmCount, hasNewAlarm, newAlarmDetected };
 };
 
 const useAudio = (src) => {
@@ -181,7 +208,6 @@ const ModernAlarmIndicator = ({ hasNewAlarm, activeAlarmCount, onClick }) => (
     </Badge>
   </div>
 );
-
 
 const ModernUserMenu = ({ user, showMenu, onToggle, onLogout }) => {
   const getInitials = (name) => {
@@ -303,11 +329,10 @@ const Layout = ({ children }) => {
   const [lastVisitedPath, setLastVisitedPath] = useState('/dashboard');
 
   const dateTime = useDateTime(DATETIME_UPDATE_INTERVAL);
-  const { alarms, activeAlarmCount, hasNewAlarm } = useAlarms(ALARM_CHECK_INTERVAL);
+  const { alarms, activeAlarmCount, hasNewAlarm, newAlarmDetected } = useAlarms(ALARM_CHECK_INTERVAL);
   const { sound, playAlarm, stopAlarm } = useAudio('/alarm.wav');
   //const { sound, playAlarm, stopAlarm } = useAudio('/gentle-chime.wav'); 
   // or: '/notification-ping.mp3'
-
 
   // Get user info from session storage
   const user = useMemo(() => ({
@@ -367,12 +392,12 @@ const Layout = ({ children }) => {
     }
   }, [user.role]);
 
-  // Handle alarm sound - play for 3 seconds only
+  // Handle alarm sound - only play when NEW alarms are detected
   useEffect(() => {
-    if (hasNewAlarm && !isMuted) {
+    if (newAlarmDetected && !isMuted) {
       playAlarm();
     }
-  }, [hasNewAlarm, isMuted, playAlarm]);
+  }, [newAlarmDetected, isMuted, playAlarm]);
 
   // Auto-collapse on mobile
   useEffect(() => {
