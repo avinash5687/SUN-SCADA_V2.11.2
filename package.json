@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mui/x-charts": "^8.10.1",
+    "react-gauge-chart": "^0.5.1"
+  }
+}
