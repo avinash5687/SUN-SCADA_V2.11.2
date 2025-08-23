@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "@mui/x-charts": "^8.10.1",
-    "react-gauge-chart": "^0.5.1"
+    "@radix-ui/react-progress": "^1.1.7",
+    "class-variance-authority": "^0.7.1",
+    "react-gauge-chart": "^0.5.1",
+    "tailwind-merge": "^3.3.1"
   }
 }

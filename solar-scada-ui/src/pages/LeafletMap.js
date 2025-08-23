@@ -37,7 +37,7 @@ const LeafletMap = () => {
   };
 
   return (
-    <div style={{ height: "calc(100vh - 64px)", width: "100%", position: 'relative' }}>
+    <div style={{ height: "calc(100vh - 48px)", width: "100%", position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
       <button
         onClick={toggleView}
         style={{
@@ -55,10 +55,11 @@ const LeafletMap = () => {
         Switch to {view === 'default' ? 'Satellite View' : 'Default View'}
       </button>
       <MapContainer
-        center={[21.159000, 74.853000]} // Center the map on the specified coordinates in India
-        zoom={18} // Adjust zoom level to show more of India
+        center={[21.159000, 74.853000]}
+        zoom={17}
         scrollWheelZoom={true}
         style={{ height: "100%", width: "100%" }}
+        attributionControl={false} // This removes the Leaflet attribution
       >
         {view === 'default' ? (
           <TileLayer

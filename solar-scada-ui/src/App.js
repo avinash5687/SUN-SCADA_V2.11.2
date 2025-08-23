@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
+import LandingPage from './pages/LandingPage';
+
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Inverter from "./pages/Inverter";
@@ -17,6 +20,7 @@ import LeafletMap from "./pages/LeafletMap";
 import PrivateRoute from "./components/PrivateRoute"; // <-- Import here
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import StartupScreen from "./pages/StartupScreen";
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -28,9 +32,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
+
+        {/* Redirect from root to landing page */}
+        {/* <Route path="/" element={<StartupScreen />} />
+        <Route path="/startup" element={<StartupScreen />} /> */}
         {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
 
         {/* Protected Routes */}
         <Route

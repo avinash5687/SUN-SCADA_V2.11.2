@@ -248,6 +248,19 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.brand-logo{
+  height: 32px;
+  width: 75px;
+  border-radius: 6px;
+  margin-left: 0px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
+}
+
+.brand-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
 /* Modern Notification Styles */
 .modern-notification-container {
   position: relative;
@@ -605,7 +618,11 @@
   }
 
   .header-logo {
-    height: 28px; /* Slightly smaller on mobile but still bigger than before */
+    height: 28px; 
+  }
+
+  .brand-logo{
+    height: 32px;
   }
 
   .modern-toggle-button {

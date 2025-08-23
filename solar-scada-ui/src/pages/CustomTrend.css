@@ -1,7 +1,7 @@
 /* ✅ Ensure Full Page Uses Flexbox to Prevent Scrolling */
 .trend-container {
   max-width: 100%;
-  height: calc(100vh - 65px); /* Ensure full page minus header */
+  height: calc(100vh - 50px); /* Ensure full page minus header */
   margin: auto;
   padding: 20px;
   background: white;

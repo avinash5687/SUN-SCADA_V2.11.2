@@ -1,0 +1,1305 @@
+/* ================================
+   Landing Page - Enhanced Professional Design
+================================= */
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a2332 30%, #2c3e50 60%, #34495e 100%);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ================================
+   Enhanced CSS Keyframe Animations
+================================= */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(180deg); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-100px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
+  50% { text-shadow: 0 0 40px rgba(52, 152, 219, 1); }
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Enhanced Sun Movement - Day/Night Cycle */
+@keyframes sunMovement {
+  0% { 
+    transform: translate(-200px, 180px) scale(0.6);
+    filter: hue-rotate(60deg) brightness(0.8);
+  }
+  25% { 
+    transform: translate(-100px, 60px) scale(0.9);
+    filter: hue-rotate(20deg) brightness(1.3);
+  }
+  50% { 
+    transform: translate(0px, 0px) scale(1.1);
+    filter: hue-rotate(0deg) brightness(1.6);
+  }
+  75% { 
+    transform: translate(100px, 60px) scale(0.9);
+    filter: hue-rotate(30deg) brightness(1.2);
+  }
+  100% { 
+    transform: translate(200px, 180px) scale(0.6);
+    filter: hue-rotate(80deg) brightness(0.7);
+  }
+}
+
+/* Cloud Movement */
+@keyframes cloudMove {
+  0% { transform: translateX(-100px); opacity: 0.6; }
+  50% { opacity: 0.8; }
+  100% { transform: translateX(500px); opacity: 0.4; }
+}
+
+@keyframes skyCloudMove {
+  0% { transform: translateX(-150px); }
+  100% { transform: translateX(600px); }
+}
+
+/* Wind Turbine Blade Rotation */
+@keyframes turbineRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Energy Flow Animation */
+@keyframes energyFlow {
+  0% { 
+    opacity: 0; 
+    transform: translateY(0) scale(0.5); 
+    background: #FFD700; 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-30px) scale(1); 
+    background: #00FF41; 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateY(-60px) scale(0.3); 
+    background: #00BFFF; 
+  }
+}
+
+/* Panel Shimmer Effect */
+@keyframes panelShimmer {
+  0%, 100% { box-shadow: inset 0 0 10px rgba(52, 152, 219, 0.3); }
+  50% { box-shadow: inset 0 0 20px rgba(52, 152, 219, 0.6); }
+}
+
+@keyframes statusBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+@keyframes dataTransmit {
+  0% { opacity: 0; transform: translateY(0) scale(0); }
+  50% { opacity: 1; transform: translateY(-15px) scale(1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0); }
+}
+
+/* Sky Transition */
+@keyframes skyTransition {
+  0%, 100% { 
+    background: linear-gradient(to bottom, #000428 0%, #004e92 50%, #87CEEB 100%);
+  }
+  50% { 
+    background: linear-gradient(to bottom, #FFD700 0%, #FFA500 30%, #87CEEB 100%);
+  }
+}
+
+/* ================================
+   Enhanced Animated Background
+================================= */
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.floating-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.shape {
+  position: absolute;
+  background: linear-gradient(45deg, rgba(52, 152, 219, 0.15), rgba(46, 204, 113, 0.1));
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+.shape-1 { width: 100px; height: 100px; top: 15%; left: 8%; animation-delay: 0s; }
+.shape-2 { width: 80px; height: 80px; top: 65%; right: 12%; animation-delay: -2.5s; }
+.shape-3 { width: 120px; height: 120px; bottom: 25%; left: 3%; animation-delay: -5s; }
+.shape-4 { width: 60px; height: 60px; top: 35%; left: 75%; animation-delay: -1.5s; }
+.shape-5 { width: 140px; height: 140px; top: 85%; right: 25%; animation-delay: -3.5s; }
+.shape-6 { width: 70px; height: 70px; bottom: 45%; right: 8%; animation-delay: -6s; }
+
+/* Moving Clouds Background */
+.clouds {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.cloud {
+  position: absolute;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-radius: 50px;
+  animation: cloudMove 25s linear infinite;
+}
+
+.cloud::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.cloud-1 { 
+  width: 100px; height: 40px; top: 20%; 
+  animation-delay: 0s;
+}
+.cloud-1::before { 
+  width: 50px; height: 50px; top: -25px; left: 10px; 
+}
+
+.cloud-2 { 
+  width: 80px; height: 30px; top: 40%; 
+  animation-delay: -8s;
+}
+.cloud-2::before { 
+  width: 40px; height: 40px; top: -20px; right: 15px; 
+}
+
+.cloud-3 { 
+  width: 120px; height: 50px; top: 60%; 
+  animation-delay: -16s;
+}
+.cloud-3::before { 
+  width: 60px; height: 60px; top: -30px; left: 20px; 
+}
+
+.cloud-4 { 
+  width: 90px; height: 35px; top: 80%; 
+  animation-delay: -12s;
+}
+.cloud-4::before { 
+  width: 45px; height: 45px; top: -22px; right: 20px; 
+}
+
+/* ================================
+   Enhanced Header with Logo
+================================= */
+.landing-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(10, 14, 26, 0.95);
+  backdrop-filter: blur(15px);
+  border-bottom: 2px solid rgba(52, 152, 219, 0.3);
+  transform: translateY(-100px);
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.landing-header.loaded {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logo-section:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.8));
+  animation: pulse 3s infinite;
+}
+
+.logo-text {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #3498db, #f39c12, #e74c3c);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientMove 4s ease infinite;
+}
+
+.company-logo {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 50px;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  transition: all 0.3s ease;
+}
+
+.header-logo:hover {
+  filter: drop-shadow(0 0 15px rgba(52, 152, 219, 0.6));
+  transform: scale(1.1);
+}
+
+/* ================================
+   Enhanced Hero Section
+================================= */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  margin-top: 90px;
+  opacity: 0;
+  animation: fadeIn 1.2s ease 0.5s forwards;
+}
+
+.hero-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 5rem;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.hero-text {
+  animation: slideInLeft 1.2s ease 0.7s both;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.highlight {
+  background: linear-gradient(270deg, #3498db, #f39c12, #e74c3c, #9b59b6, #3498db);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin-top: 0.5rem;
+  animation: gradientMove 5s ease infinite;
+}
+
+.hero-subtitle {
+  font-size: 1.4rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  animation: slideInLeft 1.2s ease 1s both;
+  font-weight: 300;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  animation: slideInLeft 1.2s ease 1.3s both;
+}
+
+/* ================================
+   Enhanced Button Styles
+================================= */
+.cta-btn {
+  padding: 1.2rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.cta-btn:hover::before {
+  left: 100%;
+}
+
+.cta-btn:hover {
+  transform: translateY(-4px);
+}
+
+.cta-btn.primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+}
+
+.cta-btn.primary:hover {
+  box-shadow: 0 15px 40px rgba(52, 152, 219, 0.6);
+  background: linear-gradient(135deg, #2980b9, #1f618d);
+}
+
+.cta-btn.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid #3498db;
+}
+
+.cta-btn.secondary:hover {
+  background: rgba(52, 152, 219, 0.15);
+  box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+}
+
+.btn-arrow {
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+.cta-btn:hover .btn-arrow {
+  transform: translateX(8px);
+}
+
+/* ================================
+   Enhanced Solar System Visual
+================================= */
+.hero-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: slideInRight 1.2s ease 0.9s both;
+  height: 500px;
+}
+
+.solar-system-visual {
+  width: 550px;
+  height: 450px;
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  background: linear-gradient(to bottom, #000428 0%, #004e92 70%, #228B22 100%);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(52, 152, 219, 0.3);
+}
+
+/* Enhanced Sky with Day/Night Cycle */
+.sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 75%;
+  animation: skyTransition 20s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.moving-clouds {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.sky-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 30px;
+  animation: skyCloudMove 15s linear infinite;
+}
+
+.sky-cloud::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.sky-cloud-1 { 
+  width: 60px; height: 25px; top: 20%; 
+  animation-delay: 0s;
+}
+.sky-cloud-1::before { 
+  width: 30px; height: 30px; top: -15px; left: 10px; 
+}
+
+.sky-cloud-2 { 
+  width: 80px; height: 30px; top: 40%; 
+  animation-delay: -5s;
+}
+.sky-cloud-2::before { 
+  width: 40px; height: 40px; top: -20px; right: 15px; 
+}
+
+.sky-cloud-3 { 
+  width: 50px; height: 20px; top: 60%; 
+  animation-delay: -10s;
+}
+.sky-cloud-3::before { 
+  width: 25px; height: 25px; top: -12px; left: 15px; 
+}
+
+/* Enhanced Sun with Rays */
+.sun-container {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  animation: sunMovement 20s ease-in-out infinite;
+}
+
+.sun {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, #FFD700 0%, #FFA500 60%, #FF8C00 90%, #FF6347 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+  position: relative;
+  animation: pulse 4s infinite;
+}
+
+.sun-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, #FFFF00 0%, #FFD700 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: glow 3s infinite;
+}
+
+.sun-rays {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  animation: turbineRotate 30s linear infinite;
+}
+
+.ray {
+  position: absolute;
+  width: 4px;
+  height: 25px;
+  background: linear-gradient(to bottom, #FFD700, transparent);
+  top: 50%;
+  left: 50%;
+  transform-origin: 50% 35px;
+  border-radius: 2px;
+}
+
+.ray-1 { transform: translate(-50%, -50%) rotate(0deg); }
+.ray-2 { transform: translate(-50%, -50%) rotate(30deg); }
+.ray-3 { transform: translate(-50%, -50%) rotate(60deg); }
+.ray-4 { transform: translate(-50%, -50%) rotate(90deg); }
+.ray-5 { transform: translate(-50%, -50%) rotate(120deg); }
+.ray-6 { transform: translate(-50%, -50%) rotate(150deg); }
+.ray-7 { transform: translate(-50%, -50%) rotate(180deg); }
+.ray-8 { transform: translate(-50%, -50%) rotate(210deg); }
+.ray-9 { transform: translate(-50%, -50%) rotate(240deg); }
+.ray-10 { transform: translate(-50%, -50%) rotate(270deg); }
+.ray-11 { transform: translate(-50%, -50%) rotate(300deg); }
+.ray-12 { transform: translate(-50%, -50%) rotate(330deg); }
+
+/* Wind Turbine */
+.wind-turbine {
+  position: absolute;
+  top: 40%;
+  right: 15%;
+  z-index: 10;
+}
+
+.turbine-tower {
+  width: 6px;
+  height: 120px;
+  background: linear-gradient(to bottom, #555, #333);
+  margin: 0 auto;
+  border-radius: 3px;
+}
+
+.turbine-blades {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  animation: turbineRotate 2s linear infinite;
+}
+
+.blade {
+  position: absolute;
+  width: 3px;
+  height: 30px;
+  background: linear-gradient(to bottom, #fff, #ddd);
+  border-radius: 1px;
+  transform-origin: 50% 30px;
+}
+
+.blade-1 { transform: rotate(0deg); }
+.blade-2 { transform: rotate(120deg); }
+.blade-3 { transform: rotate(240deg); }
+
+/* Enhanced Ground */
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background: linear-gradient(to bottom, #2d5016 0%, #1a3009 100%);
+  border-top: 2px solid rgba(46, 204, 113, 0.3);
+}
+
+/* Enhanced Solar Panels */
+.solar-panels {
+  position: absolute;
+  bottom: 70px;
+  left: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.solar-panel {
+  width: 35px;
+  height: 20px;
+  position: relative;
+  animation: panelShimmer 4s ease-in-out infinite;
+}
+
+.panel-surface {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3498db 100%);
+  border-radius: 3px;
+  position: relative;
+}
+
+.panel-frame {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #34495e;
+  border-radius: 5px;
+}
+
+.panel-1 { animation-delay: 0s; }
+.panel-2 { animation-delay: 0.5s; }
+.panel-3 { animation-delay: 1s; }
+.panel-4 { animation-delay: 1.5s; }
+.panel-5 { animation-delay: 2s; }
+.panel-6 { animation-delay: 2.5s; }
+.panel-7 { animation-delay: 3s; }
+.panel-8 { animation-delay: 3.5s; }
+
+/* Energy Flow Visualization */
+.energy-flow {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 40px;
+}
+
+.energy-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: energyFlow 3s ease-in-out infinite;
+}
+
+.energy-1 { left: 10%; animation-delay: 0s; }
+.energy-2 { left: 25%; animation-delay: 0.5s; }
+.energy-3 { left: 40%; animation-delay: 1s; }
+.energy-4 { left: 55%; animation-delay: 1.5s; }
+.energy-5 { left: 70%; animation-delay: 2s; }
+.energy-6 { left: 85%; animation-delay: 2.5s; }
+
+/* Enhanced Weather Station */
+.weather-station {
+  position: absolute;
+  bottom: 50px;
+  right: 80px;
+}
+
+.station-tower {
+  width: 6px;
+  height: 60px;
+  background: linear-gradient(to bottom, #666, #333);
+  margin: 0 auto;
+  border-radius: 3px;
+}
+
+.weather-sensors {
+  position: relative;
+  margin-top: -10px;
+}
+
+.sensor-array {
+  width: 20px;
+  height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  margin: 0 auto;
+  border: 2px solid #666;
+  animation: statusBlink 3s infinite;
+}
+
+.data-collector {
+  width: 12px;
+  height: 8px;
+  background: #f39c12;
+  border-radius: 2px;
+  margin: 5px auto 0;
+  animation: dataTransmit 2s infinite;
+}
+
+/* Enhanced Control System */
+.control-system {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.system-box {
+  width: 40px;
+  height: 25px;
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  border: 1px solid #555;
+  border-radius: 5px;
+  position: relative;
+}
+
+.display-screen {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  background: linear-gradient(135deg, #00ff41, #00bfff);
+  border-radius: 2px;
+  animation: glow 2s infinite;
+}
+
+.status-lights {
+  display: flex;
+  gap: 3px;
+}
+
+.status-light {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px currentColor;
+}
+
+.light-1 {
+  background: #00FF00;
+  animation: statusBlink 1s infinite;
+}
+
+.light-2 {
+  background: #FFFF00;
+  animation: statusBlink 1.5s infinite;
+}
+
+.light-3 {
+  background: #FF0000;
+  animation: statusBlink 2s infinite;
+}
+
+.light-4 {
+  background: #00BFFF;
+  animation: statusBlink 2.5s infinite;
+}
+
+/* Power Transmission Lines */
+.power-lines {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+
+.transmission-tower {
+  width: 4px;
+  height: 40px;
+  background: #555;
+  margin: 0 auto;
+  position: relative;
+}
+
+.transmission-tower::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -5px;
+  width: 14px;
+  height: 2px;
+  background: #555;
+}
+
+.power-cables {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.cable {
+  position: absolute;
+  width: 20px;
+  height: 1px;
+  background: #333;
+  animation: dataTransmit 1.5s infinite;
+}
+
+.cable-1 { top: 0; animation-delay: 0s; }
+.cable-2 { top: 5px; animation-delay: 0.5s; }
+.cable-3 { top: 10px; animation-delay: 1s; }
+
+/* ================================
+   Enhanced Stats Section
+================================= */
+.stats-section {
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(52, 152, 219, 0.1));
+  backdrop-filter: blur(10px);
+  animation: slideInUp 1s ease 1.5s both;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+  border-radius: 25px;
+  padding: 2.5rem;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInUp 0.8s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.stat-card:hover::before {
+  left: 100%;
+}
+
+.stat-card:hover {
+  transform: translateY(-10px) rotateY(8deg);
+  box-shadow: 0 20px 50px rgba(52, 152, 219, 0.3);
+  border-color: rgba(52, 152, 219, 0.4);
+}
+
+.stat-value {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #3498db;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.3rem;
+  animation: glow 3s infinite;
+}
+
+.stat-unit {
+  font-size: 1.4rem;
+  color: #f39c12;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ================================
+   Enhanced Features Section
+================================= */
+.features-section {
+  padding: 7rem 2rem;
+  text-align: center;
+  animation: slideInUp 1s ease 2s both;
+}
+
+.section-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 5rem;
+  background: linear-gradient(45deg, #3498db, #f39c12, #e74c3c, #9b59b6);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientMove 5s infinite, glow 4s infinite;
+}
+
+.features-grid {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.featured-item {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
+  border-radius: 30px;
+  padding: 4rem 3rem;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  animation: fadeIn 0.6s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-item::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 70%);
+  animation: float 6s ease-in-out infinite;
+}
+
+.feature-icon {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 0 20px rgba(52, 152, 219, 0.6));
+  animation: float 4s ease infinite;
+  position: relative;
+  z-index: 1;
+}
+
+.feature-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: #3498db;
+  position: relative;
+  z-index: 1;
+}
+
+.feature-description {
+  font-size: 1.3rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  position: relative;
+  z-index: 1;
+}
+
+.feature-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 3rem;
+}
+
+.indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: #3498db;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: #3498db;
+  transform: scale(1.4);
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+}
+
+.indicator.active::before {
+  width: 100%;
+  height: 100%;
+}
+
+/* ================================
+   Enhanced CTA Section
+================================= */
+.cta-section {
+  padding: 5rem 2rem;
+  animation: slideInUp 1s ease 2.5s both;
+}
+
+.cta-content {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 5rem 4rem;
+  border-radius: 40px;
+  background: linear-gradient(135deg, #3498db, #2980b9, #1f618d);
+  box-shadow: 0 30px 80px rgba(52, 152, 219, 0.4);
+  animation: float 8s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: gradientMove 4s ease infinite;
+}
+
+.cta-content h2 {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-content p {
+  font-size: 1.4rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+}
+
+.final-cta {
+  padding: 1.5rem 4rem;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(15px);
+  position: relative;
+  z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.final-cta:hover {
+  transform: scale(1.15) rotate(3deg);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+}
+
+/* ================================
+   Enhanced Footer
+================================= */
+.landing-footer {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(52, 152, 219, 0.1));
+  border-top: 2px solid rgba(255, 255, 255, 0.15);
+  padding: 3rem 2rem 2rem;
+  animation: fadeIn 1s ease 3s both;
+  backdrop-filter: blur(10px);
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-logo-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.8));
+  animation: pulse 3s infinite;
+}
+
+.footer-logo h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(45deg, #3498db, #f39c12);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.footer-info {
+  text-align: right;
+}
+
+.footer-info p {
+  margin: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-info p:first-child {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.footer-links {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1rem;
+}
+
+/* ================================
+   Enhanced Responsive Design
+================================= */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 1rem;
+  }
+  
+  .company-logo {
+    display: none;
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+    min-height: auto;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .solar-system-visual {
+    width: 400px;
+    height: 320px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+  }
+  
+  .cta-content {
+    padding: 3rem 2rem;
+  }
+  
+  .cta-content h2 {
+    font-size: 2.2rem;
+  }
+  
+  .footer-main {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .footer-info {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .solar-system-visual {
+    width: 320px;
+    height: 280px;
+  }
+  
+  /* .features.length += 1; // Account for new PM Kusum feature */
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+/* ================================
+   Accessibility & Performance
+================================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .landing-page {
+    background: #000;
+  }
+  
+  .stat-card, .featured-item, .cta-content {
+    border: 3px solid #fff;
+  }
+}
+
+/* Dark mode preference support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-bg: #0a0e1a;
+    --secondary-bg: #1a2332;
+  }
+}

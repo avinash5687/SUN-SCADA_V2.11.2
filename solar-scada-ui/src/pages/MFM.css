@@ -3,9 +3,9 @@
 ================================= */
 .mfm-container {
   width: 100%;
-  min-height: calc(100vh - 60px); /* Subtract exact header height */
+  min-height: calc(100vh - 50px); /* Subtract exact header height */
   background: white;
-  padding: 10px;
+  padding : 5px 10px; /* Reduced padding */
   border-radius: 8px;
   background-color: #f0f4f8; /* Soft, professional background */
   overflow: auto;

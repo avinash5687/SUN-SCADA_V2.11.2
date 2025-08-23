@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/BACKGROUND.jpeg";
 import logo from "../assets/logo.png";
+import project_logo from "../assets/SUN-SCADA_Logo.png";
 import { API_ENDPOINTS } from "../apiConfig";
 
 const Login = () => {
@@ -65,104 +66,168 @@ const Login = () => {
     }
   };
 
+  // Check for mobile screen width
+  const isMobile = window.innerWidth <= 768;
+
+  const styles = {
+    container: {
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      height: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      position: "relative",
+      padding: "20px",
+    },
+    header: {
+      position: "absolute",
+      top: "20px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      color: "white",
+      fontSize: "28px",
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    mainContent: {
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      padding: "20px", // Reduced padding
+      opacity: "0.9",
+      borderRadius: "10px",
+      width: isMobile ? "95%" : "80%",
+      maxWidth: "700px",
+      height: isMobile ? "auto" : "280px", // Fixed height for desktop, auto for mobile
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "stretch",
+      flexDirection: isMobile ? "column" : "row",
+      gap: '12px', // Reduced gap
+      marginTop: "40px",
+    },
+    energyDataSection: {
+      color: "white",
+      width: isMobile ? "100%" : "65%",
+      background: "rgba(77, 77, 77, 0.6)",
+      padding: "20px", // Reduced padding
+      borderRadius: "10px",
+      display: "flex",
+      flexDirection: "column",
+    },
+    energyDataTitle: {
+      marginBottom: "10px", // Reduced margin
+      fontSize: "22px", // Slightly smaller font
+      fontWeight: "bold",
+    },
+    energyDataList: {
+      listStyleType: "none",
+      padding: "15px", // Reduced padding
+      margin: "0",
+      borderRadius: "10px",
+      display: "flex",
+      flexDirection: "column",
+      background: "rgba(0, 0, 0, 0.6)",
+      flex: "1",
+      justifyContent: "center",
+    },
+    energyDataItem: {
+      marginBottom: '8px', // Reduced margin
+      fontSize: '15px', // Slightly smaller font
+      lineHeight: "1.4", // Tighter line height
+    },
+    loginSection: {
+      width: isMobile ? "100%" : "35%",
+      textAlign: "center",
+      background: "rgba(77, 77, 77, 0.6)",
+      padding: "15px", // Reduced padding
+      borderRadius: "10px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    },
+    projectLogo: {
+      height: "50px", // Reduced logo height
+      marginBottom: "15px", // Reduced margin
+    },
+    input: {
+      width: "100%",
+      padding: "8px", // Reduced padding
+      marginBottom: "12px", // Reduced margin
+      borderRadius: "5px",
+      border: "none",
+      boxSizing: "border-box",
+      fontSize: "14px", // Slightly smaller font
+    },
+    button: {
+      width: "100%",
+      padding: "8px", // Reduced padding
+      backgroundColor: "#008080",
+      color: "white",
+      borderRadius: "5px",
+      border: "none",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "14px", // Slightly smaller font
+      transition: "background-color 0.3s ease",
+    },
+    footer: {
+      position: "absolute",
+      bottom: "20px",
+      right: "20px",
+      display: "flex",
+      alignItems: "center",
+      color: "white",
+      fontWeight: "bold",
+      fontSize: "22px",
+    },
+    footerLogo: {
+      height: "80px",
+      marginLeft: "10px",
+    },
+    errorText: {
+        color: 'red',
+        marginBottom: '8px', // Reduced margin
+        fontSize: '12px', // Smaller font
+    }
+  };
+
   return (
-    <div
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        position: "relative",
-      }}
-    >
-      <h2
-        style={{
-          position: "absolute",
-          top: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          color: "white",
-          fontSize: "28px",
-          fontWeight: "bold",
-        }}
-      >
-        21.5MWp JSPL SOLAR PROJECT, DHULE, MAHARASHTRA
+    <div style={styles.container}>
+      <h2 style={styles.header}>
+        21.5MWp JSPL SOLAR PROJECT
+        <br />
+        DHULE, MAHARASHTRA
       </h2>
 
-      <div
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
-          padding: "20px",
-          opacity: "90%",
-          borderRadius: "10px",
-          width: "60%",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "50px",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            width: "70%",
-            background: "rgba(77, 77, 77, 0.6)",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
-          <h3 style={{ marginBottom: "10px" }}>Current Energy Data</h3>
-          <ul
-            style={{
-              listStyleType: "none",
-              padding: "20px",
-              borderRadius: "10px",
-              display: "flex",
-              flexDirection: "column",
-              background: "rgba(0, 0, 0, 0.6)",
-            }}
-          >
+      <div style={styles.mainContent}>
+        <div style={styles.energyDataSection}>
+          <h3 style={styles.energyDataTitle}>Current Energy Data</h3>
+          <ul style={styles.energyDataList}>
             {energyData ? (
               <>
-                <li>🔋 Energy Generated: {energyData.energyGenerated} MWh</li>
-                <li>⚡ Current Power: {energyData.currentPower} MW</li>
-                <li>🌍 CO₂ Saved: {energyData.co2Saved} kg</li>
-                <li>🌳 Trees Saved: {energyData.treesSaved}</li>
+                <li style={styles.energyDataItem}>🔋 Energy Generated: {energyData.energyGenerated} MWh</li>
+                <li style={styles.energyDataItem}>⚡ Current Power: {energyData.currentPower} MW</li>
+                <li style={styles.energyDataItem}>🌍 CO₂ Saved: {energyData.co2Saved} kg</li>
+                <li style={styles.energyDataItem}>🌳 Trees Saved: {energyData.treesSaved}</li>
               </>
             ) : (
-              <li>Loading energy data...</li>
+              <li style={styles.energyDataItem}>Loading energy data...</li>
             )}
           </ul>
         </div>
 
-        <div
-          style={{
-            width: "30%",
-            textAlign: "center",
-            marginLeft: "10px",
-            background: "rgba(77, 77, 77, 0.6)",
-            padding: "20px",
-            borderRadius: "10px",
-          }}
-        >
-          <h3 style={{ color: "white", marginBottom: "10px" }}>Login</h3>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+        <div style={styles.loginSection}>
+          <img src={project_logo} alt="Project Logo" style={styles.projectLogo} />
+          {error && <p style={styles.errorText}>{error}</p>}
           <form onSubmit={handleLogin}>
             <input
               type="text"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-                borderRadius: "5px",
-              }}
+              style={styles.input}
               required
             />
             <input
@@ -170,24 +235,14 @@ const Login = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-                borderRadius: "5px",
-              }}
+              style={styles.input}
               required
             />
-            <button
-              type="submit"
-              style={{
-                width: "100%",
-                padding: "10px",
-                backgroundColor: "#008080",
-                color: "white",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
+            <button 
+              type="submit" 
+              style={styles.button}
+              onMouseOver={(e) => e.target.style.backgroundColor = "#006666"}
+              onMouseOut={(e) => e.target.style.backgroundColor = "#008080"}
             >
               Login
             </button>
@@ -195,27 +250,9 @@ const Login = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
-          display: "flex",
-          alignItems: "center",
-          color: "white",
-          fontWeight: "bold",
-          fontSize: "22px",
-        }}
-      >
+      <div style={styles.footer}>
         <span>Developed by</span>
-        <img
-          src={logo}
-          alt="Logo"
-          style={{
-            height: "80px",
-            marginLeft: "10px",
-          }}
-        />
+        <img src={logo} alt="Logo" style={styles.footerLogo} />
       </div>
     </div>
   );

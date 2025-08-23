@@ -21,6 +21,7 @@ import { Howl } from "howler";
 import html2canvas from "html2canvas";
 import "./Layout.css";
 import logo from "../assets/logo.png";
+import project_logo from "../assets/SUN-SCADA_Logo.png";
 import { API_ENDPOINTS } from "../apiConfig";
 
 // Utility functions
@@ -518,7 +519,8 @@ const Layout = ({ children }) => {
 
             <div className="brand-section" onClick={navigateToMap}>
               <div className="brand-text">
-                <h1 className="brand-name">SUN-SCADA</h1>
+                {/* <h1 className="brand-name">SUN-SCADA</h1> */}
+                <img src={project_logo} alt="Brand Logo" className="brand-logo" />
               </div>
             </div>
           </div>
