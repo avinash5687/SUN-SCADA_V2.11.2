@@ -95,7 +95,7 @@ const MFM = () => {
     <div className="mfm-container">
       {/* Header with Title and Block Buttons */}
       <div className="mfm-header">
-        <h2 className="mfm-title">MFM Data Overview</h2>
+        <h2 className="mfm-title">Multi Functional Meter Data Overview</h2>
         
         <div className="block-controls">
           <div className="block-buttons">

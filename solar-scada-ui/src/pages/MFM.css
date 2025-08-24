@@ -4,10 +4,10 @@
 .mfm-container {
   width: 100%;
   min-height: calc(100vh - 50px); /* Subtract exact header height */
-  background: white;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Tahoma', Arial, sans-serif;
   padding : 5px 10px; /* Reduced padding */
   border-radius: 8px;
-  background-color: #f0f4f8; /* Soft, professional background */
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -28,9 +28,10 @@
 /* Title - SMALLER */
 .mfm-title {
   font-weight: 600;
-  font-size: 1.1rem; /* Reduced from 1.25rem */
+  font-size: 1.1rem;
   color: #1a3b5d;
-  margin-bottom: 0;
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
 }
 
 .block-controls {
