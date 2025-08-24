@@ -1,40 +1,79 @@
-/* Inverter.css */
-
-/* ========== Inverter Container ========== */
+/* ========== Inverter Container - Formula Screen Style ========== */
 .inverter-container {
   width: 100%;
-  height: 100%;
-  background-color: #f0f4f8;
-  padding: 10px;
-  box-sizing: border-box;
+  height: calc(100vh - 50px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden;
   border-radius: 8px;
 }
 
-/* ========== Title Styling ========== */
+/* ========== Formula Screen Style Header ========== */
+.inverter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 8px 16px 8px 16px;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
 .inverter-title {
+  font-weight: 600;
+  font-size: 1.1rem;
   color: #1a3b5d;
-  font-size: 1.4rem;
-  margin-bottom: 5px;
-  font-weight: 700;
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+/* ========== Loading State - Formula Screen Style ========== */
+.inverter-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: #5d6d7e;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========== Main Content Area ========== */
+.inverter-content {
+  flex: 1;
+  padding: 5px 5px 10px 10px;
+  overflow: auto;
 }
 
 /* ========== Table Styling (Classic Grid with Modern Touches) ========== */
 .inverter-table {
   width: 100%;
-  /* --- FIX 1: Use border-collapse for a clean grid --- */
   border-collapse: collapse; 
   text-align: center;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
   overflow: auto;
-  /* Add a single, encompassing border around the whole table */
   border: 1px solid #d6dde3;
 }
-
 
 /* ========== Header Styling ========== */
 .inverter-header-content {
@@ -43,7 +82,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 10px;
+  padding: 8px;
 }
 
 .header-inverter-image {
@@ -72,13 +111,11 @@
   font-size: 1rem;
 }
 
-/* --- FIX 2: Add borders to create the grid --- */
 .inverter-table th, .inverter-table td {
-  border-bottom: 1px solid #000000; /* Horizontal line for every row */
-  border-right: 1px solid #000000;  /* Vertical line for every column */
+  border-bottom: 1px solid #000000;
+  border-right: 1px solid #000000;
 }
 
-/* Remove the outer-right border from the last column */
 .inverter-table th:last-child, .inverter-table td:last-child {
   border-right: none;
 }
@@ -93,7 +130,6 @@
   font-family: tahoma;
 }
 
-
 /* First column (parameters) styling */
 .inverter-table tbody tr td:first-child {
   text-align: left;
@@ -102,23 +138,17 @@
   color: #2c3e50;
 }
 
-/* --- FIX 3: Add Zebra Striping and a distinct Hover effect --- */
-
-/* Add a transition for a smooth hover effect */
 .inverter-table tbody tr {
   transition: background-color 0.2s ease-in-out;
 }
 
-/* Background for EVEN rows (2nd, 4th, etc.) */
 .inverter-table tbody tr:nth-child(even) {
-  background-color: #e9f0f7; /* A very light gray for even rows */
+  background-color: #e9f0f7;
 }
 
-/* Hover effect for ANY row */
 .inverter-table tbody tr:hover {
-  background-color: #cfe8ff; /* A distinct light blue for hover */
+  background-color: #cfe8ff;
 }
-
 
 /* Status Indicator Styling */
 .status-indicator {
@@ -126,6 +156,7 @@
   height: 14px;
   border-radius: 50%;
   border: 2px solid #ffffff;
+  margin-left: 10px; /* <-- Add this line for extra space */
 }
 
 .status-green {
@@ -139,11 +170,6 @@
 }
 
 /* ========== Responsive Media Queries ========== */
-
-/* Tablets */
-
-/* Large Tablets and Small Laptops */
-
 @media (min-width: 1024px) and (max-width: 1278px) {
   .inverter-table td {
     padding: 3px;
@@ -158,18 +184,16 @@
   }
 }
 
-
-
 @media (min-width: 1440px) and (max-width: 1600px) {
- .inverter-container {
-  height: 100vh;
-  overflow: auto;
- }
- .inverter-table {
-  overflow: hidden;
-  border: 1px solid #d6dde3;
-  height: 80vh;
-}
+  .inverter-container {
+    height: 100vh;
+    overflow: auto;
+  }
+  .inverter-table {
+    overflow: hidden;
+    border: 1px solid #d6dde3;
+    height: 80vh;
+  }
 }
 
 @media (min-width: 1601px) and (max-width: 1920px) {
@@ -184,17 +208,14 @@
 }
 
 @media (min-width: 1921px) {
-
   .inverter-container {
     height: 100vh;
   }
-
   .inverter-table td {
     padding: 10px;
     font-size: 1.2rem;
   }
 }
-
 
 /* Mobile Devices */
 @media (max-width: 768px) {
@@ -204,8 +225,16 @@
     overflow-x: auto;
   }
 
+  .inverter-header {
+    padding: 8px 10px 6px 10px;
+  }
+
   .inverter-title {
-    font-size: clamp(16px, 4vw, 20px);
+    font-size: 1rem;
+  }
+
+  .inverter-content {
+    padding: 6px 10px 10px 10px;
   }
 
   .inverter-table {
