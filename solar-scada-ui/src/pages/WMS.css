@@ -1,45 +1,81 @@
-/* ========== Fullscreen Container and Layout ========== */
-.wms-container-fullscreen {
-  /* width: calc(100vw - 97px); */
+/* ========== WMS Container - Formula Screen Style ========== */
+.wms-container {
   width: 100%;
-  height: calc(100vh - 50px);
-  background-color: #f0f4f8;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  overflow: hidden; /* Prevent the main page from scrolling */
+  height: calc(100vh - 48px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
-.wms-title {
-  color: #1a3b5d;
-  font-size: .9rem;
-  margin-bottom: 4px;
-  font-weight: 700;
+/* ========== Formula Screen Style Header ========== */
+.wms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px 8px 16px;
+  border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
 }
 
-/* FIX: This grid layout is key to the side-by-side view */
+.wms-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1a3b5d;
+  margin: 0;
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+/* ========== Loading State - Formula Screen Style ========== */
+.wms-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: #5d6d7e;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========== Main Content Grid ========== */
 .wms-grid-content {
   flex-grow: 1;
   display: grid;
-  grid-template-columns: 35% 1fr; /* Table takes 55%, chart takes the rest */
-  grid-template-rows: 1fr; /* A single row that fills the available height */
-  gap: 10px;
-  min-height: 0; /* CRITICAL: Allows children to shrink and use ResponsiveContainer */
+  grid-template-columns: 35% 1fr;
+  grid-template-rows: 1fr;
+  gap: 5px;
+  min-height: 0;
+  padding: 8px 0px 0px 16px;
 }
 
-/* Container for the table to handle its own scrolling */
+/* ========== Table Container ========== */
 .wms-table-container {
-  overflow: auto; /* Allows table to scroll vertically and horizontally */
+  overflow: auto;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
   height: 85vh;
 }
 
-/* ========== Table Styling (Modern Grid Look) ========== */
+/* ========== Table Styling ========== */
 .wms-table {
   width: 100%;
   border-collapse: collapse;
@@ -61,6 +97,7 @@
   border-bottom: 1px solid #000000;
   border-right: 1px solid #000000;
 }
+
 .wms-table th:first-child, .wms-table td:first-child {
   border-left: 1px solid #000000;
 }
@@ -70,28 +107,84 @@
   vertical-align: middle;
 }
 
-.wms-table tbody tr:nth-child(even) { background-color: #f8f9fa; }
-.wms-table tbody tr:hover { background-color: #e9f5ff; }
-.wms-table tbody tr td:first-child { text-align: left; font-weight: 600; color: #2c3e50; padding: 5px 6px; }
+.wms-table tbody tr:nth-child(even) { 
+  background-color: #f8f9fa; 
+}
 
-/* Progress Bar Styling (Corrected) */
-.progress-bar-cell { position: relative; height: 100%; min-height: 34px; display: flex; align-items: center; justify-content: center; }
-.progress-bar-fill { position: absolute; left: 0; top: 0; height: 100%; transition: width 0.3s ease-in-out; opacity: 0.7; z-index: 1; }
-.progress-bar-text { position: relative; z-index: 2; font-weight: 600; color: #111; }
+.wms-table tbody tr:hover { 
+  background-color: #e9f5ff; 
+}
 
-/* Header and Status Styling */
-.wms-header-content { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px; }
-.header-name { font-weight: 600; }
-.status-indicator { width: 15px; height: 15px; border-radius: 50%; border: 2px solid #ffffff; }
-.status-green { background-color: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
-.status-red { background-color: #e74c3c; box-shadow: 0 0 8px #e74c3c; }
+.wms-table tbody tr td:first-child { 
+  text-align: left; 
+  font-weight: 600; 
+  color: #2c3e50; 
+  padding: 5px 6px; 
+}
 
-/* FIX: Corrected Chart Container Styling */
+/* ========== Progress Bar Styling ========== */
+.progress-bar-cell { 
+  position: relative; 
+  height: 100%; 
+  min-height: 34px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+
+.progress-bar-fill { 
+  position: absolute; 
+  left: 0; 
+  top: 0; 
+  height: 100%; 
+  transition: width 0.3s ease-in-out; 
+  opacity: 0.7; 
+  z-index: 1; 
+}
+
+.progress-bar-text { 
+  position: relative; 
+  z-index: 2; 
+  font-weight: 600; 
+  color: #111; 
+}
+
+/* ========== Header and Status Styling ========== */
+.wms-header-content { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px; 
+  min-width: 120px; 
+}
+
+.header-name { 
+  font-weight: 600; 
+}
+
+.status-indicator { 
+  width: 15px; 
+  height: 15px; 
+  border-radius: 50%; 
+  border: 2px solid #ffffff; 
+}
+
+.status-green { 
+  background-color: #2ecc71; 
+  box-shadow: 0 0 8px #2ecc71; 
+}
+
+.status-red { 
+  background-color: #e74c3c; 
+  box-shadow: 0 0 8px #e74c3c; 
+}
+
+/* ========== Chart Container Styling ========== */
 .charts-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  height: 87vh;
+  gap: 2px;
+  height: 90vh;
   min-height: 0;
   width: 100%;
 }
@@ -100,7 +193,6 @@
   flex: 1 1 0;
   height: auto;
   background-color: #fff;
-  padding: 8px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
   margin-bottom: 8px;
@@ -110,14 +202,12 @@
   max-width: 100%;
 }
 
-.loading-text {
-  font-size: 1.2rem;
-  color: #888;
-}
-
-/* Responsive Design */
-/* Large screens (≥1440px) */
+/* ========== Responsive Design ========== */
 @media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .wms-header {
+    padding: 8px 10px 6px 10px;
+  }
+  
   .wms-title {
     font-size: 0.95rem;
   }
@@ -145,8 +235,6 @@
   }
 }
 
-
-/* ========== Breakpoint: 1280px (HD Laptops) ========== */
 @media screen and (min-width: 1280px) and (max-width: 1359px) {
   .wms-title {
     font-size: 1rem;
@@ -175,7 +263,6 @@
   }
 }
 
-/* ========== Breakpoint: 1360px to 1439px ========== */
 @media screen and (min-width: 1360px) and (max-width: 1439px) {
   .wms-title {
     font-size: 1.1rem;
@@ -192,6 +279,7 @@
   .wms-table tbody tr td:first-child {
     padding: 4px 6px;
   }
+  
   .charts-stack {
     height: 86vh;
     gap: 4px;
@@ -203,7 +291,6 @@
   }
 }
 
-/* ========== Breakpoint: 1440px (Full HD) ========== */
 @media screen and (min-width: 1440px) and (max-width: 1679px) {
   .wms-title {
     font-size: 1.25rem;
@@ -231,11 +318,8 @@
     font-size: 1rem;
     padding: 4px 4px;
   }
-
-
 }
 
-/* ========== Breakpoint: 1680px to 1919px ========== */
 @media screen and (min-width: 1680px) and (max-width: 1919px) {
   .wms-title {
     font-size: 1.35rem;
@@ -253,7 +337,7 @@
     min-height: 38px;
   }
 
-   .charts-stack {
+  .charts-stack {
     height: 89vh;
     gap: 4px;
     width: 98%;
@@ -264,7 +348,6 @@
   }
 }
 
-/* ========== Breakpoint: 1920px and above ========== */
 @media screen and (min-width: 1920px) {
   .wms-title {
     font-size: 1.5rem;
@@ -298,9 +381,11 @@
   }
 }
 
-
-/* Tablets and small laptops (768px–1023px) */
 @media screen and (max-width: 1023px) {
+  .wms-header {
+    padding: 8px 10px 6px 10px;
+  }
+  
   .wms-content {
     flex-direction: column;
     align-items: stretch;
@@ -316,7 +401,6 @@
   }
 }
 
-/* Mobile devices (<768px) */
 @media screen and (max-width: 767px) {
   .wms-title {
     font-size: 1rem;
@@ -333,7 +417,6 @@
   }
 }
 
-/* Very small screens (<480px) */
 @media screen and (max-width: 479px) {
   .wms-table {
     font-size: 0.65rem;

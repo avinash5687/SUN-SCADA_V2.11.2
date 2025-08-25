@@ -1,4 +1,3 @@
-// (No change at top imports)
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import {
@@ -37,6 +36,7 @@ const WMS = () => {
   const [soilChartData, setSoilChartData] = useState([]);
   const [zoomedData, setZoomedData] = useState([]);
   const [isZooming, setIsZooming] = useState(false);
+  const [loading, setLoading] = useState(true);
   const chartRef = useRef(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const onZoomChange = (zooming) => setIsZooming(zooming)
@@ -45,6 +45,7 @@ const WMS = () => {
   useEffect(() => {
     const fetchAllData = async () => {
       try {
+        if (wmsData.length === 0) setLoading(true);
         const [wmsRes, chartRes, soilRes] = await Promise.all([
           axios.get(API_ENDPOINTS.wms.getAll),
           axios.get(API_ENDPOINTS.wms.chart),
@@ -56,12 +57,14 @@ const WMS = () => {
         setSoilChartData(soilRes.data);
       } catch (error) {
         console.error("Error fetching WMS data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAllData();
     const interval = setInterval(() => { if (!isZooming) fetchAllData(); }, 30000);
     return () => clearInterval(interval);
-  }, [isZooming]);
+  }, [isZooming, wmsData.length]);
 
   const handleBrushChange = (range) => {
     if (range && range.startIndex !== undefined && range.endIndex !== undefined) {
@@ -82,12 +85,11 @@ const WMS = () => {
         setWindowHeight(window.innerHeight);
       }
     };
-  
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
- useEffect(() => {
+  useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -119,7 +121,6 @@ const WMS = () => {
 
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
-
   const chartHeight = Math.max(250, windowHeight * 0.4);
 
   const highchartsAreaOptions = {
@@ -195,7 +196,7 @@ const WMS = () => {
       spacing: spacing,
       animation: {
         duration: 1500,
-        easing: 'easeOutBounce' // You can try 'easeOutBounce', 'easeOutElastic', 'easeOutBack', etc.
+        easing: 'easeOutBounce'
       }
     },
     title: {
@@ -206,8 +207,6 @@ const WMS = () => {
       gridLineWidth: 1,
       title: { text: '' },
       tickmarkPlacement: 'on',
-  //     min: 0.5,        // Add this
-  // max: data.length - 0.5  
     },
     yAxis: [
       {
@@ -254,18 +253,16 @@ const WMS = () => {
       align: 'center',
       verticalAlign: 'bottom',
       itemStyle: {
-        fontSize: '13px'  // smaller text to fit better
+        fontSize: '13px'
       }
     },
     series: [
       { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8', animation: { duration: 1000, easing: 'easeOutElastic' } },
       { name: 'POA (W/m²)', data: data.map(d => d.POA), yAxis: 0, color: '#82ca9d' },
       { name: 'DHI (W/m²)', data: data.map(d => d.DHI), yAxis: 0, color: '#1E90FF' },
-  
       { name: 'GHI Cumulative (kWh/m²)', data: data.map(d => d.CUM_GHI), yAxis: 1, color: '#FFD700' },
       { name: 'POA Cumulative (kWh/m²)', data: data.map(d => d.CUM_POA), yAxis: 1, color: '#A0E7E5' },
       { name: 'DHI Cumulative (kWh/m²)', data: data.map(d => d.DHI_CUMM), yAxis: 1, color: '#B19CD9' },
-  
       { name: 'Module Temperature 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500' },
       { name: 'Module Temperature 2 (°C)', data: data.map(d => d.MOD_TEMP2), yAxis: 2, color: '#DA70D6' },
       { name: 'Ambient Temperature (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32' },
@@ -274,7 +271,6 @@ const WMS = () => {
       { name: 'Transmission Loss 1 (%)', data: data.map(d => d.SOI_LS1), yAxis: 2, color: '#8B4513' },
       { name: 'Soiling 2 (%)', data: data.map(d => d.SOI2), yAxis: 2, color: '#2F4F4F' },
       { name: 'Transmission Loss 2 (%)', data: data.map(d => d.SOI_LS2), yAxis: 2, color: '#708090' },
-  
       { name: 'Wind Speed (m/s)', data: data.map(d => d.WND_SPD), yAxis: 3, color: '#6A5ACD' },
       { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB' },
     ],
@@ -287,72 +283,79 @@ const WMS = () => {
       }
     }
   });
-  
 
   return (
-    <div className="wms-container-fullscreen">
-      <h2 className="wms-title">Weather Monitoring Station Overview</h2>
-      <div className="wms-grid-content">
-        <div className="wms-table-container">
-          <table className="wms-table">
-            <thead>
-              <tr>
-                <th>Parameters</th>
-                {wmsData.map((sensor, index) => (
-                  <th key={index}>
-                    <div className="wms-header-content">
-                      <span className="header-name">{sensor.ICR || `Sensor ${index + 1}`}</span>
-                      <div className={`status-indicator ${sensor.CUM_STS === 1 ? "status-green" : "status-red"}`}></div>
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {parametersConfig.map((param, idx) => (
-                <tr key={idx}>
-                  <td>{param.name}</td>
+    <div className="wms-container">
+      {/* Formula Screen Style Header */}
+      <div className="wms-header">
+        <h2 className="wms-title">Weather Monitoring Station Overview</h2>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="wms-loading">
+          <div className="loading-spinner"></div>
+          <span>Loading WMS data...</span>
+        </div>
+      )}
+
+      {/* Main Content */}
+      {!loading && (
+        <div className="wms-grid-content">
+          <div className="wms-table-container">
+            <table className="wms-table">
+              <thead>
+                <tr>
+                  <th>Parameters</th>
                   {wmsData.map((sensor, index) => (
-                    <td key={index}>
-                      {param.max ? (
-                        <ProgressBarCell value={sensor[param.key]} max={param.max} unit={param.unit} />
-                      ) : (
-                        sensor[param.key] || 0
-                      )}
-                    </td>
+                    <th key={index}>
+                      <div className="wms-header-content">
+                        <span className="header-name">{sensor.ICR || `Sensor ${index + 1}`}</span>
+                        <div className={`status-indicator ${sensor.CUM_STS === 1 ? "status-green" : "status-red"}`}></div>
+                      </div>
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {parametersConfig.map((param, idx) => (
+                  <tr key={idx}>
+                    <td>{param.name}</td>
+                    {wmsData.map((sensor, index) => (
+                      <td key={index}>
+                        {param.max ? (
+                          <ProgressBarCell value={sensor[param.key]} max={param.max} unit={param.unit} />
+                        ) : (
+                          sensor[param.key] || 0
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        <div className="charts-stack">
-         
-          <div className="chart-container">
-          <HighchartsReact
-  highcharts={Highcharts} 
-  options={highChartsMultiYAxisLine(zoomedData)} 
-  containerProps={{ style: { height: "100%", width: "100%" } }}
-/>
-</div>
+          <div className="charts-stack">
+            <div className="chart-container">
+              <HighchartsReact
+                highcharts={Highcharts} 
+                options={highChartsMultiYAxisLine(zoomedData)} 
+                containerProps={{ style: { height: "100%", width: "100%" } }}
+              />
+            </div>
 
-          <div className="chart-container">
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={{
-                ...highchartsAreaOptions,
-                // chart: {
-                //   ...highchartsAreaOptions.chart,
-                //   height: 600, // Increase height (you can adjust this)
-                // },
-              }}
-              containerProps={{ style: { height: "100%", width: "100%" } }} // Increase height & width
-              ref={chartRef}
-            />
+            <div className="chart-container">
+              <HighchartsReact
+                highcharts={Highcharts}
+                options={highchartsAreaOptions}
+                containerProps={{ style: { height: "100%", width: "100%" } }}
+                ref={chartRef}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
