@@ -9,45 +9,108 @@ const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
   const [mfmStatus, setMFMStatus] = useState({});
   const [popupData, setPopupData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingStates, setLoadingStates] = useState({
+    inverters: { 1: true, 2: true, 3: true, 4: true },
+    mfm: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true }
+  });
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchStatuses = async () => {
+  const fetchStatuses = async (isRefresh = false) => {
     try {
-      if (Object.keys(inverterStatus).length === 0) setLoading(true);
+      if (isRefresh) {
+        setRefreshing(true);
+      }
       
       const inverterIds = [1, 2, 3, 4];
       const mfmIds = [1, 2, 3, 4, 5, 6, 7, 8];
 
-      const inverterStatusPromises = inverterIds.map(id =>
-        axios.get(API_ENDPOINTS.inverter.getAll, { params: { id } })
-      );
-      const mfmStatusAll = await axios.get(API_ENDPOINTS.mfm.getAll);
+      console.time('SLD API Fetch');
+      
+      const API_TIMEOUT = 10000;
+      const axiosConfig = { timeout: API_TIMEOUT };
 
-      const inverterResponses = await Promise.all(inverterStatusPromises);
-      const inverterStatusObj = {};
-      inverterResponses.forEach((res, i) => {
-        const data = Array.isArray(res.data) ? res.data[0] : res.data;
-        inverterStatusObj[inverterIds[i]] = data;
+      // Fetch inverter data individually and update states as they come
+      inverterIds.forEach(async (id) => {
+        try {
+          const response = await axios.get(API_ENDPOINTS.inverter.getAll, { 
+            params: { id }, 
+            ...axiosConfig 
+          });
+          
+          if (response.data) {
+            const data = Array.isArray(response.data) ? response.data[0] : response.data;
+            setInverterStatus(prev => ({ ...prev, [id]: data }));
+            setLoadingStates(prev => ({
+              ...prev,
+              inverters: { ...prev.inverters, [id]: false }
+            }));
+          }
+        } catch (error) {
+          console.warn(`Inverter ${id} API failed:`, error.message);
+          setLoadingStates(prev => ({
+            ...prev,
+            inverters: { ...prev.inverters, [id]: false }
+          }));
+        }
       });
 
-      const mfmStatusObj = {};
-      mfmIds.forEach(id => {
-        const matched = mfmStatusAll.data.find(item => item.ID === id);
-        if (matched) mfmStatusObj[id] = matched;
-      });
+      // Fetch MFM data
+      try {
+        const mfmResponse = await axios.get(API_ENDPOINTS.mfm.getAll, axiosConfig);
+        
+        if (mfmResponse.data) {
+          const mfmStatusObj = {};
+          mfmIds.forEach(id => {
+            const matched = mfmResponse.data.find(item => item.ID === id);
+            if (matched) mfmStatusObj[id] = matched;
+          });
+          
+          setMFMStatus(prev => ({ ...prev, ...mfmStatusObj }));
+          
+          // Update loading states for all MFM devices
+          const newMfmLoadingStates = {};
+          mfmIds.forEach(id => {
+            newMfmLoadingStates[id] = false;
+          });
+          
+          setLoadingStates(prev => ({
+            ...prev,
+            mfm: newMfmLoadingStates
+          }));
+        }
+      } catch (error) {
+        console.warn('MFM API failed:', error.message);
+        // Set all MFM loading states to false
+        const newMfmLoadingStates = {};
+        mfmIds.forEach(id => {
+          newMfmLoadingStates[id] = false;
+        });
+        
+        setLoadingStates(prev => ({
+          ...prev,
+          mfm: newMfmLoadingStates
+        }));
+      }
 
-      setInverterStatus(inverterStatusObj);
-      setMFMStatus(mfmStatusObj);
+      console.timeEnd('SLD API Fetch');
+      console.log('✅ SLD data fetch initiated');
+
     } catch (err) {
-      console.error('Error fetching statuses', err);
+      console.error('❌ Error fetching SLD statuses:', err);
     } finally {
-      setLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    fetchStatuses();
-    const interval = setInterval(fetchStatuses, 30000);
+    // Initial fetch
+    fetchStatuses(false);
+    
+    // Set up interval for refresh
+    const interval = setInterval(() => {
+      fetchStatuses(true);
+    }, 30000);
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -148,82 +211,105 @@ const SLDScreen = () => {
     }
   };
 
+  // Individual Skeleton Button Component
+  const SkeletonButton = ({ type, id }) => (
+    <div className="skeleton-device-btn">
+      <div className="skeleton-btn-content">
+        <div className="skeleton-btn-icon"></div>
+        <div className="skeleton-btn-text"></div>
+        <div className="skeleton-btn-dot"></div>
+      </div>
+    </div>
+  );
+
   return (
     <Layout>
       <div className="sld-container">
         {/* Formula Screen Style Header */}
         <div className="sld-header">
           <h2 className="sld-title">Single Line Diagram</h2>
+          {refreshing && (
+            <div className="refresh-indicator">
+              <div className="refresh-spinner"></div>
+              <span>Refreshing...</span>
+            </div>
+          )}
         </div>
 
-        {/* Loading State */}
-        {loading && (
-          <div className="sld-loading">
-            <div className="loading-spinner"></div>
-            <span>Loading SLD data...</span>
-          </div>
-        )}
-
         {/* Main Content */}
-        {!loading && (
-          <div className="sld-content">
-            <div className="sld-main-area">
-              {/* Device Control Panel */}
-              <div className="device-control-panel">
-                <div className="control-section">
-                  <h4 className="control-title">📊 Meters</h4>
-                  <div className="device-buttons">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(id => {
-                      const status = mfmStatus[id];
-                      const isOnline = status && status.CUM_STS > 0;
-                      return (
-                        <button
-                          key={`mfm-${id}`}
-                          className={`device-btn mfm-btn ${isOnline ? 'online' : 'offline'}`}
-                          onClick={() => handleClick('mfm', id)}
-                          title={status?.ICR || `MFM ${id}`}
-                        >
-                          <span className="btn-icon">📊</span>
-                          <span className="btn-text">MFM {id}</span>
-                          <div className={`btn-status-dot ${isOnline ? 'online' : 'offline'}`}></div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="control-section">
-                  <h4 className="control-title">⚡ Inverters</h4>
-                  <div className="device-buttons">
-                    {[1, 2, 3, 4].map(id => {
-                      const status = inverterStatus[id];
-                      const isOnline = status && status.CUM_STS > 0;
-                      return (
-                        <button
-                          key={`inverter-${id}`}
-                          className={`device-btn inverter-btn ${isOnline ? 'online' : 'offline'}`}
-                          onClick={() => handleClick('inverter', id)}
-                          title={status?.Name || `Inverter ${id}`}
-                        >
-                          <span className="btn-icon">⚡</span>
-                          <span className="btn-text">INV {id}</span>
-                          <div className={`btn-status-dot ${isOnline ? 'online' : 'offline'}`}></div>
-                        </button>
-                      );
-                    })}
-                  </div>
+        <div className="sld-content">
+          <div className="sld-main-area">
+            {/* Device Control Panel */}
+            <div className="device-control-panel">
+              <div className="control-section">
+                <h4 className="control-title">📊 Meters</h4>
+                <div className="device-buttons">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(id => {
+                    const isLoading = loadingStates.mfm[id];
+                    const status = mfmStatus[id];
+                    const isOnline = status && status.CUM_STS > 0;
+                    const hasData = !!status;
+                    
+                    if (isLoading) {
+                      return <SkeletonButton key={`mfm-skeleton-${id}`} type="mfm" id={id} />;
+                    }
+                    
+                    return (
+                      <button
+                        key={`mfm-${id}`}
+                        className={`device-btn mfm-btn ${isOnline ? 'online' : 'offline'} ${!hasData ? 'no-data' : ''}`}
+                        onClick={() => hasData && handleClick('mfm', id)}
+                        disabled={!hasData}
+                        title={status?.ICR || `MFM ${id}${!hasData ? ' (No Data)' : ''}`}
+                      >
+                        <span className="btn-icon">📊</span>
+                        <span className="btn-text">MFM {id}</span>
+                        <div className={`btn-status-dot ${hasData ? (isOnline ? 'online' : 'offline') : 'no-data'}`}></div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* SLD Image */}
-              <div className="sld-image-container">
-                <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
+              <div className="control-section">
+                <h4 className="control-title">⚡ Inverters</h4>
+                <div className="device-buttons">
+                  {[1, 2, 3, 4].map(id => {
+                    const isLoading = loadingStates.inverters[id];
+                    const status = inverterStatus[id];
+                    const isOnline = status && status.CUM_STS > 0;
+                    const hasData = !!status;
+                    
+                    if (isLoading) {
+                      return <SkeletonButton key={`inverter-skeleton-${id}`} type="inverter" id={id} />;
+                    }
+                    
+                    return (
+                      <button
+                        key={`inverter-${id}`}
+                        className={`device-btn inverter-btn ${isOnline ? 'online' : 'offline'} ${!hasData ? 'no-data' : ''}`}
+                        onClick={() => hasData && handleClick('inverter', id)}
+                        disabled={!hasData}
+                        title={status?.Name || `Inverter ${id}${!hasData ? ' (No Data)' : ''}`}
+                      >
+                        <span className="btn-icon">⚡</span>
+                        <span className="btn-text">INV {id}</span>
+                        <div className={`btn-status-dot ${hasData ? (isOnline ? 'online' : 'offline') : 'no-data'}`}></div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Compact Popup with Reduced Width */}
+            {/* SLD Image */}
+            <div className="sld-image-container">
+              <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
+            </div>
+          </div>
+        </div>
+
+        {/* Compact Popup */}
         {popupData && (
           <div className="popup-overlay" onClick={handleOverlayClick}>
             <div className={`compact-popup ${popupData.status}`}>
