@@ -50,10 +50,10 @@ const CustomTrend = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [trendData, setTrendData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const chartRef = useRef(null);
   const [chartHeight, setChartHeight] = useState(getChartHeight());
   const [showForm, setShowForm] = useState(true);
-
 
   function getChartHeight() {
     const width = window.innerWidth;
@@ -102,6 +102,7 @@ const CustomTrend = () => {
     }
 
     try {
+      setLoading(true);
       const res = await axios.post(API_ENDPOINTS.customTrend.getTableData, {
         table1: selectedTable1,
         columns1: selectedColumns1,
@@ -123,9 +124,11 @@ const CustomTrend = () => {
       });
 
       setTrendData(formatted);
-      setShowForm(false);  // hide form after data fetched
+      setShowForm(false);
     } catch (error) {
       console.error("Fetch trend data error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,6 +158,11 @@ const CustomTrend = () => {
     } catch (error) {
       console.error("Export CSV error:", error);
     }
+  };
+
+  const goBackToForm = () => {
+    setShowForm(true);
+    setTrendData([]);
   };
 
   // Build dynamic yAxis and series
@@ -190,7 +198,11 @@ const CustomTrend = () => {
       type: 'line',
       animation: { duration: 1000 },
       zoomType: 'x',
-      height: chartHeight
+      height: chartHeight,
+      spacingTop: 10,
+      spacingBottom: 15,
+      spacingLeft: 10,
+      spacingRight: 10
     },
     title: { text: '' },
     xAxis: {
@@ -214,77 +226,146 @@ const CustomTrend = () => {
   return (
     <Layout>
       <div className="trend-container">
-        <h2 style={{ fontSize: '20px' }}>📈 Custom Trend Analysis</h2>
-        {showForm && (
-          <div className="form-grid">
-            <div className="input-group">
-              <label>Select Table 1:</label>
-              <select value={selectedTable1} onChange={(e) => setSelectedTable1(e.target.value)}>
-                <option value="">-- Select Table --</option>
-                {tables.map(table => <option key={table} value={table}>{table}</option>)}
-              </select>
-            </div>
-
-            {selectedTable1 && (
-              <div className="input-group">
-                <label>Select Columns for Table 1:</label>
-                <select multiple value={selectedColumns1} onChange={(e) =>
-                  setSelectedColumns1([...e.target.selectedOptions].map(o => o.value))
-                }>
-                  {columns1.map(col => <option key={col} value={col}>{col}</option>)}
-                </select>
-              </div>
-            )}
-
-            <div className="input-group">
-              <label>Select Table 2 (Optional):</label>
-              <select value={selectedTable2} onChange={(e) => setSelectedTable2(e.target.value)}>
-                <option value="">-- Select Table --</option>
-                {tables.map(table => <option key={table} value={table}>{table}</option>)}
-              </select>
-            </div>
-
-            {selectedTable2 && (
-              <div className="input-group">
-                <label>Select Columns for Table 2:</label>
-                <select multiple value={selectedColumns2} onChange={(e) =>
-                  setSelectedColumns2([...e.target.selectedOptions].map(o => o.value))
-                }>
-                  {columns2.map(col => <option key={col} value={col}>{col}</option>)}
-                </select>
-              </div>
-            )}
-
-            <div className="input-group">
-              <label>Start Date:</label>
-              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            </div>
-
-            <div className="input-group">
-              <label>End Date:</label>
-              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-            </div>
-          </div>
-        )}
-        <div className={`button-group ${selectedTable2 ? '' : 'single-table'}`}>
-          {!trendData.length && (
-            <button onClick={fetchTrendData} className="primary">📊 Show Trend</button>
-          )}
-          {trendData.length > 0 && (
-            <button onClick={exportCSV} className="secondary">📥 Export CSV</button>
-          )}
-          <button onClick={() => window.location.reload()} className="secondary">🔄 Reload Page</button>
+        {/* Formula Screen Style Header */}
+        <div className="trend-header">
+          <h2 className="trend-title">Custom Trend Analysis</h2>
         </div>
 
-        {trendData.length > 0 && (
-          <div className="chart-container">
-            <h3>Trend Graph</h3>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={chartOptions}
-              containerProps={{ style: { height: "100%", width: "100%" } }}
-              ref={chartRef}
-            />
+        {/* Loading State */}
+        {loading && (
+          <div className="trend-loading">
+            <div className="loading-spinner"></div>
+            <span>Loading trend data...</span>
+          </div>
+        )}
+
+        {/* Main Content */}
+        {!loading && (
+          <div className="trend-content">
+            {showForm && (
+              <div className="trend-form-section">
+                <div className="compact-form-grid">
+                  <div className="input-group">
+                    <label>📊 Select Primary Table:</label>
+                    <select 
+                      value={selectedTable1} 
+                      onChange={(e) => setSelectedTable1(e.target.value)}
+                      className="compact-select"
+                    >
+                      <option value="">-- Choose Table --</option>
+                      {tables.map(table => (
+                        <option key={table} value={table}>{table}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedTable1 && (
+                    <div className="input-group">
+                      <label>📈 Select Columns for {selectedTable1}:</label>
+                      <select 
+                        multiple 
+                        value={selectedColumns1} 
+                        onChange={(e) =>
+                          setSelectedColumns1([...e.target.selectedOptions].map(o => o.value))
+                        }
+                        className="compact-select compact-multi-select"
+                      >
+                        {columns1.map(col => (
+                          <option key={col} value={col}>{col}</option>
+                        ))}
+                      </select>
+                      <span className="helper-text">Hold Ctrl/Cmd to select multiple</span>
+                    </div>
+                  )}
+
+                  <div className="input-group">
+                    <label>📊 Select Secondary Table (Optional):</label>
+                    <select 
+                      value={selectedTable2} 
+                      onChange={(e) => setSelectedTable2(e.target.value)}
+                      className="compact-select"
+                    >
+                      <option value="">-- Choose Table --</option>
+                      {tables.map(table => (
+                        <option key={table} value={table}>{table}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedTable2 && (
+                    <div className="input-group">
+                      <label>📈 Select Columns for {selectedTable2}:</label>
+                      <select 
+                        multiple 
+                        value={selectedColumns2} 
+                        onChange={(e) =>
+                          setSelectedColumns2([...e.target.selectedOptions].map(o => o.value))
+                        }
+                        className="compact-select compact-multi-select"
+                      >
+                        {columns2.map(col => (
+                          <option key={col} value={col}>{col}</option>
+                        ))}
+                      </select>
+                      <span className="helper-text">Hold Ctrl/Cmd to select multiple</span>
+                    </div>
+                  )}
+
+                  <div className="input-group">
+                    <label>📅 Start Date:</label>
+                    <input 
+                      type="date" 
+                      value={startDate} 
+                      onChange={(e) => setStartDate(e.target.value)}
+                      className="compact-input"
+                    />
+                  </div>
+
+                  <div className="input-group">
+                    <label>📅 End Date:</label>
+                    <input 
+                      type="date" 
+                      value={endDate} 
+                      onChange={(e) => setEndDate(e.target.value)}
+                      className="compact-input"
+                    />
+                  </div>
+                </div>
+
+                <div className="button-group">
+                  <button onClick={fetchTrendData} className="primary-btn">
+                    📊 Generate Trend
+                  </button>
+                  <button onClick={() => window.location.reload()} className="secondary-btn">
+                    🔄 Reset Form
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {trendData.length > 0 && (
+              <div className="chart-section">
+                <div className="chart-header">
+                  <h3 className="chart-title">Trend Analysis Results</h3>
+                  <div className="chart-header-buttons">
+                    <button onClick={goBackToForm} className="back-btn">
+                      ← Go Back to Main Page
+                    </button>
+                    <button onClick={exportCSV} className="export-btn">
+                      📥 Export CSV
+                    </button>
+                  </div>
+                </div>
+                <div className="chart-container">
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={chartOptions}
+                    containerProps={{ style: { height: "100%", width: "100%" } }}
+                    ref={chartRef}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
