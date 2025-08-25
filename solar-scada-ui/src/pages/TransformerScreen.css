@@ -4,8 +4,8 @@
 .transformer-screen {
   width: 100%;
   height: calc(100vh - 50px);
-  background: #f0f4f8;
-  display: flex;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Tahoma', Arial, sans-serif;  display: flex;
   flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
