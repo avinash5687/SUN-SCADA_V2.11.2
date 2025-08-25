@@ -5,7 +5,8 @@
   width: 100%;
   height: calc(100vh - 50px);
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  font-family: 'Tahoma', Arial, sans-serif;  display: flex;
+  font-family: 'Tahoma', Arial, sans-serif;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
@@ -31,10 +32,10 @@
 }
 
 /* ================================
-   Legend Section - Color-coded status guide
+   Legend Section - Compact in 1 row
 ================================= */
 .legend-section {
-  padding: 8px 16px;
+  padding: 6px 16px;
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
@@ -42,46 +43,48 @@
 
 .temperature-legend {
   background: white;
-  border-radius: 8px;
-  padding: 12px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   border: 1px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 .legend-title {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #2c3e50;
-  margin: 0 0 8px 0;
+  margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
 }
 
 .legend-items {
   display: flex;
-  gap: 20px;
+  gap: 18px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .legend-color {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.legend-color.good {
-  background: linear-gradient(45deg, #2ecc71, #27ae60);
-}
-
 .legend-color.normal {
-  background: linear-gradient(45deg, #3498db, #2980b9);
+  background: linear-gradient(45deg, #2ecc71, #27ae60);
 }
 
 .legend-color.warning {
@@ -93,13 +96,114 @@
 }
 
 .legend-text {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #2c3e50;
+  white-space: nowrap;
 }
 
 /* ================================
-   Main Content - Adjusted for legend space
+   Skeleton Loading Styles
+================================= */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-card {
+  animation: skeleton-fade 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-fade {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeleton-icon-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skeleton-card-title {
+  height: 18px;
+  width: 80%;
+  margin-bottom: 4px;
+}
+
+.skeleton-connection-status {
+  height: 12px;
+  width: 60%;
+}
+
+.skeleton-gauge {
+  background: linear-gradient(145deg, #f8f9fa, #f0f0f0);
+  border: 1px solid #e9ecef;
+  opacity: 0.8;
+}
+
+.skeleton-temperature-value {
+  height: 16px;
+  width: 50px;
+  border-radius: 6px;
+  margin: 0 auto;
+}
+
+.skeleton-gauge-chart {
+  width: 80px;
+  height: 50px;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(90deg, #e9ecef 25%, #dee2e6 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-gauge-label {
+  height: 10px;
+  width: 70%;
+  margin: 0 auto 3px auto;
+}
+
+.skeleton-status-badge {
+  height: 12px;
+  width: 50px;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+/* Skeleton pulse effect for specific elements */
+.skeleton-gauge .gauge-value-display,
+.skeleton-gauge .gauge-wrapper,
+.skeleton-gauge .gauge-info {
+  animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ================================
+   Main Content - Adjusted for compact legend
 ================================= */
 .transformer-content {
   flex: 1;
@@ -119,11 +223,11 @@
   gap: 12px;
   flex: 1;
   overflow: hidden;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 180px);
 }
 
 /* ================================
-   Compact Transformer Card - Same as before
+   Compact Transformer Card
 ================================= */
 .compact-transformer-card {
   background: white;
@@ -142,8 +246,14 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
 }
 
+/* Skeleton card hover disabled */
+.skeleton-card:hover {
+  transform: none;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+}
+
 /* ================================
-   Compact Card Header - Same as before
+   Compact Card Header
 ================================= */
 .compact-card-header {
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
@@ -227,7 +337,7 @@
 }
 
 /* ================================
-   Compact Gauges Section - Same as before
+   Compact Gauges Section
 ================================= */
 .compact-gauges-section {
   padding: 12px;
@@ -249,7 +359,7 @@
 }
 
 /* ================================
-   Compact Gauge Container - Same as before
+   Compact Gauge Container
 ================================= */
 .compact-gauge-container {
   display: flex;
@@ -271,7 +381,7 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
 }
 
-/* Temperature Value Display - Same as before */
+/* Temperature Value Display */
 .gauge-value-display {
   margin-bottom: 4px;
   text-align: center;
@@ -289,7 +399,7 @@
   border: 1px solid rgba(52, 152, 219, 0.2);
 }
 
-/* Gauge Wrapper - Same as before */
+/* Gauge Wrapper */
 .gauge-wrapper {
   width: 80px;
   height: 50px;
@@ -299,7 +409,7 @@
   margin-bottom: 4px;
 }
 
-/* Gauge Info - Same as before */
+/* Gauge Info */
 .gauge-info {
   text-align: center;
 }
@@ -323,13 +433,8 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.status-badge.good {
-  background: linear-gradient(45deg, #2ecc71, #27ae60);
-  color: white;
-}
-
 .status-badge.normal {
-  background: linear-gradient(45deg, #3498db, #2980b9);
+  background: linear-gradient(45deg, #2ecc71, #27ae60);
   color: white;
 }
 
@@ -351,7 +456,7 @@
 }
 
 /* ================================
-   Loading, Error, and No Data States - Same as before
+   Loading, Error, and No Data States
 ================================= */
 .error-message {
   display: flex;
@@ -447,13 +552,13 @@
 }
 
 /* ================================
-   Responsive Design - Adjusted for legend
+   Responsive Design
 ================================= */
 @media (max-width: 900px) {
   .compact-transformers-grid {
     grid-template-columns: 1fr;
     gap: 10px;
-    max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 200px);
   }
   
   .legend-items {
@@ -472,6 +577,11 @@
   .temperature-value {
     font-size: 1rem;
   }
+
+  .skeleton-gauge-chart {
+    width: 75px;
+    height: 45px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -484,11 +594,12 @@
   }
   
   .legend-section {
-    padding: 6px 12px;
+    padding: 4px 12px;
   }
   
   .temperature-legend {
-    padding: 10px 12px;
+    padding: 6px 10px;
+    gap: 15px;
   }
   
   .legend-items {
@@ -500,14 +611,19 @@
   }
   
   .legend-text {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
+  }
+  
+  .legend-title {
+    font-size: 0.75rem;
   }
   
   .compact-card-header {
     padding: 8px 10px;
   }
   
-  .transformer-icon-badge {
+  .transformer-icon-badge,
+  .skeleton-icon-badge {
     width: 32px;
     height: 32px;
   }
@@ -529,6 +645,11 @@
     height: 40px;
   }
   
+  .skeleton-gauge-chart {
+    width: 70px;
+    height: 40px;
+  }
+  
   .temperature-value {
     font-size: 0.9rem;
   }
@@ -538,7 +659,7 @@
   }
   
   .compact-transformers-grid {
-    max-height: calc(100vh - 240px);
+    max-height: calc(100vh - 220px);
   }
 }
 
@@ -550,4 +671,9 @@
 .legend-item:focus-within {
   outline: 2px solid #3498db;
   outline-offset: 2px;
+}
+
+/* Skip skeleton focus states */
+.skeleton-card:focus-within {
+  outline: none;
 }

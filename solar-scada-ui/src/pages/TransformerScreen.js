@@ -49,21 +49,19 @@ const TransformerScreen = () => {
   }, []);
 
   const getTemperatureStatus = (temp) => {
-    if (temp >= 120) return 'CRITICAL';
-    if (temp >= 90) return 'WARNING';
-    if (temp >= 70) return 'NORMAL';
-    return 'GOOD';
+    if (temp >= 90) return 'CRITICAL';
+    if (temp >= 70) return 'WARNING';
+    return 'NORMAL';
   };
 
   // Get needle color based on temperature value
   const getNeedleColor = (temp) => {
-    if (temp >= 120) return '#e74c3c';  // Critical - Red
-    if (temp >= 90) return '#f39c12';   // Warning - Orange
-    if (temp >= 70) return '#3498db';   // Normal - Blue
-    return '#2ecc71';                   // Good - Green
+    if (temp >= 90) return '#e74c3c';   // Critical - Red
+    if (temp >= 70) return '#f39c12';   // Warning - Orange
+    return '#2ecc71';                   // Normal - Green
   };
 
-  const renderCompactGauge = (value, label, min = 0, max = 150) => {
+  const renderCompactGauge = (value, label, min = 0, max = 120) => {
     const clampedValue = Math.max(min, Math.min(value, max));
     const status = getTemperatureStatus(value);
     const percentage = clampedValue / max;
@@ -80,10 +78,10 @@ const TransformerScreen = () => {
         <div className="gauge-wrapper">
           <GaugeChart
             id={`gauge-${label.replace(/\s+/g, '-').toLowerCase()}`}
-            nrOfLevels={4}
+            nrOfLevels={3}
             percent={percentage}
-            arcsLength={[0.33, 0.33, 0.17, 0.17]}
-            colors={['#2ecc71', '#3498db', '#f39c12', '#e74c3c']}
+            arcsLength={[0.58, 0.17, 0.25]}
+            colors={['#2ecc71', '#f39c12', '#e74c3c']}
             arcWidth={0.25}
             arcPadding={0.015}
             cornerRadius={2}
@@ -106,26 +104,69 @@ const TransformerScreen = () => {
     );
   };
 
+  // Skeleton Loader Components
+  const SkeletonGauge = () => (
+    <div className="compact-gauge-container skeleton-gauge">
+      <div className="gauge-value-display">
+        <div className="skeleton skeleton-temperature-value"></div>
+      </div>
+      <div className="gauge-wrapper">
+        <div className="skeleton skeleton-gauge-chart"></div>
+      </div>
+      <div className="gauge-info">
+        <div className="skeleton skeleton-gauge-label"></div>
+        <div className="skeleton skeleton-status-badge"></div>
+      </div>
+    </div>
+  );
+
+  const SkeletonCard = () => (
+    <div className="compact-transformer-card skeleton-card">
+      <div className="compact-card-header">
+        <div className="header-content">
+          <div className="skeleton skeleton-icon-badge"></div>
+          <div className="title-info">
+            <div className="skeleton skeleton-card-title"></div>
+            <div className="skeleton skeleton-connection-status"></div>
+          </div>
+        </div>
+      </div>
+      <div className="compact-gauges-section">
+        <div className="compact-gauges-grid">
+          <SkeletonGauge />
+          <SkeletonGauge />
+          <SkeletonGauge />
+          <SkeletonGauge />
+        </div>
+      </div>
+    </div>
+  );
+
+  const SkeletonLoader = () => (
+    <div className="compact-transformers-grid">
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+      <SkeletonCard />
+    </div>
+  );
+
   // Legend component
   const TemperatureLegend = () => (
     <div className="temperature-legend">
       <h4 className="legend-title">Temperature Status Legend</h4>
       <div className="legend-items">
         <div className="legend-item">
-          <div className="legend-color good"></div>
-          <span className="legend-text">Good (0-70°C)</span>
-        </div>
-        <div className="legend-item">
           <div className="legend-color normal"></div>
-          <span className="legend-text">Normal (70-90°C)</span>
+          <span className="legend-text">Normal (0-70°C)</span>
         </div>
         <div className="legend-item">
           <div className="legend-color warning"></div>
-          <span className="legend-text">Warning (90-120°C)</span>
+          <span className="legend-text">Warning (70-90°C)</span>
         </div>
         <div className="legend-item">
           <div className="legend-color critical"></div>
-          <span className="legend-text">Critical (above 120°C)</span>
+          <span className="legend-text">Critical (above 90°C)</span>
         </div>
       </div>
     </div>
@@ -156,10 +197,7 @@ const TransformerScreen = () => {
         )}
 
         {loading && !transformerData.length && (
-          <div className="loading-container">
-            <div className="loading-spinner large-loader"></div>
-            <div className="loading-message">Loading transformer data...</div>
-          </div>
+          <SkeletonLoader />
         )}
 
         {transformerData.length > 0 && (

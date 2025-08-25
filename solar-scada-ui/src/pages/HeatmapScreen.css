@@ -29,6 +29,25 @@
   font-family: Tahoma, Arial, sans-serif;
 }
 
+/* ========== Refresh Indicator ========== */
+.refresh-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: #3498db;
+  font-weight: 500;
+}
+
+.refresh-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ecf8ff;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
 /* ========== Legend Styling =========== */
 .legend-container {
   display: flex;
@@ -68,7 +87,6 @@
   font-size: 0.45rem;
   color: #222;
 }
-
 
 /* ========== Loading State ========== */
 .heatmap-loading {
@@ -197,6 +215,125 @@
   background: rgba(0, 0, 0, 0.15);
   padding: 2px 9px;
   border-radius: 7px;
+}
+
+/* ========== No Data Cell Styling ========== */
+.no-data-cell {
+  background: linear-gradient(135deg, #bdc3c7, #95a5a6) !important;
+  color: #7f8c8d !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.no-data-cell:hover {
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.09) !important;
+}
+
+.no-data-cell .cell-value,
+.no-data-cell .cell-label {
+  color: #ffffff !important;
+  opacity: 0.9;
+}
+
+/* ========== Skeleton Cell Styles ========== */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.skeleton-cell {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    #f0f2f5 25%,
+    #e0e6ea 50%,
+    #f0f2f5 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+.skeleton-cell-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.6;
+}
+
+.skeleton-value {
+  width: 40px;
+  height: 16px;
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  border-radius: 4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.skeleton-label {
+  width: 30px;
+  height: 12px;
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  border-radius: 6px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Staggered Animation for Skeleton Cells */
+.skeleton-cell:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.skeleton-cell:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.skeleton-cell:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.skeleton-cell:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+.skeleton-cell:nth-child(1) .skeleton-value,
+.skeleton-cell:nth-child(1) .skeleton-label {
+  animation-delay: 0.2s;
+}
+
+.skeleton-cell:nth-child(2) .skeleton-value,
+.skeleton-cell:nth-child(2) .skeleton-label {
+  animation-delay: 0.5s;
+}
+
+.skeleton-cell:nth-child(3) .skeleton-value,
+.skeleton-cell:nth-child(3) .skeleton-label {
+  animation-delay: 0.8s;
+}
+
+.skeleton-cell:nth-child(4) .skeleton-value,
+.skeleton-cell:nth-child(4) .skeleton-label {
+  animation-delay: 1.1s;
 }
 
 /* ========== Center Popup with Blur Overlay ========== */
@@ -351,7 +488,7 @@
   }
 
   .legend-title {
-    font-size: 0.6rem; /* 60% of 1rem */
+    font-size: 0.6rem;
     margin-right: 6px;
   }
 
@@ -379,5 +516,24 @@
 
   .popup-status {
     font-size: 1.2rem;
+  }
+  
+  .skeleton-value {
+    width: 30px;
+    height: 12px;
+  }
+  
+  .skeleton-label {
+    width: 25px;
+    height: 10px;
+  }
+  
+  .refresh-indicator {
+    font-size: 0.7rem;
+  }
+  
+  .refresh-spinner {
+    width: 10px;
+    height: 10px;
   }
 }

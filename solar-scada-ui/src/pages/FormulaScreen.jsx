@@ -100,6 +100,44 @@ const FormulaScreen = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  // Skeleton Card Component
+  const SkeletonCard = ({ item }) => (
+    <div 
+      className="formula-card skeleton-card" 
+      style={{
+        '--card-color': item.color,
+        '--card-gradient': item.gradient
+      }}
+    >
+      <div className="card-header">
+        <div className="card-title-section">
+          <div className="skeleton skeleton-title"></div>
+          <div className="skeleton skeleton-unit"></div>
+        </div>
+      </div>
+      
+      <div className="card-value">
+        <div className="skeleton skeleton-value"></div>
+      </div>
+      
+      <div className="card-formula">
+        <div className="skeleton skeleton-description"></div>
+        <div className="skeleton skeleton-calculation"></div>
+      </div>
+      
+      <div className="card-accent"></div>
+    </div>
+  );
+
+  // Skeleton Loader Component
+  const SkeletonLoader = () => (
+    <div className="formula-grid">
+      {formulaItems.map((item) => (
+        <SkeletonCard key={item.key} item={item} />
+      ))}
+    </div>
+  );
+
   return (
     <Layout>
       <div className="formula-container">
@@ -108,13 +146,8 @@ const FormulaScreen = () => {
           <h2 className="formula-title">Formulae & KPIs</h2>
         </div>
 
-        {/* Loading State - only on initial load */}
-        {loading && !data && (
-          <div className="formula-loading">
-            <div className="loading-spinner"></div>
-            <span>Loading KPIs...</span>
-          </div>
-        )}
+        {/* Loading State - Skeleton on initial load */}
+        {loading && !data && <SkeletonLoader />}
 
         {/* KPI Cards Grid - Always show data, update smoothly */}
         {data && (

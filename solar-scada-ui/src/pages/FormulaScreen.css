@@ -30,6 +30,68 @@
   font-family: Tahoma, Arial, sans-serif;
 }
 
+/* ================================
+   Skeleton Loading Styles
+================================= */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-card {
+  animation: skeleton-fade 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-fade {
+  0% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeleton-title {
+  height: clamp(14px, 0.6rem + 0.8vw, 20px);
+  width: 75%;
+  margin-bottom: 4px;
+}
+
+.skeleton-unit {
+  height: clamp(10px, 0.5rem + 0.3vw, 14px);
+  width: 40px;
+  border-radius: 6px;
+}
+
+.skeleton-value {
+  height: clamp(20px, 0.8rem + 2.5vw, 40px);
+  width: 80%;
+  margin-bottom: clamp(6px, 1vh, 12px);
+}
+
+.skeleton-description {
+  height: clamp(12px, 0.6rem + 0.3vw, 16px);
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.skeleton-calculation {
+  height: clamp(12px, 0.55rem + 0.3vw, 16px);
+  width: 90%;
+  border-radius: 4px;
+}
+
 /* Grid Layout - Exactly 3 columns, 2 rows to fit screen */
 .formula-grid {
   display: grid;
@@ -66,6 +128,15 @@
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.12),
     0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Skeleton card hover disabled */
+.skeleton-card:hover {
+  transform: none;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .formula-card::before {
@@ -235,6 +306,14 @@
     gap: 8px;
     padding: 8px 12px 12px 12px;
   }
+  
+  .skeleton-title {
+    height: clamp(12px, 0.6rem + 0.8vw, 18px);
+  }
+  
+  .skeleton-value {
+    height: clamp(18px, 0.8rem + 2.5vw, 35px);
+  }
 }
 
 @media (max-width: 600px) {
@@ -252,12 +331,38 @@
   .formula-title {
     font-size: 1rem;
   }
+  
+  .skeleton-title {
+    height: clamp(10px, 0.6rem + 0.8vw, 16px);
+  }
+  
+  .skeleton-unit {
+    height: clamp(8px, 0.5rem + 0.3vw, 12px);
+    width: 35px;
+  }
+  
+  .skeleton-value {
+    height: clamp(16px, 0.8rem + 2.5vw, 30px);
+  }
+  
+  .skeleton-description {
+    height: clamp(10px, 0.6rem + 0.3vw, 14px);
+  }
+  
+  .skeleton-calculation {
+    height: clamp(10px, 0.55rem + 0.3vw, 14px);
+  }
 }
 
 /* Accessibility */
 .formula-card:focus-within {
   outline: 2px solid #3498db;
   outline-offset: 2px;
+}
+
+/* Skip skeleton focus states */
+.skeleton-card:focus-within {
+  outline: none;
 }
 
 /* Smooth data update animations */
@@ -269,4 +374,20 @@
 /* Prevent layout shift during updates */
 .formula-card * {
   will-change: auto;
+}
+
+/* Skeleton pulse effects for enhanced UX */
+.skeleton-card .card-header,
+.skeleton-card .card-value,
+.skeleton-card .card-formula {
+  animation: skeleton-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 }

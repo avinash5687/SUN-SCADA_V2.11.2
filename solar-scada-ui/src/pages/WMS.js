@@ -30,41 +30,98 @@ const parametersConfig = [
   { name: "Transmission Loss 2", key: "SOI_LS2", unit: "%", max: 100 },
 ];
 
+// Skeleton Components
+const TableSkeleton = () => (
+  <div className="table-skeleton">
+    {parametersConfig.map((param, idx) => (
+      <div key={idx} className="skeleton-row">
+        <div className="skeleton-cell skeleton-param">{param.name}</div>
+        {[1, 2, 3].map(i => (
+          <div key={i} className="skeleton-cell">
+            <div className="skeleton-content"></div>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+);
+
+const ChartSkeleton = ({ height = "400px" }) => (
+  <div className="chart-skeleton" style={{ height }}>
+    <div className="skeleton-chart-content">
+      <div className="skeleton-chart-title"></div>
+      <div className="skeleton-chart-body"></div>
+    </div>
+  </div>
+);
+
 const WMS = () => {
   const [wmsData, setWmsData] = useState([]);
   const [chartData, setChartData] = useState([]);
   const [soilChartData, setSoilChartData] = useState([]);
   const [zoomedData, setZoomedData] = useState([]);
   const [isZooming, setIsZooming] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const chartRef = useRef(null);
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const onZoomChange = (zooming) => setIsZooming(zooming)
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const onZoomChange = (zooming) => setIsZooming(zooming);
+
+  const fetchAllData = async (isInitial = false) => {
+    try {
+      if (!isInitial) setIsRefreshing(true);
+      
+      const [wmsRes, chartRes, soilRes] = await Promise.all([
+        axios.get(API_ENDPOINTS.wms.getAll),
+        axios.get(API_ENDPOINTS.wms.chart),
+        axios.get(API_ENDPOINTS.wms.soilChart)
+      ]);
+
+      // Use functional updates to prevent flickering
+      setWmsData(prevData => {
+        if (JSON.stringify(prevData) !== JSON.stringify(wmsRes.data)) {
+          return wmsRes.data;
+        }
+        return prevData;
+      });
+
+      setChartData(prevData => {
+        if (JSON.stringify(prevData) !== JSON.stringify(chartRes.data)) {
+          setZoomedData(chartRes.data);
+          return chartRes.data;
+        }
+        return prevData;
+      });
+
+      setSoilChartData(prevData => {
+        if (JSON.stringify(prevData) !== JSON.stringify(soilRes.data)) {
+          return soilRes.data;
+        }
+        return prevData;
+      });
+
+    } catch (error) {
+      console.error("Error fetching WMS data:", error);
+    } finally {
+      if (isInitial) setInitialLoading(false);
+      if (!isInitial) setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        if (wmsData.length === 0) setLoading(true);
-        const [wmsRes, chartRes, soilRes] = await Promise.all([
-          axios.get(API_ENDPOINTS.wms.getAll),
-          axios.get(API_ENDPOINTS.wms.chart),
-          axios.get(API_ENDPOINTS.wms.soilChart)
-        ]);
-        setWmsData(wmsRes.data);
-        setChartData(chartRes.data);
-        setZoomedData(chartRes.data);
-        setSoilChartData(soilRes.data);
-      } catch (error) {
-        console.error("Error fetching WMS data:", error);
-      } finally {
-        setLoading(false);
+    // Initial fetch
+    fetchAllData(true);
+
+    // Set up interval for subsequent fetches
+    const interval = setInterval(() => {
+      if (!isZooming) {
+        fetchAllData(false);
       }
-    };
-    fetchAllData();
-    const interval = setInterval(() => { if (!isZooming) fetchAllData(); }, 30000);
+    }, 30000);
+
     return () => clearInterval(interval);
-  }, [isZooming, wmsData.length]);
+  }, [isZooming]);
 
   const handleBrushChange = (range) => {
     if (range && range.startIndex !== undefined && range.endIndex !== undefined) {
@@ -107,52 +164,77 @@ const WMS = () => {
     else return [15, 20, 25, 10];
   };
 
-  const getHeightForWidth = (width) => {
-    if (width <= 1229) return 300;
-    else if (width <= 1240) return 320;
-    else if (width <= 1280) return 330;
-    else if (width <= 1396) return 350;
-    else if (width <= 1440) return 380;
-    else if (width <= 1536) return 400;
-    else if (width <= 1707) return 420
-    else if (width <= 1920) return 440;
-    else return 450;
+  const getMainChartHeightForWidth = (width) => {
+    if (width <= 1229) return 330;
+    else if (width <= 1240) return 350;
+    else if (width <= 1280) return 360;
+    else if (width <= 1396) return 380;
+    else if (width <= 1440) return 410;
+    else if (width <= 1536) return 430;
+    else if (width <= 1707) return 450;
+    else if (width <= 1920) return 470;
+    else return 480;
+  };
+
+  const getSoilChartHeightForWidth = (width) => {
+    if (width <= 1229) return 200;
+    else if (width <= 1240) return 210;
+    else if (width <= 1280) return 220;
+    else if (width <= 1396) return 230;
+    else if (width <= 1440) return 240;
+    else if (width <= 1536) return 250;
+    else if (width <= 1707) return 260;
+    else if (width <= 1920) return 270;
+    else return 280;
   };
 
   const spacing = getSpacingForWidth(windowWidth);
-  const height = getHeightForWidth(windowWidth);
-  const chartHeight = Math.max(250, windowHeight * 0.4);
+  const mainChartHeight = getMainChartHeightForWidth(windowWidth);
+  const soilChartHeight = getSoilChartHeightForWidth(windowWidth);
 
   const highchartsAreaOptions = {
     chart: {
       type: 'area',
       zoomType: 'x',
-      height: chartHeight,
-      spacing: [10, 10, 10, 10],
+      height: soilChartHeight,
+      spacing: [5, 5, 5, 5], // Reduced spacing
       backgroundColor: '#fff',
     },
     title: {
       text: 'Loss Due to Soiling',
       align: 'center',
-      margin: 5,
-      style: { fontSize: '16px' }
+      margin: 2, // Reduced margin
+      style: { fontSize: '14px' } // Reduced font size
     },
     subtitle: {
       text: 'Shadow impact may vary the data',
       align: 'center',
-      style: { fontSize: '12px', color: '#666' }
+      style: { fontSize: '10px', color: '#666' } // Reduced font size
     },
     xAxis: {
       type: 'datetime',
-      title: { text: 'Date' },
+      title: { 
+        text: 'Date',
+        style: { fontSize: '10px' }
+      },
+      labels: {
+        style: { fontSize: '9px' }
+      }
     },
     yAxis: [{
-      title: { text: 'Loss Due to Soil (%)' },
+      title: { 
+        text: 'Loss Due to Soil (%)',
+        style: { fontSize: '10px' }
+      },
+      labels: {
+        style: { fontSize: '9px' }
+      },
       opposite: false
     }],
     tooltip: {
       shared: true,
       xDateFormat: '%d-%b %Y %H:%M',
+      style: { fontSize: '10px' },
       formatter: function () {
         let s = `<b>${Highcharts.dateFormat('%d-%b %Y %H:%M', this.x)}</b>`;
         this.points.forEach(point => {
@@ -162,9 +244,7 @@ const WMS = () => {
       }
     },
     legend: {
-      layout: 'horizontal',
-      align: 'center',
-      verticalAlign: 'bottom'
+      enabled: false // Removed legend to save space
     },
     plotOptions: {
       area: {
@@ -192,7 +272,7 @@ const WMS = () => {
     chart: {
       type: 'line',
       zoomType: 'x',
-      height:height,
+      height: mainChartHeight,
       spacing: spacing,
       animation: {
         duration: 1500,
@@ -213,7 +293,7 @@ const WMS = () => {
         title: { text: 'W/m²' },
         lineColor: '#8884d8',
         lineWidth: 2,
-        labels: { style: { color: '#8884d8' } , }
+        labels: { style: { color: '#8884d8' } }
       },
       {
         title: { text: 'kWh/m²' },
@@ -253,7 +333,7 @@ const WMS = () => {
       align: 'center',
       verticalAlign: 'bottom',
       itemStyle: {
-        fontSize: '13px'
+        fontSize: '12px' // Slightly reduced
       }
     },
     series: [
@@ -289,20 +369,20 @@ const WMS = () => {
       {/* Formula Screen Style Header */}
       <div className="wms-header">
         <h2 className="wms-title">Weather Monitoring Station Overview</h2>
+        {isRefreshing && (
+          <div className="refresh-indicator">
+            <div className="refresh-spinner"></div>
+            <span>Updating...</span>
+          </div>
+        )}
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="wms-loading">
-          <div className="loading-spinner"></div>
-          <span>Loading WMS data...</span>
-        </div>
-      )}
-
-      {/* Main Content */}
-      {!loading && (
-        <div className="wms-grid-content">
-          <div className="wms-table-container">
+      {/* Main Content - Always visible */}
+      <div className="wms-grid-content">
+        <div className="wms-table-container">
+          {initialLoading ? (
+            <TableSkeleton />
+          ) : (
             <table className="wms-table">
               <thead>
                 <tr>
@@ -334,28 +414,36 @@ const WMS = () => {
                 ))}
               </tbody>
             </table>
-          </div>
+          )}
+        </div>
 
-          <div className="charts-stack">
-            <div className="chart-container">
+        <div className="charts-stack">
+          <div className="chart-container main-chart">
+            {initialLoading ? (
+              <ChartSkeleton height={`${mainChartHeight}px`} />
+            ) : (
               <HighchartsReact
                 highcharts={Highcharts} 
                 options={highChartsMultiYAxisLine(zoomedData)} 
                 containerProps={{ style: { height: "100%", width: "100%" } }}
               />
-            </div>
+            )}
+          </div>
 
-            <div className="chart-container">
+          <div className="chart-container soil-chart">
+            {initialLoading ? (
+              <ChartSkeleton height={`${soilChartHeight}px`} />
+            ) : (
               <HighchartsReact
                 highcharts={Highcharts}
                 options={highchartsAreaOptions}
                 containerProps={{ style: { height: "100%", width: "100%" } }}
                 ref={chartRef}
               />
-            </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
