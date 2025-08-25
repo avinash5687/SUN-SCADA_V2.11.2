@@ -9,10 +9,12 @@ const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
   const [mfmStatus, setMFMStatus] = useState({});
   const [popupData, setPopupData] = useState(null);
-  const [popupPosition, setPopupPosition] = useState({ x: 100, y: 100 });
+  const [loading, setLoading] = useState(true);
 
   const fetchStatuses = async () => {
     try {
+      if (Object.keys(inverterStatus).length === 0) setLoading(true);
+      
       const inverterIds = [1, 2, 3, 4];
       const mfmIds = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -38,6 +40,8 @@ const SLDScreen = () => {
       setMFMStatus(mfmStatusObj);
     } catch (err) {
       console.error('Error fetching statuses', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,7 +105,7 @@ const SLDScreen = () => {
         : null;
     }).filter(Boolean);
 
-    // 🔹 Add PR to inverter popup
+    // Add PR to inverter popup
     if (type === 'inverter') {
       const energy = parseFloat(rawData.E_Today || 0);
       const dcCapacity = parseFloat(rawData.DC_Capacity || 0);
@@ -119,101 +123,137 @@ const SLDScreen = () => {
     return dataEntries;
   };
 
-  const handleClick = (type, id, event) => {
+  const handleClick = (type, id) => {
     const raw = type === 'inverter' ? inverterStatus[id] : mfmStatus[id];
     if (!raw) return;
+    
     const formatted = formatDataForPopup(raw, type);
     const title = raw?.Name || raw?.ICR || (type.toUpperCase() + ' ' + id);
-    const centerX = window.innerWidth / 2 - 200;
-    const centerY = window.innerHeight / 2 - 220;
-    setPopupPosition({ x: centerX, y: centerY });
-    setPopupData({ data: formatted, title });
+    const status = raw?.CUM_STS > 0 ? 'online' : 'offline';
+    
+    setPopupData({ 
+      data: formatted, 
+      title, 
+      type, 
+      status,
+      deviceId: id 
+    });
   };
 
   const closePopup = () => setPopupData(null);
 
-  const mfmPositions = [
-    { id: 1, top: '52.7%', left: '34.75%' },
-    { id: 2, top: '72.89%', left: '23.4%' },
-    { id: 3, top: '31.7%', left: '34.75%' },
-    { id: 4, top: '35.7%', left: '34.75%' },
-    { id: 5, top: '52.6%', left: '59%' },
-    { id: 6, top: '70.2%', left: '72.8%' },
-    { id: 7, top: '31.7%', left: '59%' },
-    { id: 8, top: '35.7%', left: '59%' },
-  ];
-
-  const inverterPositions = [
-    { id: 1, top: '84.4%', left: '26.3%' },
-    { id: 2, top: '84.4%', left: '36.2%' },
-    { id: 3, top: '84.3%', left: '50.6%' },
-    { id: 4, top: '84.3%', left: '60.5%' },
-  ];
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains('popup-overlay')) {
+      closePopup();
+    }
+  };
 
   return (
     <Layout>
-      <div className="sld-wrapper">
-        <div className="sld-container">
-          <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
-          <div className="marker-layer">
-            {mfmPositions.map(pos => {
-              const status = mfmStatus[pos.id];
-              const isRed = status && status.CUM_STS > 0;
-              const isWide = pos.id === 2 || pos.id === 6;
-              const width = isWide ? '63px' : '35px';
-              const height = isWide ? '20px' : '18px';
-
-              return (
-                <div
-                  key={`mfm-${pos.id}`}
-                  className={`click-zone mfm ${isRed ? 'red-border' : 'green-border'}`}
-                  style={{ top: pos.top, left: pos.left, width, height }}
-                  onClick={(e) => handleClick('mfm', pos.id, e)}
-                  title={status?.ICR || `MFM ${pos.id}`}
-                />
-              );
-            })}
-
-            {inverterPositions.map(pos => {
-              const status = inverterStatus[pos.id];
-              const isRed = status && status.CUM_STS > 0;
-              return (
-                <div
-                  key={`inverter-${pos.id}`}
-                  className={`click-zone inverter ${isRed ? 'red-border' : 'green-border'}`}
-                  style={{ top: pos.top, left: pos.left }}
-                  onClick={(e) => handleClick('inverter', pos.id, e)}
-                  title={status?.Name || `Inverter ${pos.id}`}
-                />
-              );
-            })}
-          </div>
+      <div className="sld-container">
+        {/* Formula Screen Style Header */}
+        <div className="sld-header">
+          <h2 className="sld-title">Single Line Diagram</h2>
         </div>
 
-        {popupData && (
-          <div className="scada-popup" style={{ top: popupPosition.y, left: popupPosition.x }}>
-            <div className="popup-title-bar">
-              <span>{popupData.title}</span>
-              <button className="close-btn" onClick={closePopup}>×</button>
+        {/* Loading State */}
+        {loading && (
+          <div className="sld-loading">
+            <div className="loading-spinner"></div>
+            <span>Loading SLD data...</span>
+          </div>
+        )}
+
+        {/* Main Content */}
+        {!loading && (
+          <div className="sld-content">
+            <div className="sld-main-area">
+              {/* Device Control Panel */}
+              <div className="device-control-panel">
+                <div className="control-section">
+                  <h4 className="control-title">📊 Meters</h4>
+                  <div className="device-buttons">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(id => {
+                      const status = mfmStatus[id];
+                      const isOnline = status && status.CUM_STS > 0;
+                      return (
+                        <button
+                          key={`mfm-${id}`}
+                          className={`device-btn mfm-btn ${isOnline ? 'online' : 'offline'}`}
+                          onClick={() => handleClick('mfm', id)}
+                          title={status?.ICR || `MFM ${id}`}
+                        >
+                          <span className="btn-icon">📊</span>
+                          <span className="btn-text">MFM {id}</span>
+                          <div className={`btn-status-dot ${isOnline ? 'online' : 'offline'}`}></div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="control-section">
+                  <h4 className="control-title">⚡ Inverters</h4>
+                  <div className="device-buttons">
+                    {[1, 2, 3, 4].map(id => {
+                      const status = inverterStatus[id];
+                      const isOnline = status && status.CUM_STS > 0;
+                      return (
+                        <button
+                          key={`inverter-${id}`}
+                          className={`device-btn inverter-btn ${isOnline ? 'online' : 'offline'}`}
+                          onClick={() => handleClick('inverter', id)}
+                          title={status?.Name || `Inverter ${id}`}
+                        >
+                          <span className="btn-icon">⚡</span>
+                          <span className="btn-text">INV {id}</span>
+                          <div className={`btn-status-dot ${isOnline ? 'online' : 'offline'}`}></div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* SLD Image */}
+              <div className="sld-image-container">
+                <img src={sldImage} alt="Single Line Diagram" className="sld-image" />
+              </div>
             </div>
-            <table className="popup-table">
-              <thead>
-                <tr>
-                  <th>PARAMETER</th>
-                  <th style={{ textAlign: 'center' }}>VALUE</th>
-                  <th style={{ textAlign: 'center' }}>UNIT</th>
-                </tr>
-              </thead>
-              <tbody>
-                {popupData.data.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.parameter}</td>
-                    <td style={{ textAlign: 'center' }}>{item.value}</td>
-                    <td style={{ textAlign: 'center' }}>{item.unit}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          </div>
+        )}
+
+        {/* Compact Popup with Reduced Width */}
+        {popupData && (
+          <div className="popup-overlay" onClick={handleOverlayClick}>
+            <div className={`compact-popup ${popupData.status}`}>
+              <div className="compact-popup-header">
+                <div className="popup-title-section">
+                  <div className={`device-badge ${popupData.type}`}>
+                    {popupData.type === 'inverter' ? '⚡' : '📊'} {popupData.title}
+                  </div>
+                  <div className={`status-indicator ${popupData.status}`}>
+                    <span className="status-dot"></span>
+                    {popupData.status === 'online' ? 'ONLINE' : 'OFFLINE'}
+                  </div>
+                </div>
+                <button className="compact-close-btn" onClick={closePopup}>✕</button>
+              </div>
+              
+              <div className="compact-popup-content">
+                <div className="data-grid">
+                  {popupData.data.map((item, index) => (
+                    <div key={index} className="data-item">
+                      <div className="param-name">{item.parameter}</div>
+                      <div className="param-value">
+                        <span className="value">{item.value}</span>
+                        <span className="unit">{item.unit}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
