@@ -37,7 +37,7 @@ const App = () => {
         {/* <Route path="/" element={<StartupScreen />} />
         <Route path="/startup" element={<StartupScreen />} /> */}
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
 
