@@ -1,7 +1,7 @@
 /* ========== Inverter Container - Formula Screen Style ========== */
 .inverter-container {
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 48px);
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
@@ -15,7 +15,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
   padding: 8px 16px 8px 16px;
   border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
@@ -59,7 +58,7 @@
 /* ========== Main Content Area ========== */
 .inverter-content {
   flex: 1;
-  padding: 5px 5px 10px 10px;
+  padding: 5px;
   overflow: auto;
 }
 
@@ -69,7 +68,7 @@
   border-collapse: collapse; 
   text-align: center;
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
   overflow: auto;
   border: 1px solid #d6dde3;
