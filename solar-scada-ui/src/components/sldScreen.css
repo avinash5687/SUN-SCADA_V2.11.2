@@ -157,7 +157,7 @@
 .inverter-btn.online {
   background: linear-gradient(135deg, #27ae60, #2ecc71);
   color: white;
-  border-left: 4px solid #1f618d;
+  border-left: 4px solid #1e8449;
 }
 
 .inverter-btn.offline {
