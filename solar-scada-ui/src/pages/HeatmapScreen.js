@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { API_ENDPOINTS } from "../apiConfig";
 import "./HeatmapScreen.css";
@@ -51,74 +51,64 @@ const HeatmapScreen = () => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState({});
   const [inverterData, setInverterData] = useState({});
-  const [loadingStates, setLoadingStates] = useState({});
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
   const [activeCell, setActiveCell] = useState(null);
 
-  // Initialize loading states for inverters 1-4
-  useEffect(() => {
-    const initialLoadingStates = {};
-    [1, 2, 3, 4].forEach(id => {
-      initialLoadingStates[id] = true;
-    });
-    setLoadingStates(initialLoadingStates);
-  }, []);
-
+  // FIXED: Single API call that returns all inverter data
   const fetchInverterData = useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) {
         setRefreshing(true);
       }
 
-      const inverterIds = [1, 2, 3, 4];
       const API_TIMEOUT = 10000;
-      const axiosConfig = { timeout: API_TIMEOUT };
+      const timestamp = Date.now();
 
-      console.time('Heatmap API Fetch');
+      console.log('🚀 Fetching heatmap data from single API...');
 
-      // Fetch each inverter data individually for heatmap
-      inverterIds.forEach(async (id) => {
-        try {
-          const response = await axios.get(API_ENDPOINTS.inverter.heatmap, { 
-            params: { id }, 
-            ...axiosConfig 
+      // Single API call - no ID parameter needed since it returns all inverters
+      const response = await axios.get(API_ENDPOINTS.inverter.heatmap, { 
+        timeout: API_TIMEOUT,
+        params: { _t: timestamp }
+      });
+
+      console.log('✅ Raw API Response:', response.data);
+
+      // Process the array response - each object represents one inverter
+      const allInverters = Array.isArray(response.data) ? response.data : [];
+      console.log('📊 Processed inverters array:', allInverters);
+
+      // Convert array to object with ID as key for easy access
+      const newInverterData = {};
+      allInverters.forEach(inverter => {
+        if (inverter && inverter.ID) {
+          newInverterData[inverter.ID] = inverter;
+          console.log(`✅ Stored Inverter ${inverter.ID}:`, {
+            ID: inverter.ID,
+            Name: inverter.Inverter_Name,
+            TotalEnergy: inverter.TotalEnergy,
+            AC_PWR: inverter.AC_PWR,
+            DeviationPercentage: inverter.DeviationPercentage
           });
-          
-          if (response.data) {
-            // Handle both array and single object responses
-            const data = Array.isArray(response.data) ? response.data[0] : response.data;
-            if (data) {
-              setInverterData(prev => ({ ...prev, [id]: data }));
-              setLoadingStates(prev => ({ ...prev, [id]: false }));
-            }
-          }
-        } catch (error) {
-          console.warn(`Heatmap Inverter ${id} API failed:`, error.message);
-          setLoadingStates(prev => ({ ...prev, [id]: false }));
         }
       });
 
-      // Mark initial load as complete after first attempt
-      if (initialLoad) {
-        setTimeout(() => setInitialLoad(false), 1000);
-      }
+      console.log('🗂️ Final inverter data structure:', newInverterData);
 
-      console.timeEnd('Heatmap API Fetch');
-      console.log('✅ Heatmap data fetch initiated');
+      // Update state with all inverter data
+      setInverterData(newInverterData);
+      setLoading(false);
+
+      console.log('🎉 Heatmap data loaded successfully');
 
     } catch (error) {
-      console.error("Error fetching heatmap data:", error);
-      // Set all loading states to false on general error
-      const errorStates = {};
-      [1, 2, 3, 4].forEach(id => {
-        errorStates[id] = false;
-      });
-      setLoadingStates(errorStates);
+      console.error("💥 Error fetching heatmap data:", error);
+      setLoading(false);
     } finally {
       setRefreshing(false);
     }
-  }, [initialLoad]);
+  }, []);
 
   useEffect(() => {
     fetchInverterData(false);
@@ -138,7 +128,7 @@ const HeatmapScreen = () => {
     setActiveCell(`${item.ID}-${category.key}`);
     setPopupContent({ 
       status, 
-      device: item.Inverter_Name || `Device ${item.ID}`, 
+      device: item.Inverter_Name || `Inverter ${item.ID}`, 
       current: currentValue.toFixed(2), 
       max: maxValue.toFixed(2), 
       deviation: deviation.toFixed(1), 
@@ -175,7 +165,7 @@ const HeatmapScreen = () => {
   }, [popupVisible]);
 
   // Skeleton Components
-  const SkeletonCell = ({ id, category }) => (
+  const SkeletonCell = () => (
     <div className="skeleton-cell">
       <div className="skeleton-cell-content">
         <div className="skeleton-value"></div>
@@ -184,10 +174,12 @@ const HeatmapScreen = () => {
     </div>
   );
 
-  // Convert object data to array for rendering
-  const displayData = Object.values(inverterData).filter(Boolean);
-  const inverterIds = [1, 2, 3, 4];
-  const totalCells = inverterIds.length;
+  // Get available inverter IDs from data (1,2,3,4)
+  const availableIds = Object.keys(inverterData).map(id => parseInt(id)).sort();
+  const inverterIds = availableIds.length > 0 ? availableIds : [1, 2, 3, 4];
+
+  console.log('🖥️ Available inverter IDs:', availableIds);
+  console.log('🖥️ Current inverter data keys:', Object.keys(inverterData));
 
   return (
     <div className="heatmap-container">
@@ -203,16 +195,16 @@ const HeatmapScreen = () => {
         <Legend />
       </div>
 
-      {/* Loading State - Only show if all are loading initially */}
-      {initialLoad && Object.values(loadingStates).every(state => state) && (
+      {/* Loading State */}
+      {loading && (
         <div className="heatmap-loading">
           <div className="loading-spinner"></div>
           <span>Loading heatmap data...</span>
         </div>
       )}
 
-      {/* Main Content - Show heatmap with skeleton/data mix */}
-      {(!initialLoad || !Object.values(loadingStates).every(state => state)) && (
+      {/* Main Content */}
+      {!loading && (
         <div className="heatmap-content">
           {heatmapCategories.map((category) => (
             <div key={category.key} className="heatmap-row">
@@ -224,21 +216,12 @@ const HeatmapScreen = () => {
               </div>
               <div 
                 className="heatmap-cells" 
-                style={{ gridTemplateColumns: `repeat(${totalCells}, minmax(120px, 1fr))` }}
+                style={{ gridTemplateColumns: `repeat(${inverterIds.length}, minmax(120px, 1fr))` }}
               >
                 {inverterIds.map((id) => {
-                  const isLoading = loadingStates[id];
                   const item = inverterData[id];
 
-                  if (isLoading) {
-                    return (
-                      <SkeletonCell 
-                        key={`skeleton-${id}-${category.key}`} 
-                        id={id} 
-                        category={category} 
-                      />
-                    );
-                  }
+                  console.log(`🔍 Rendering cell for Inverter ${id}:`, { hasItem: !!item, item });
 
                   if (!item) {
                     return (
@@ -247,15 +230,32 @@ const HeatmapScreen = () => {
                         className="heatmap-cell no-data-cell"
                       >
                         <span className="cell-value">No Data</span>
-                        <span className="cell-label">INV {id}</span>
+                        <span className="cell-label">INV-{id}</span>
                       </div>
                     );
                   }
 
                   const deviation = Number(item[category.deviationKey]) || 0;
-                  const inverterLabel = item.Inverter_Name ? 
-                    (item.Inverter_Name.includes("_") ? item.Inverter_Name.split("_")[1] : item.Inverter_Name) : 
-                    `D${item.ID}`;
+                  const cellValue = Number(item[category.key]) || 0;
+                  
+                  // Extract cleaner inverter label
+                  let inverterLabel = `INVERTER-${id}`;
+                  if (item.Inverter_Name) {
+                    if (item.Inverter_Name.includes("_")) {
+                      // Extract "INVERTER-1" from "ICR-1_INVERTER-1"
+                      const parts = item.Inverter_Name.split("_");
+                      inverterLabel = parts[parts.length - 1] || `INV-${id}`;
+                    } else {
+                      inverterLabel = item.Inverter_Name;
+                    }
+                  }
+                  
+                  console.log(`📊 Cell data for INV-${id}:`, { 
+                    cellValue, 
+                    deviation, 
+                    inverterLabel,
+                    rawName: item.Inverter_Name
+                  });
                   
                   return (
                     <div 
@@ -265,7 +265,7 @@ const HeatmapScreen = () => {
                       onClick={(e) => handleCellClick(e, item, category)}
                     >
                       <span className="cell-value">
-                        {Number(item[category.key] || 0).toFixed(1)}
+                        {cellValue.toLocaleString()}
                       </span>
                       <span className="cell-label">{inverterLabel}</span>
                     </div>
@@ -277,7 +277,7 @@ const HeatmapScreen = () => {
         </div>
       )}
 
-      {/* Center Popup with Blur Overlay */}
+      {/* Popup */}
       {popupVisible && (
         <div className="popup-overlay" onClick={handleOverlayClick}>
           <div className="heatmap-popup">
