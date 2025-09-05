@@ -1,199 +1,145 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from "../assets/logo.png";
+import project_logo from "../assets/SUN-SCADA_Logo.png";
 import './LandingPage.css';
 
 const LandingPage = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [currentFeature, setCurrentFeature] = useState(0);
   const navigate = useNavigate();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [activeFeature, setActiveFeature] = useState(0);
+
+  useEffect(() => {
+    setIsLoaded(true);
+    
+    // Auto-cycle through features
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % 6);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const features = [
     {
+      id: 1,
+      title: "Real Time Monitor",
       icon: "⚡",
-      title: "Real-time Monitoring",
-      description: "Monitor your solar plant performance in real-time"
+      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
     },
     {
-      icon: "📊", 
-      title: "Data Analytics",
-      description: "Comprehensive data analysis and visualization"
+      id: 2,
+      title: "Remote Monitor", 
+      icon: "🌐",
+      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
     },
     {
-      icon: "🔧",
-      title: "Smart Management",
-      description: "Intelligent system management with alerts"
+      id: 3,
+      title: "Centralized Monitor",
+      icon: "🏢",
+      gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
     },
     {
-      icon: "🏛️",
-      title: "PM Kusum Compliant",
-      description: "Fully compliant with PM Kusum guidelines for government solar subsidy schemes with automated documentation"
+      id: 4,
+      title: "Analytics",
+      icon: "📊",
+      gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+    },
+    {
+      id: 5,
+      title: "PM KUSUM",
+      icon: "✅",
+      gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+    },
+    {
+      id: 6,
+      title: "SCADA System",
+      icon: "⚙️",
+      gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
     }
   ];
 
-  const stats = [
-    { value: "21.5", unit: "MWp", label: "Solar Capacity" },
-    { value: "99.9", unit: "%", label: "Uptime" },
-    { value: "24/7", unit: "", label: "Monitoring" },
-    { value: "1000+", unit: "", label: "Data Points" }
-  ];
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const slideTimer = setInterval(() => {
-      setCurrentFeature(prev => (prev + 1) % features.length);
-    }, 4000);
-    return () => clearInterval(slideTimer);
-  }, []);
-
-  const handleLearnMore = () => {
-    window.open('https://heyday-ventures.com/', '_blank', 'noopener,noreferrer');
+  const handleNavigateToDashboard = () => {
+    navigate('/dashboard');
   };
 
   return (
     <div className="landing-page">
       {/* Animated Background */}
-      <div className="animated-bg">
+      <div className="animated-background">
         <div className="floating-shapes">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className={`shape shape-${i + 1}`} />
-          ))}
-        </div>
-        {/* Moving Clouds */}
-        <div className="clouds">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className={`cloud cloud-${i + 1}`} />
+            <div key={i} className={`floating-shape shape-${i + 1}`}></div>
           ))}
         </div>
       </div>
 
-      {/* Header with Logo */}
+      {/* Compact Header */}
       <header className={`landing-header ${isLoaded ? 'loaded' : ''}`}>
         <div className="header-content">
-          <div className="logo-section" onClick={() => navigate('/dashboard')}>
-            <div className="logo-icon">☀️</div>
-            <h1 className="logo-text">SUN-SCADA</h1>
+          <div className="logo-left">
+            <img src={project_logo} alt="SUN-SCADA" className="sun-scada-logo" />
           </div>
-          <div className="company-logo">
-            <img src={logo} alt="Company Logo" className="header-logo" />
+          <div className="header-center">
+            <span className="tagline-text">Inaugurated by :- Shri Rambaran, Chief Engineer (Uttar Pradesh SLDC)</span>
+          </div>
+          <div className="logo-right">
+            <img src={logo} alt="Heyday Ventures" className="heyday-logo" />
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className={`hero-section ${isLoaded ? 'loaded' : ''}`}>
-        <div className="hero-content">
-          <div className="hero-text">
+      {/* Main Content */}
+      <main className="landing-main">
+        <div className="hero-section">
+          {/* Left Side - Content */}
+          <div className={`hero-content ${isLoaded ? 'loaded' : ''}`}>
             <h1 className="hero-title">
-              Advanced Solar Plant
-              <span className="highlight">SCADA System</span>
+              <span className="title-highlight">SUN-SCADA</span>
+              <span className="title-line">FOR PM KUSUM</span>
             </h1>
             
-            <p className="hero-subtitle">
-              Monitor, analyze, and optimize your solar power generation with 
-              our cutting-edge SCADA technology for maximum efficiency and PM Kusum compliance.
+            <p className="hero-description">
+              Transform your solar operations with AI-powered SCADA solution. 
+              Real-time analytics, predictive maintenance, and seamless integration.
             </p>
-            <div className="hero-actions">
+
+            <div className="cta-container">
               <button 
-                onClick={() => navigate('/dashboard')}
-                className="cta-btn primary"
+                className="cta-primary" 
+                onClick={handleNavigateToDashboard}
               >
-                <span>Explore Dashboard</span>
-                <div className="btn-arrow">→</div>
-              </button>
-              
-              <button 
-                className="cta-btn secondary"
-                onClick={handleLearnMore}
-              >
-                Learn More
+                <span className="cta-text">Launch Dashboard</span>
+                <span className="cta-icon">🚀</span>
               </button>
             </div>
           </div>
 
-          {/* Enhanced Solar Animation */}
-          <div className="hero-visual">
-            <div className="solar-system-visual">
-              {/* Dynamic Sky Background */}
-              <div className="sky">
-                <div className="moving-clouds">
-                  {[...Array(3)].map((_, i) => (
-                    <div key={i} className={`sky-cloud sky-cloud-${i + 1}`} />
-                  ))}
-                </div>
-              </div>
-              
-              {/* Animated Sun with Day/Night Cycle */}
-              <div className="sun-container">
-                <div className="sun">
-                  <div className="sun-core"></div>
-                </div>
-                <div className="sun-rays">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className={`ray ray-${i + 1}`} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Wind Turbine */}
-              <div className="wind-turbine">
-                <div className="turbine-tower"></div>
-                <div className="turbine-blades">
-                  <div className="blade blade-1"></div>
-                  <div className="blade blade-2"></div>
-                  <div className="blade blade-3"></div>
-                </div>
-              </div>
-              
-              {/* Ground with Enhanced Solar Farm */}
-              <div className="ground">
-                <div className="solar-panels">
-                  {[...Array(8)].map((_, i) => (
-                    <div key={i} className={`solar-panel panel-${i + 1}`}>
-                      <div className="panel-surface"></div>
-                      <div className="panel-frame"></div>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Energy Generation Visualization */}
-                <div className="energy-flow">
-                  {[...Array(6)].map((_, i) => (
-                    <div key={i} className={`energy-particle energy-${i + 1}`} />
-                  ))}
-                </div>
-                
-                {/* Enhanced Weather Station */}
-                <div className="weather-station">
-                  <div className="station-tower"></div>
-                  <div className="weather-sensors">
-                    <div className="sensor-array"></div>
-                    <div className="data-collector"></div>
+          {/* Right Side - Dashboard Preview */}
+          <div className={`hero-visual ${isLoaded ? 'loaded' : ''}`}>
+            <div className="dashboard-preview">
+              <div className="preview-screen">
+                <div className="screen-header">
+                  <div className="screen-dots">
+                    <span></span><span></span><span></span>
                   </div>
+                  <div className="screen-title">Dashboard</div>
                 </div>
-                
-                {/* Control System with Animation */}
-                <div className="control-system">
-                  <div className="system-box">
-                    <div className="display-screen"></div>
+                <div className="screen-content">
+                  <div className="preview-charts">
+                    <div className="chart-item chart-1"></div>
+                    <div className="chart-item chart-2"></div>
+                    <div className="chart-item chart-3"></div>
                   </div>
-                  <div className="status-lights">
+                  <div className="preview-metrics">
                     {[...Array(4)].map((_, i) => (
-                      <div key={i} className={`status-light light-${i + 1}`} />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Power Transmission Lines */}
-                <div className="power-lines">
-                  <div className="transmission-tower"></div>
-                  <div className="power-cables">
-                    {[...Array(3)].map((_, i) => (
-                      <div key={i} className={`cable cable-${i + 1}`} />
+                      <div key={i} className={`metric-card metric-${i + 1}`}>
+                        <div className="metric-icon"></div>
+                        <div className="metric-data">
+                          <div className="metric-line"></div>
+                          <div className="metric-line short"></div>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -201,79 +147,58 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="stats-section">
-        <div className="stats-grid">
-          {stats.map((stat, index) => (
-            <div key={index} className="stat-card" style={{ animationDelay: `${index * 0.1}s` }}>
-              <div className="stat-value">
-                {stat.value}
-                <span className="stat-unit">{stat.unit}</span>
+        {/* Compelling Features Section */}
+        <section className="features-section">
+          <div className="features-grid">
+            {features.map((feature, index) => (
+              <div
+                key={feature.id}
+                className={`feature-card ${activeFeature === index ? 'active' : ''} ${isLoaded ? 'loaded' : ''}`}
+                style={{ 
+                  animationDelay: `${index * 0.1}s`,
+                  background: activeFeature === index ? feature.gradient : ''
+                }}
+                onMouseEnter={() => setActiveFeature(index)}
+              >
+                <div className="feature-icon-container">
+                  <span className="feature-icon">{feature.icon}</span>
+                  <div className="icon-sparkles">
+                    <span className="sparkle sparkle-1">✨</span>
+                    <span className="sparkle sparkle-2">⭐</span>
+                    <span className="sparkle sparkle-3">💫</span>
+                  </div>
+                </div>
+                <div className="feature-content">
+                  <h3 className="feature-title">{feature.title}</h3>
+                </div>
+                
+                {/* Multiple animated rings */}
+                <div className="feature-rings">
+                  <div className="pulse-ring ring-1"></div>
+                  <div className="pulse-ring ring-2"></div>
+                  <div className="pulse-ring ring-3"></div>
+                </div>
+                
+                {/* Floating particles */}
+                <div className="floating-particles">
+                  <div className="particle particle-1"></div>
+                  <div className="particle particle-2"></div>
+                  <div className="particle particle-3"></div>
+                  <div className="particle particle-4"></div>
+                </div>
+                
+                {/* Morphing background */}
+                <div className="morphing-bg"></div>
               </div>
-              <div className="stat-label">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="features-section">
-        <h2 className="section-title">Powerful Features</h2>
-        
-        <div className="features-grid">
-          <div className="featured-item">
-            <div className="feature-icon">
-              {features[currentFeature].icon}
-            </div>
-            <h3 className="feature-title">{features[currentFeature].title}</h3>
-            <p className="feature-description">{features[currentFeature].description}</p>
-          </div>
-          
-          <div className="feature-indicators">
-            {features.map((_, index) => (
-              <button
-                key={index}
-                className={`indicator ${currentFeature === index ? 'active' : ''}`}
-                onClick={() => setCurrentFeature(index)}
-              />
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2>Ready to Optimize Your Solar Plant?</h2>
-          <p>Join the future of solar energy management with PM Kusum compliance</p>
-          <button 
-            onClick={() => navigate('/dashboard')}
-            className="final-cta"
-          >
-            Start Monitoring Now
-          </button>
-        </div>
-      </section>
-
-      {/* Enhanced Footer */}
+      {/* Compact Footer */}
       <footer className="landing-footer">
-        <div className="footer-content">
-          <div className="footer-main">
-            <div className="footer-logo">
-              <div className="footer-logo-icon">☀️</div>
-              <h3>SUN-SCADA</h3>
-            </div>
-            <div className="footer-info">
-              <p>&copy; 2025 SUN-SCADA by Heyday Ventures, Delhi India</p>
-              <p>Advanced Solar Monitoring Solutions</p>
-            </div>
-          </div>
-          <div className="footer-links">
-            <span>21.5 MWp JSPL Solar Project - Dhule, Maharashtra</span>
-          </div>
-        </div>
+        <p>&copy; 2025 SUN-SCADA by Heyday Ventures. All rights reserved.</p>
       </footer>
     </div>
   );
