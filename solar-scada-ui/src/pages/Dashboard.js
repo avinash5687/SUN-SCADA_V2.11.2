@@ -418,6 +418,7 @@ const Dashboard = () => {
     };
   };
 
+
   return (
     <div className="dashboard-container">
       {/* Formula Screen Style Header - FIXED */}
