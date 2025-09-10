@@ -279,8 +279,8 @@ const Dashboard = () => {
 
       return {
         x: decimalHour,
-        poa: d.POA || 0,
-        activePower: d.ACTIVE_POWER || 0,
+        poa: Math.max(d.POA || 0, 0), // Ensure POA is never negative
+        activePower: Math.max(d.ACTIVE_POWER || 0, 0), // Ensure ACTIVE_POWER is never negative
         originalTime: d.Date_Time,
         hour: Math.floor(decimalHour),
         minute: Math.round((decimalHour % 1) * 60)
@@ -308,7 +308,6 @@ const Dashboard = () => {
 
     const maxPOA = Math.max(...uniqueData.map(d => d.poa), 100);
     const maxActivePower = Math.max(...uniqueData.map(d => d.activePower), 100);
-    const minActivePower = Math.min(...uniqueData.map(d => d.activePower), 0);
 
     return {
       chart: {
@@ -342,7 +341,7 @@ const Dashboard = () => {
           lineColor: '#ff7300',
           lineWidth: 2,
           labels: { style: { color: '#ff7300', fontSize: '10px' } },
-          min: 0,
+          min: 0, // Fixed minimum to 0
           max: Math.ceil(maxPOA * 1.1)
         },
         {
@@ -351,7 +350,7 @@ const Dashboard = () => {
           lineColor: '#387908',
           lineWidth: 2,
           labels: { style: { color: '#387908', fontSize: '10px' } },
-          min: Math.floor(minActivePower * 1.1), // Handle negative values
+          min: 0, // Fixed minimum to 0 (removed negative value handling)
           max: Math.ceil(maxActivePower * 1.1)
         }
       ],
