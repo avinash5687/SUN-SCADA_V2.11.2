@@ -427,7 +427,7 @@ return (
                 <div className="chart-content">
                   <div className="generation-summary">
                     Total Generation: <span className="total-value">
-                      {barChartData.reduce((sum, item) => sum + (parseFloat(item["Energy Generated"]) || 0), 0).toFixed(2)} MWh
+                      {barChartData.reduce((sum, item) => sum + (parseFloat(item["Energy Generated"]) || 0), 0).toFixed(2)} MW
                     </span>
                   </div>
                   <div className="chart-wrapper">

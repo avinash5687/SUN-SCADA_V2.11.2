@@ -10,7 +10,6 @@
   border-radius: 8px;
 }
 
-/* ========== Formula Screen Style Header ========== */
 .inverter-header {
   display: flex;
   align-items: center;
@@ -79,6 +78,14 @@
   flex: 1;
   padding: 5px;
   overflow: auto;
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+  -webkit-scrollbar: none;
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+
 }
 
 /* ========== Table Styling (Classic Grid with Modern Touches) ========== */
@@ -87,10 +94,10 @@
   border-collapse: collapse; 
   text-align: center;
   background-color: #ffffff;
-  border-radius: 15px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
   overflow: auto;
   border: 1px solid #d6dde3;
+  
 }
 
 /* ========== Header Styling ========== */

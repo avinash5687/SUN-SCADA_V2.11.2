@@ -218,6 +218,25 @@ const MFM = () => {
         <h2 className="mfm-title">Multi Functional Meter Data Overview</h2>
         
         <div className="block-controls">
+
+          {/* Data Info */}
+          <div className="data-info">
+            {/* <div className="active-block-indicator">
+              <span className={`block-status ${activeBlock.toLowerCase()}`}>
+                {activeBlock === 'BLOCK1' ? '● BLOCK 1' : '● BLOCK 2'}
+              </span>
+              <span className="meter-count">
+                {filteredData.length + loadingDataForBlock.length} Meter{(filteredData.length + loadingDataForBlock.length) !== 1 ? 's' : ''}
+              </span>
+            </div> */}
+            {refreshing && (
+              <div className="refresh-indicator">
+                <div className="refresh-spinner"></div>
+                <span>Refreshing...</span>
+              </div>
+            )}
+          </div>
+
           <div className="block-buttons">
             <button
               className={`block-btn ${activeBlock === 'BLOCK1' ? 'active' : ''}`}
@@ -236,24 +255,7 @@ const MFM = () => {
               BLOCK 2
             </button>
           </div>
-          
-          {/* Data Info */}
-          <div className="data-info">
-            <div className="active-block-indicator">
-              <span className={`block-status ${activeBlock.toLowerCase()}`}>
-                {activeBlock === 'BLOCK1' ? '● BLOCK 1' : '● BLOCK 2'}
-              </span>
-              <span className="meter-count">
-                {filteredData.length + loadingDataForBlock.length} Meter{(filteredData.length + loadingDataForBlock.length) !== 1 ? 's' : ''}
-              </span>
-            </div>
-            {refreshing && (
-              <div className="refresh-indicator">
-                <div className="refresh-spinner"></div>
-                <span>Refreshing...</span>
-              </div>
-            )}
-          </div>
+
         </div>
       </div>
 
