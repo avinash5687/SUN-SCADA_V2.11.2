@@ -41,7 +41,37 @@ const CylinderChart = ({ data, trendType = "day" }) => {
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
 
-  // Build chart options with conditional logic for daily view
+  // Process data based on trend type
+  const processChartData = () => {
+    if (trendType === "day") {
+      // For daily view, use the HourBlock to create 0-23 hour structure
+      const hourlyData = Array.from({ length: 24 }, (_, hour) => {
+        // Find matching data for this hour
+        const hourData = data.find(item => item.HourBlock === hour);
+        return {
+          hour,
+          energy: hourData ? parseFloat(hourData["Energy Generated"] || 0) : 0,
+          period: `${hour.toString().padStart(2, '0')}:00`
+        };
+      });
+
+      return {
+        categories: hourlyData.map(d => d.period),
+        seriesData: hourlyData.map(d => d.energy),
+        xAxisTitle: "Hour of Day"
+      };
+    } else {
+      // For other trend types (week, month, year)
+      return {
+        categories: data.map(item => item.Time || item.TIME || item.period || item.name),
+        seriesData: data.map(item => parseFloat(item["Energy Generated"] || 0)),
+        xAxisTitle: "Time Period"
+      };
+    }
+  };
+
+  const chartData = processChartData();
+
   const chartOptions = {
     chart: {
       type: "cylinder",
@@ -57,24 +87,18 @@ const CylinderChart = ({ data, trendType = "day" }) => {
       spacing: spacing
     },
     title: { text: null },
-    xAxis: trendType === "day" ? {
-      // DAILY VIEW: Fixed 0-24 hour x-axis (25 categories to include hour 24)
-      categories: Array.from({ length: 25 }, (_, i) => `${i.toString().padStart(2, '0')}:00`),
-      title: { text: "Hour of Day" },
+    xAxis: {
+      categories: chartData.categories,
+      title: { text: chartData.xAxisTitle },
       labels: { 
         skew3d: true,
-        rotation: 0,
-        step: 2, // Show every 2nd hour (0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24)
+        rotation: trendType === "day" ? 0 : -45,
+        step: trendType === "day" ? 2 : 1, // Show every 2nd hour for daily view
         style: { fontSize: '10px' }
       },
+      tickInterval: trendType === "day" ? 1 : undefined,
       min: 0,
-      max: 24, // Now we can show up to 24
-      tickInterval: 2
-    } : {
-      // OTHER VIEWS: Use original data structure
-      categories: data.map(item => item.TIME || item.Time),
-      title: { text: "Time" },
-      labels: { skew3d: true }
+      max: trendType === "day" ? 23 : undefined
     },
     yAxis: {
       title: {
@@ -103,17 +127,9 @@ const CylinderChart = ({ data, trendType = "day" }) => {
     series: [
       {
         name: "Energy Generated",
-        data: trendType === "day" ? 
-          // For 25 hours (0-24), map your 24-hour data and add 0 for hour 24
-          Array.from({ length: 25 }, (_, hour) => {
-            if (hour === 24) return 0; // Hour 24 typically has no data
-            const hourData = data.find(item => item.HourBlock === hour);
-            return hourData ? parseFloat(hourData["Energy Generated"] || 0) : 0;
-          }) :
-          // OTHER VIEWS: Use original data mapping
-          data.map(item => parseFloat(item["Energy Generated"]) || 0),
+        data: chartData.seriesData,
         showInLegend: false,
-        color: 'red' // Red color as requested
+        color: 'red'
       }
     ],
     credits: { enabled: false }
