@@ -24,6 +24,9 @@ import logo from "../assets/logo.png";
 import project_logo from "../assets/SUN-SCADA_Logo.png";
 import { API_ENDPOINTS } from "../apiConfig";
 
+// Import the ChatbotWidget component
+import ChatbotWidget from "./ChatbotWidget";
+
 // Utility functions
 const getOrdinalSuffix = (day) => {
   if (day > 3 && day < 21) return "th";
@@ -629,6 +632,10 @@ const Layout = ({ children }) => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+
+      {/* Chatbot Widget */}
+      <ChatbotWidget />
+
     </div>
   );
 };

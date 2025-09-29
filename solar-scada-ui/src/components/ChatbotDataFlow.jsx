@@ -43,7 +43,7 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
     setCurrentStep('welcome');
     setTimeout(() => {
       addBotMessage(
-        `Hello ${user?.username || 'there'}! I'm your Solar Plant Assistant. I can help you troubleshoot common issues and provide technical guidance.`,
+        `Hello ${user?.username || 'there'}! I'm Zyra your Assistant. How can I assist you today?`,
         'welcome'
       );
       setTimeout(() => {
@@ -261,7 +261,7 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
             <BotIcon sx={{ fontSize: 16 }} /> {/* Reduced from 18 */}
           </Avatar>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '14px' }}>
-            Solar Plant Assistant
+            Zyra - Solar Plant Assistant
           </Typography>
           {/* Removed the Chip component for status */}
         </Box>
