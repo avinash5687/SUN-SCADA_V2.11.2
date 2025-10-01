@@ -2,36 +2,57 @@ const express = require("express");
 const router = express.Router();
 const sql = require("mssql");
 const dbConfig = require("../config/db");
+// ✅ Redis Cache Helper
+const { getOrSetCache, setNoCacheHeaders, handleError } = require("../helpers/cacheHelper");
 
 // GET MFM data (with optional ID filter)
 router.get("/", async (req, res) => {
   try {
     const { id } = req.query;
-    const pool = await sql.connect(dbConfig);
-    const result = await pool.request().execute("sp_GetMFMData"); // returns all 8 MFMs
-
-    if (id) {
-      const filtered = result.recordset.find(item => item.ID == id);
-      if (!filtered) {
-        return res.status(404).json({ error: "MFM not found" });
+    const cacheKey = id ? `mfm:data:${id}` : "mfm:data:all";
+    const data = await getOrSetCache(cacheKey, async () => {
+      const pool = await sql.connect(dbConfig);
+      try {
+        const result = await pool.request().execute("sp_GetMFMData");
+        if (id) {
+          const filtered = result.recordset.find(item => item.ID == id);
+          if (!filtered) {
+            throw new Error("MFM not found");
+          }
+          return filtered; // Return only one MFM's data
+        } else {
+          return result.recordset; // Return all MFMs
+        }
+      } finally {
+        await pool.close();
       }
-      res.json(filtered); // return only one MFM's data
-    } else {
-      res.json(result.recordset); // return all MFMs
-    }
+    }, 60); // Cache for 1 minute
+
+    setNoCacheHeaders(res);
+    res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    handleError(res, err, "MFM Data");
   }
 });
 
-// Trend visualization endpoint (separate)
+// Trend visualization endpoint
 router.get("/trend", async (req, res) => {
   try {
-    const pool = await sql.connect(dbConfig);
-    const result = await pool.request().execute("sp_GetMFMTrend1");
-    res.json(result.recordset);
+    const cacheKey = "mfm:trend";
+    const data = await getOrSetCache(cacheKey, async () => {
+      const pool = await sql.connect(dbConfig);
+      try {
+        const result = await pool.request().execute("sp_GetMFMTrend1");
+        return result.recordset;
+      } finally {
+        await pool.close();
+      }
+    }, 300); // Cache for 5 minutes
+
+    setNoCacheHeaders(res);
+    res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    handleError(res, err, "MFM Trend");
   }
 });
 
