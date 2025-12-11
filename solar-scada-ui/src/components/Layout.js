@@ -298,7 +298,7 @@ const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage('sidebarState', true);
   const [isCollapsed, setIsCollapsed] = useLocalStorage('sidebarCollapsed', false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [lastVisitedPath, setLastVisitedPath] = useState('/dashboard');
+  const [lastVisitedPath, setLastVisitedPath] = useState('/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Dashboard');
 
   const dateTime = useDateTime(DATETIME_UPDATE_INTERVAL);
   const { alarms, activeAlarmCount, hasNewAlarm, newAlarmDetected } = useAlarms(ALARM_CHECK_INTERVAL);
@@ -311,46 +311,29 @@ const Layout = ({ children }) => {
 
   // Navigation items with modern Material-UI icons
   const navItems = useMemo(() => {
+    const basePrefix = "/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA";
     const baseItems = [
-      { path: "/dashboard", icon: Dashboard, text: "Dashboard", color: "#4ecdc4" }
+      { path: `${basePrefix}/Dashboard`, icon: Dashboard, text: "Dashboard", color: "#4ecdc4" }
     ];
 
     const adminItems = [
-      { path: "/InverterScreen", icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
-      { path: "/InverterHeatmap", icon: Layers, text: "Inverter Heatmap", color: "#ab47bc" },
-      { path: "/SmbScreen", icon: SmbIcon, text: "SMB", color: "#26c6da" },
-      { path: "/SmbHeatmap", icon: ElectricalServicesIcon, text: "SMB Heatmap", color: "#29b6f6" },
-      { path: "/MfmScreen", icon: Speed, text: "MFM", color: "#ffee58" },
-      { path: "/WmsScreen", icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
-      { path: "/TransformerScreen", icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
-      { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
-      { path: "/SLDTemplate", icon: AccountTree, text: "SLD", color: "#ff6b6b" },
-      { path: "/CustomTrend", icon: Timeline, text: "Custom Trend", color: "#26c6da" },
-      { path: "/FormulaScreen", icon: Calculate, text: "Formula", color: "#8bc34a" },
-      {
-        path: "/report",
-        icon: Description,
-        text: "Report",
-        color: "#ff7043"
-        // isExternal: true,
-        // url: window.location.hostname.includes("localhost")
-        //   ? API_ENDPOINTS.report.local
-        //   : API_ENDPOINTS.report.production,
-      }
+      { path: `${basePrefix}/InverterScreen`, icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
+      { path: `${basePrefix}/InverterHeatmap`, icon: Layers, text: "Inverter Heatmap", color: "#ab47bc" },
+      { path: `${basePrefix}/SmbScreen`, icon: SmbIcon, text: "SMB", color: "#26c6da" },
+      { path: `${basePrefix}/SmbHeatmap`, icon: ElectricalServicesIcon, text: "SMB Heatmap", color: "#29b6f6" },
+      { path: `${basePrefix}/MfmScreen`, icon: Speed, text: "MFM", color: "#ffee58" },
+      { path: `${basePrefix}/WmsScreen`, icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
+      { path: `${basePrefix}/TransformerScreen`, icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
+      { path: `${basePrefix}/AlarmScreen`, icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
+      { path: `${basePrefix}/SLDTemplate`, icon: AccountTree, text: "SLD", color: "#ff6b6b" },
+      { path: `${basePrefix}/CustomTrend`, icon: Timeline, text: "Custom Trend", color: "#26c6da" },
+      { path: `${basePrefix}/FormulaScreen`, icon: Calculate, text: "Formula", color: "#8bc34a" },
+      { path: `${basePrefix}/ReportPage`, icon: Description, text: "Report", color: "#ff7043"}
     ];
 
     const operatorItems = [
-      { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
-      {
-        path: "/report",
-        icon: Description,
-        text: "Report",
-        color: "#ff7043",
-        isExternal: true,
-        url: window.location.hostname.includes("localhost")
-          ? API_ENDPOINTS.report.local
-          : API_ENDPOINTS.report.production,
-      }
+      { path: `${basePrefix}/AlarmScreen`, icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
+      { path: `${basePrefix}/ReportPage`, icon: Description, text: "Report", color: "#ff7043" }
     ];
 
     switch (user.role) {
@@ -392,8 +375,9 @@ const Layout = ({ children }) => {
   }, [navigate, location.pathname, isMobile, setIsSidebarOpen]);
 
   const toggleAlarmScreen = useCallback(() => {
-    const isOnAlarmScreen = location.pathname === "/AlarmScreen";
-    const targetPath = isOnAlarmScreen ? lastVisitedPath : "/AlarmScreen";
+    const basePrefix = "/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA";
+    const isOnAlarmScreen = location.pathname === `${basePrefix}/AlarmScreen`;
+    const targetPath = isOnAlarmScreen ? lastVisitedPath : `${basePrefix}/AlarmScreen`;
 
     if (!isOnAlarmScreen) {
       setLastVisitedPath(location.pathname);
@@ -404,7 +388,7 @@ const Layout = ({ children }) => {
   const handleLogout = useCallback(() => {
     localStorage.clear();
     sessionStorage.clear();
-    navigate("/");
+    navigate("/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Login");
   }, [navigate]);
 
   const toggleUserMenu = useCallback(() => {
@@ -412,7 +396,7 @@ const Layout = ({ children }) => {
   }, []);
 
   const navigateToMap = useCallback(() => {
-    navigate("/leaflet-map");
+    navigate("/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Leaflet-Map");
   }, [navigate]);
 
   // Close user menu when clicking outside

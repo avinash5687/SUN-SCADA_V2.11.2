@@ -14,7 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
-      navigate("/leaflet-map");
+      navigate("/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Leaflet-Map");
     }
   }, [navigate]);
 
@@ -56,7 +56,7 @@ const Login = () => {
         sessionStorage.setItem("token", data.token);
         sessionStorage.setItem("username", username);
         sessionStorage.setItem("role", data.role);
-        navigate("/leaflet-map");
+        navigate("/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Leaflet-Map");
       } else {
         setError(text || "Invalid credentials");
       }

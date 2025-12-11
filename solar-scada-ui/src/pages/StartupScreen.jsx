@@ -176,7 +176,7 @@ const StartupScreen = () => {
         <div className={`button-section ${animationPhase >= 6 ? 'animate-in' : ''}`}>
           <button 
             className="dashboard-button"
-            onClick={() => navigate('/dashboard')} // Update this path as needed
+            onClick={() => navigate('/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Dashboard')} // Update this path as needed
           >
             Enter Dashboard
           </button>

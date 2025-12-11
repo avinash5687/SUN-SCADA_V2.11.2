@@ -9,7 +9,6 @@ import Inverter from "./pages/Inverter";
 import MFM from "./pages/MFM";
 import WMS from "./pages/WMS";
 import Alarm from "./pages/AlarmScreen";
-import Report from "./pages/Report";
 import Login from "./pages/Login";
 import CustomTrend from "./pages/CustomTrend";
 import SLDScreen from './components/SLDTemplate';
@@ -23,7 +22,7 @@ import "./App.css";
 import StartupScreen from "./pages/StartupScreen";
 import SmbScreen from "./pages/SmbScreen";
 import SmbHeatmap from "./pages/SmbHeatmap";
-
+import ReportPage from "./pages/ReportPage";
 
 
 const App = () => {
@@ -36,18 +35,12 @@ const App = () => {
   return (
     <Router>
       <Routes>
-
-        {/* Redirect from root to landing page */}
-        {/* <Route path="/" element={<StartupScreen />} />
-        <Route path="/startup" element={<StartupScreen />} /> */}
-        {/* Public Routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
+        <Route path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Login" replace />} />
 
         {/* Protected Routes */}
         <Route
-          path="/leaflet-map"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Leaflet-Map"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -57,7 +50,7 @@ const App = () => {
           }
         />
         <Route
-          path="/dashboard"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Dashboard"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -67,7 +60,7 @@ const App = () => {
           }
         />
         <Route
-          path="/InverterScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/InverterScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -77,7 +70,7 @@ const App = () => {
           }
         />
         <Route
-          path="/MfmScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/MfmScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -87,7 +80,7 @@ const App = () => {
           }
         />
         <Route
-          path="/WmsScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/WmsScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -97,7 +90,7 @@ const App = () => {
           }
         />
         <Route
-          path="/AlarmScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/AlarmScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -107,17 +100,17 @@ const App = () => {
           }
         />
         <Route
-          path="/report"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/ReportPage"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
-                <Report />
+                <ReportPage />
               </Layout>
             </PrivateRoute>
           }
         />
         <Route
-          path="/CustomTrend"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/CustomTrend"
           element={
             <PrivateRoute>
               <CustomTrend />
@@ -125,7 +118,7 @@ const App = () => {
           }
         />
         <Route
-          path="/SLDTemplate"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/SLDTemplate"
           element={
             <PrivateRoute>
               <SLDScreen />
@@ -133,7 +126,7 @@ const App = () => {
           }
         />
         <Route
-          path="/InverterHeatmap"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/InverterHeatmap"
           element={
             <PrivateRoute>
               <Layout>
@@ -143,7 +136,7 @@ const App = () => {
           }
         />
         <Route
-          path="/FormulaScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/FormulaScreen"
           element={
             <PrivateRoute>
               <FormulaScreen />
@@ -151,7 +144,7 @@ const App = () => {
           }
         />
         <Route
-          path="/TransformerScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/TransformerScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -161,7 +154,7 @@ const App = () => {
           }
         />
         <Route
-          path="/SmbScreen"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/SmbScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -171,7 +164,7 @@ const App = () => {
           }
         />
         <Route
-          path="/SmbHeatmap"
+          path="/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/SmbHeatmap"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>

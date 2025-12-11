@@ -60,7 +60,7 @@ const LandingPage = () => {
   ];
 
   const handleNavigateToDashboard = () => {
-    navigate('/dashboard');
+    navigate('/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Dashboard');
   };
 
   return (

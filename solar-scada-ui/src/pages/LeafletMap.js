@@ -33,7 +33,7 @@ const LeafletMap = () => {
   };
 
   const handleSiteNameClick = () => {
-    navigate('/dashboard');
+    navigate('/Heyday-Ventures-Private-Limited/Demo_Solar_SCADA/Dashboard');
   };
 
   return (

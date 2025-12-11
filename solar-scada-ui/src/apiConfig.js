@@ -67,7 +67,13 @@ export const API_ENDPOINTS = {
   },
 
   // Report Server
+  // report: {
+  //   local: process.env.REACT_APP_LOCAL_REPORT_SERVER_URL,
+  // }
+
   report: {
-    local: process.env.REACT_APP_LOCAL_REPORT_SERVER_URL,
+    list: "/api/report/list",
+    devices: "/api/report/devices",
+    run: "/api/report/run"
   }
 };

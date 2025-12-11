@@ -249,6 +249,12 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Larger table area for History tab */
+.alarm-table-wrapper.history {
+  max-height: 80vh;
+  padding-bottom: 12px;
+}
+
 .alarm-table {
   width: 100%;
   border-collapse: collapse;

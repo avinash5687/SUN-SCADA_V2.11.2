@@ -24,6 +24,15 @@ const AlarmScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dataRef = useRef(alarms);
+  // Date filters
+  const [activeStartDate, setActiveStartDate] = useState("");
+  const [activeEndDate, setActiveEndDate] = useState("");
+  const [historyStartDate, setHistoryStartDate] = useState("");
+  const [historyEndDate, setHistoryEndDate] = useState("");
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [showFilterPopup, setShowFilterPopup] = useState(false);
+  const [filterFrom, setFilterFrom] = useState("");
+  const [filterTo, setFilterTo] = useState("");
 
   const fetchAlarms = async (showLoading = false) => {
     if (showLoading) setLoading(true);
@@ -37,6 +46,39 @@ const AlarmScreen = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const fetchHistoryRange = async (start, end) => {
+    if (!start || !end) {
+      alert('Please select both start and end dates for history.');
+      return;
+    }
+    setHistoryLoading(true);
+    try {
+      const res = await axios.get(API_ENDPOINTS.alarm.history, { params: { startDate: `${start} 00:00:00`, endDate: `${end} 23:59:59` } });
+      setAlarms(res.data);
+      dataRef.current = res.data;
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch history.');
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const applyActiveDateFilter = () => {
+    if (!activeStartDate || !activeEndDate) {
+      // if no filter selected, refresh full alarms
+      fetchAlarms(false);
+      return;
+    }
+    const start = new Date(`${activeStartDate}T00:00:00`);
+    const end = new Date(`${activeEndDate}T23:59:59`);
+    const filtered = dataRef.current.filter(a => {
+      const at = new Date(a.activeAt.replace(' ', 'T'));
+      return at >= start && at <= end;
+    });
+    setAlarms(filtered);
   };
 
   const filteredAlarms = useMemo(() => {
@@ -68,8 +110,19 @@ const AlarmScreen = () => {
       return;
     }
     try {
-      await axios.put(API_ENDPOINTS.alarm.acknowledge(selectedAlarmId), { ackComment: comment });
-      fetchAlarms(false);
+      const res = await axios.put(API_ENDPOINTS.alarm.acknowledge(selectedAlarmId), { ackComment: comment });
+      // If server returned updated alarm, update local state immediately
+      if (res.data && res.data.alarm) {
+        const updatedAlarm = res.data.alarm;
+        setAlarms(prev => {
+          const next = prev.map(a => a.id === updatedAlarm.id ? { ...a, ...updatedAlarm } : a);
+          dataRef.current = next;
+          return next;
+        });
+      } else {
+        // Fallback: refresh from server
+        fetchAlarms(false);
+      }
       closePopup();
     } catch (error) {
       alert("Could not acknowledge alarm. Try again.");
@@ -88,8 +141,20 @@ const AlarmScreen = () => {
       return;
     }
     try {
-      await axios.put(API_ENDPOINTS.alarm.acknowledgeAll, { alarmIds, ackComment: comment });
-      fetchAlarms(false);
+      const res = await axios.put(API_ENDPOINTS.alarm.acknowledgeAll, { alarmIds, ackComment: comment });
+      // Optimistically update local state for immediate UI feedback
+      if (res.data && res.data.acknowledgedIds) {
+        const ids = res.data.acknowledgedIds;
+        const now = new Date();
+        const formattedNow = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+        setAlarms(prev => {
+          const next = prev.map(a => ids.includes(a.id) ? { ...a, ackAt: formattedNow, ackComment: comment } : a);
+          dataRef.current = next;
+          return next;
+        });
+      } else {
+        fetchAlarms(false);
+      }
       closePopup();
     } catch (error) {
       alert("Could not acknowledge all alarms. Try again.");
@@ -97,9 +162,27 @@ const AlarmScreen = () => {
   };
 
   const clearAlarm = async (id) => {
+    // Pre-check ackComment to avoid unnecessary server call
+    const alarm = alarms.find(a => a.id === id) || dataRef.current.find(a => a.id === id);
+    const ackComment = alarm?.ackComment || alarm?.ackcomment;
+    if (!ackComment || ackComment.trim() === "") {
+      alert("Alarm must be acknowledged with a comment before clearing.");
+      return;
+    }
     try {
-      await axios.put(API_ENDPOINTS.alarm.clear(id));
-      fetchAlarms(false);
+      const res = await axios.put(API_ENDPOINTS.alarm.clear(id));
+      if (res.data && res.data.alarm) {
+        const updated = res.data.alarm;
+        setAlarms(prev => {
+          const next = prev.map(a => a.id === updated.id ? { ...a, ...updated } : a);
+          dataRef.current = next;
+          return next;
+        });
+      } else {
+        setAlarms(prevAlarms => prevAlarms.map(alarm =>
+          alarm.id === id ? { ...alarm, status: 'OFF', timeOff: new Date().toISOString() } : alarm
+        ));
+      }
     } catch (error) {
       alert("Failed to clear the alarm. Please try again.");
     }
@@ -107,12 +190,51 @@ const AlarmScreen = () => {
 
   const clearAllActiveAlarms = async () => {
     const activeAlarms = dataRef.current.filter((alarm) => alarm.status === "ON");
+    if (activeAlarms.length === 0) {
+      alert("No active alarms to clear.");
+      return;
+    }
+
+    // Separate alarms that have ack comments and those that don't
+    const withAck = activeAlarms.filter(a => (a.ackComment || a.ackcomment) && (a.ackComment || a.ackcomment).toString().trim() !== "");
+    const withoutAck = activeAlarms.filter(a => !((a.ackComment || a.ackcomment) && (a.ackComment || a.ackcomment).toString().trim() !== ""));
+
+    if (withAck.length === 0) {
+      alert("No active alarms have acknowledgement comments. Please acknowledge alarms before clearing.");
+      return;
+    }
+
+    if (withoutAck.length > 0) {
+      const proceed = window.confirm(`${withoutAck.length} active alarm(s) do not have acknowledgement comments and will NOT be cleared. Proceed to clear ${withAck.length} alarm(s) that are acknowledged?`);
+      if (!proceed) return;
+    }
+
     try {
-      for (const alarm of activeAlarms) {
-        await axios.put(API_ENDPOINTS.alarm.clear(alarm.id));
+      // Clear acknowledged alarms in parallel
+      const clearPromises = withAck.map(alarm =>
+        axios.put(API_ENDPOINTS.alarm.clear(alarm.id)).then(res => ({ ok: true, alarm: res.data?.alarm || null })).catch(err => ({ ok: false, id: alarm.id, error: err }))
+      );
+
+      const results = await Promise.all(clearPromises);
+
+      // Apply updates returned from server immediately
+      setAlarms(prev => {
+        const next = prev.map(a => {
+          const r = results.find(rr => rr.ok && rr.alarm && rr.alarm.id === a.id);
+          return r && r.alarm ? { ...a, ...r.alarm } : a;
+        });
+        dataRef.current = next;
+        return next;
+      });
+
+      // For any failures, show a message
+      const failures = results.filter(r => !r.ok);
+      if (failures.length > 0) {
+        console.warn('Some clears failed:', failures);
+        alert(`${failures.length} alarm(s) could not be cleared. Check logs.`);
       }
-      fetchAlarms(false);
     } catch (error) {
+      console.error('Failed to clear all acknowledged alarms:', error);
       alert("Failed to clear all alarms. Please try again.");
     }
   };
@@ -121,9 +243,11 @@ const AlarmScreen = () => {
     setActiveTab(tab);
   };
 
+  const isFilterApplied = !!(activeTab === 'ACTIVE' ? (activeStartDate || activeEndDate) : (historyStartDate || historyEndDate));
+
   useEffect(() => {
     fetchAlarms(true);
-    const interval = setInterval(() => fetchAlarms(false), 5000);
+    const interval = setInterval(() => fetchAlarms(false), 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -133,6 +257,35 @@ const AlarmScreen = () => {
       <div className="alarm-header">
         <h2 className="alarm-title">Alarm Management</h2>
         <div className="alarm-controls">
+            <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+              <div style={{display:'flex', alignItems:'center', gap:8}}>
+                {loading && (
+                  <div className="loading-indicator">
+                    <div className="loading-spinner"></div>
+                    <span>Loading...</span>
+                  </div>
+                )}
+                <button className="action-btn" onClick={() => {
+                  if (isFilterApplied) {
+                    // Clear current tab filters
+                    if (activeTab === 'ACTIVE') {
+                      setActiveStartDate(""); setActiveEndDate("");
+                    } else {
+                      setHistoryStartDate(""); setHistoryEndDate("");
+                    }
+                    fetchAlarms(false);
+                  } else {
+                    // open filter popup and seed current values
+                    setFilterFrom(activeTab === 'ACTIVE' ? activeStartDate : historyStartDate);
+                    setFilterTo(activeTab === 'ACTIVE' ? activeEndDate : historyEndDate);
+                    setShowFilterPopup(true);
+                  }
+                }} style={{padding:'6px 10px'}}>
+                  {isFilterApplied ? 'Clear Filter' : 'Filter'}
+                </button>
+              </div>
+            </div>
+
           <div className="alarm-tab-buttons">
             <button
               className={`alarm-tab-btn ${activeTab === 'ACTIVE' ? 'active' : ''}`}
@@ -154,23 +307,6 @@ const AlarmScreen = () => {
               </span>
               HISTORY
             </button>
-          </div>
-          
-          <div className="alarm-data-info">
-            <div className="active-tab-indicator">
-              <span className={`tab-status ${activeTab.toLowerCase()}`}>
-                ● {activeTab === 'ACTIVE' ? 'ACTIVE ALARMS' : 'ALARM HISTORY'}
-              </span>
-              <span className="alarm-count">
-                {filteredAlarms.length} Alarm{filteredAlarms.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-            {loading && (
-              <div className="loading-indicator">
-                <div className="loading-spinner"></div>
-                <span>Loading...</span>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -222,7 +358,7 @@ const AlarmScreen = () => {
           </div>
         ) : (
           <>
-            <div className="alarm-table-wrapper">
+            <div className={`alarm-table-wrapper ${activeTab === 'HISTORY' ? 'history' : ''}`}>
               <table className="alarm-table">
                 <thead>
                   <tr>
@@ -258,7 +394,7 @@ const AlarmScreen = () => {
                         </span>
                       </td>
                       <td className="duration-cell">{alarm.duration || "--"}</td>
-                      <td className="comment-cell">{alarm.ackComment || "--"}</td>
+                      <td className="comment-cell">{alarm.ackcomment || "--"}</td>
                       {activeTab === 'ACTIVE' && (
                         <td className="actions-cell">
                           <div className="action-buttons">
@@ -341,6 +477,58 @@ const AlarmScreen = () => {
                 )}
                 <button onClick={closePopup} className="popup-btn cancel-btn">
                   <FontAwesomeIcon icon={faTimes} />
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </Fade>
+      )}
+
+      {/* Filter Popup */}
+      {showFilterPopup && (
+        <Fade in={showFilterPopup} timeout={200}>
+          <div className="alarm-popup-overlay">
+            <div className="alarm-popup">
+              <div className="popup-header">
+                <h3>
+                  <FontAwesomeIcon icon={faHistory} />
+                  Filter Alarms by Date
+                </h3>
+              </div>
+              <div className="popup-content">
+                <div style={{display:'flex', gap:8, alignItems:'center'}}>
+                  <div style={{display:'flex',flexDirection:'column'}}>
+                    <label style={{fontSize:12,color:'#6c757d'}}>From</label>
+                    <input type="date" value={filterFrom} onChange={(e)=>setFilterFrom(e.target.value)} />
+                  </div>
+                  <div style={{display:'flex',flexDirection:'column'}}>
+                    <label style={{fontSize:12,color:'#6c757d'}}>To</label>
+                    <input type="date" value={filterTo} onChange={(e)=>setFilterTo(e.target.value)} />
+                  </div>
+                </div>
+              </div>
+              <div className="popup-actions">
+                <button className="popup-btn confirm-btn" onClick={() => {
+                  // apply filter depending on active tab
+                  if (!filterFrom || !filterTo) {
+                    alert('Please select both From and To dates.');
+                    return;
+                  }
+                  if (activeTab === 'ACTIVE') {
+                    setActiveStartDate(filterFrom);
+                    setActiveEndDate(filterTo);
+                    applyActiveDateFilter();
+                  } else {
+                    setHistoryStartDate(filterFrom);
+                    setHistoryEndDate(filterTo);
+                    fetchHistoryRange(filterFrom, filterTo);
+                  }
+                  setShowFilterPopup(false);
+                }}>
+                  Apply
+                </button>
+                <button className="popup-btn cancel-btn" onClick={() => setShowFilterPopup(false)}>
                   Cancel
                 </button>
               </div>
