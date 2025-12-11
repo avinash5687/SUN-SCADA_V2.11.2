@@ -34,7 +34,7 @@ const Legend = () => {
   
   return (
     <div className="legend-container">
-      <span className="legend-title">📊 Performance Deviation:</span>
+      <span className="legend-title">Deviation Legend:</span>
       {legendData.map((item, i) => (
         <span key={i} className="legend-item">
           <span className="legend-emoji" style={{ background: item.color }}>

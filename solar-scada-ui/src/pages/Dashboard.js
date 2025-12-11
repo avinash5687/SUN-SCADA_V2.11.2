@@ -480,8 +480,8 @@ const Dashboard = () => {
                 <SkeletonChart />
               ) : (
                 <>
-                  <div className="chart-header">
-                    <h4 className="chart-title">Energy Generation</h4>
+                  <div className="table-header">
+                    <h4 className="table-title">Energy Generation</h4>
                     <div className="chart-controls">
                       <input
                         type="date"
@@ -522,8 +522,8 @@ const Dashboard = () => {
                 <SkeletonChart />
               ) : (
                 <>
-                  <div className="chart-header">
-                    <h4 className="chart-title">Power & Irradiance Trend</h4>
+                  <div className="table-header">
+                    <h4 className="table-title">Power & Irradiance Trend</h4>
                   </div>
                   <div className="chart-content">
                     <HighchartsReact
