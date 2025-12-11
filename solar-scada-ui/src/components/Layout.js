@@ -6,19 +6,18 @@ import {
 import {
   Menu as MenuIcon, Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon,
   Dashboard, NotificationsActive, Timeline, Calculate,
-  Description, CameraAlt, Print, VolumeOff, VolumeUp, PowerSettingsNew, Layers,
+  Description, PowerSettingsNew, Layers,
   AccountTree, Speed
 } from "@mui/icons-material";
 import SolarPowerIcon from '@mui/icons-material/SolarPower';
 import PowerIcon from '@mui/icons-material/Power';
 import WindPowerIcon from '@mui/icons-material/WindPower';
-
+import ElectricalServicesIcon from '@mui/icons-material/ElectricalServices';
+import SmbIcon from '@mui/icons-material/OfflineBolt';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { Howl } from "howler";
-import html2canvas from "html2canvas";
 import "./Layout.css";
 import logo from "../assets/logo.png";
 import project_logo from "../assets/SUN-SCADA_Logo.png";
@@ -146,42 +145,6 @@ const useAlarms = (interval) => {
   return { alarms, activeAlarmCount, hasNewAlarm, newAlarmDetected };
 };
 
-const useAudio = (src) => {
-  const [sound, setSound] = useState(null);
-
-  useEffect(() => {
-    const audioSound = new Howl({
-      src: [src],
-      format: ["mp3", "wav"], // Add mp3 if needed
-      loop: false,
-      volume: 1.0,
-      preload: true,
-    });
-
-    setSound(audioSound);
-
-    return () => {
-      audioSound.unload();
-    };
-  }, [src]);
-
-  const playAlarm = useCallback(() => {
-    if (sound) {
-      sound.play();
-      // Change to 2.5 seconds
-      setTimeout(() => {
-        sound.stop();
-      }, 2500);
-    }
-  }, [sound]);
-
-  const stopAlarm = useCallback(() => {
-    sound?.stop();
-  }, [sound]);
-
-  return { sound, playAlarm, stopAlarm };
-};
-
 // Modern Sub-components
 const ModernAlarmIndicator = ({ hasNewAlarm, activeAlarmCount, onClick }) => (
   <div className="modern-notification-container" onClick={onClick}>
@@ -230,22 +193,28 @@ const ModernUserMenu = ({ user, showMenu, onToggle, onLogout }) => {
   return (
     <div className="modern-user-menu-container">
       <div className="user-profile-trigger" onClick={onToggle}>
-        <Avatar
-          sx={{
-            width: 24,
-            height: 24,
-            bgcolor: getRoleColor(user.role),
-            fontSize: '0.65rem',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out',
-            '&:hover': {
-              transform: 'scale(1.1)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
-            }
-          }}
-        >
-          {getInitials(user.username)}
-        </Avatar>
+        <div className="user-avatar-wrapper">
+          <Avatar
+            sx={{
+              width: 24,
+              height: 24,
+              bgcolor: getRoleColor(user.role),
+              fontSize: '0.65rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                transform: 'scale(1.1)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+              }
+            }}
+          >
+            {getInitials(user.username)}
+          </Avatar>
+          <div className="user-info-text">
+            <span>{user.username}</span>
+            <span style={{ color: getRoleColor(user.role) }}>{user.role}</span>
+          </div>
+        </div>
         <ArrowDownIcon
           className={`user-menu-arrow ${showMenu ? 'rotated' : ''}`}
           sx={{ fontSize: 11, ml: 0.3, transition: 'transform 0.2s ease-in-out' }}
@@ -328,15 +297,11 @@ const Layout = ({ children }) => {
   // State management with custom hooks
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage('sidebarState', true);
   const [isCollapsed, setIsCollapsed] = useLocalStorage('sidebarCollapsed', false);
-  const [isMuted, setIsMuted] = useLocalStorage('alarmMuted', false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [lastVisitedPath, setLastVisitedPath] = useState('/dashboard');
 
   const dateTime = useDateTime(DATETIME_UPDATE_INTERVAL);
   const { alarms, activeAlarmCount, hasNewAlarm, newAlarmDetected } = useAlarms(ALARM_CHECK_INTERVAL);
-  const { sound, playAlarm, stopAlarm } = useAudio('/alarm.wav');
-  //const { sound, playAlarm, stopAlarm } = useAudio('/gentle-chime.wav'); 
-  // or: '/notification-ping.mp3'
 
   // Get user info from session storage
   const user = useMemo(() => ({
@@ -351,24 +316,26 @@ const Layout = ({ children }) => {
     ];
 
     const adminItems = [
-      { path: "/SLDTemplate", icon: AccountTree, text: "SLD", color: "#ff6b6b" },
       { path: "/inverter", icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
-      { path: "/heatmap", icon: Layers, text: "Heatmap", color: "#ab47bc" },
+      { path: "/heatmap", icon: Layers, text: "Inverter Heatmap", color: "#ab47bc" },
+      { path: "/SmbScreen", icon: SmbIcon, text: "SMB", color: "#26c6da" },
+      { path: "/smb", icon: ElectricalServicesIcon, text: "SMB Heatmap", color: "#29b6f6" },
       { path: "/mfm", icon: Speed, text: "MFM", color: "#ffee58" },
       { path: "/wms", icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
       { path: "/TransformerScreen", icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
       { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
+      { path: "/SLDTemplate", icon: AccountTree, text: "SLD", color: "#ff6b6b" },
       { path: "/CustomTrend", icon: Timeline, text: "Custom Trend", color: "#26c6da" },
       { path: "/formula", icon: Calculate, text: "Formula", color: "#8bc34a" },
       {
         path: "/report",
         icon: Description,
         text: "Report",
-        color: "#ff7043",
-        isExternal: true,
-        url: window.location.hostname.includes("localhost")
-          ? API_ENDPOINTS.report.local
-          : API_ENDPOINTS.report.production,
+        color: "#ff7043"
+        // isExternal: true,
+        // url: window.location.hostname.includes("localhost")
+        //   ? API_ENDPOINTS.report.local
+        //   : API_ENDPOINTS.report.production,
       }
     ];
 
@@ -396,13 +363,6 @@ const Layout = ({ children }) => {
     }
   }, [user.role]);
 
-  // Handle alarm sound - only play when NEW alarms are detected
-  useEffect(() => {
-    if (newAlarmDetected && !isMuted) {
-      playAlarm();
-    }
-  }, [newAlarmDetected, isMuted, playAlarm]);
-
   // Auto-collapse on mobile
   useEffect(() => {
     if (isMobile) {
@@ -418,16 +378,6 @@ const Layout = ({ children }) => {
       setIsCollapsed(prev => !prev);
     }
   }, [isMobile, setIsSidebarOpen, setIsCollapsed]);
-
-  const toggleMute = useCallback(() => {
-    setIsMuted(prev => {
-      const newMuted = !prev;
-      if (newMuted) {
-        stopAlarm();
-      }
-      return newMuted;
-    });
-  }, [setIsMuted, stopAlarm]);
 
   const handleNavigation = useCallback((item) => {
     if (item.isExternal && item.url) {
@@ -456,22 +406,6 @@ const Layout = ({ children }) => {
     sessionStorage.clear();
     navigate("/");
   }, [navigate]);
-
-  const handlePrintScreen = useCallback(() => {
-    window.print();
-  }, []);
-
-  const handleScreenshot = useCallback(async () => {
-    try {
-      const canvas = await html2canvas(document.body);
-      const link = document.createElement("a");
-      link.download = `screenshot-${Date.now()}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    } catch (error) {
-      console.error("Failed to capture screenshot:", error);
-    }
-  }, []);
 
   const toggleUserMenu = useCallback(() => {
     setShowUserMenu(prev => !prev);
@@ -520,9 +454,8 @@ const Layout = ({ children }) => {
               isMobile={isMobile}
             />
 
-            <div className="brand-section" onClick={navigateToMap}>
+              <div className="brand-section" onClick={navigateToMap}>
               <div className="brand-text">
-                {/* <h1 className="brand-name">SUN-SCADA</h1> */}
                 <img src={project_logo} alt="Brand Logo" className="brand-logo" />
               </div>
             </div>
@@ -531,54 +464,30 @@ const Layout = ({ children }) => {
           <div className="header-center">
             <div className="project-info">
               <Typography variant="h6" className="project-title">
-                21.5 MWp JSPL SOLAR PROJECT - DHULE, MAHARASHTRA
+                DEMO SOLAR SCADA
               </Typography>
             </div>
           </div>
 
           <div className="header-right">
             <div className="action-buttons">
-              <ModernActionButton
-                icon={<CameraAlt sx={{ fontSize: '0.9rem' }} />}
-                tooltip="Take Screenshot"
-                onClick={handleScreenshot}
-                variant="screenshot"
-              />
-
-              <ModernActionButton
-                icon={<Print sx={{ fontSize: '0.9rem' }} />}
-                tooltip="Print Page"
-                onClick={handlePrintScreen}
-                variant="print"
-              />
-
+              <div className="datetime-display">
+                <Typography variant="body2" className="time-text">
+                  {dateTime}
+                </Typography>
+              </div>
               <ModernAlarmIndicator
                 hasNewAlarm={hasNewAlarm}
                 activeAlarmCount={activeAlarmCount}
                 onClick={toggleAlarmScreen}
               />
-
-              <ModernActionButton
-                icon={isMuted ? <VolumeOff sx={{ fontSize: '0.9rem' }} /> : <VolumeUp sx={{ fontSize: '0.9rem' }} />}
-                tooltip={isMuted ? "Unmute Alarms" : "Mute Alarms"}
-                onClick={toggleMute}
-                variant={isMuted ? "muted" : "unmuted"}
-              />
             </div>
-
-            <div className="datetime-display">
-              <Typography variant="body2" className="time-text">
-                {dateTime}
-              </Typography>
-            </div>
-
             <ModernUserMenu
               user={user}
               showMenu={showUserMenu}
               onToggle={toggleUserMenu}
               onLogout={handleLogout}
             />
-
             <img src={logo} alt="Company Logo" className="header-logo" />
           </div>
         </div>

@@ -183,7 +183,7 @@ const Login = () => {
       fontSize: "22px",
     },
     footerLogo: {
-      height: "80px",
+      height: "32px",
       marginLeft: "10px",
     },
     errorText: {
@@ -196,9 +196,9 @@ const Login = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>
-        21.5MWp JSPL SOLAR PROJECT
-        <br />
-        DHULE, MAHARASHTRA
+        DEMO SOLAR SCADA
+        {/* <br />
+        DHULE, MAHARASHTRA */}
       </h2>
 
       <div style={styles.mainContent}>
