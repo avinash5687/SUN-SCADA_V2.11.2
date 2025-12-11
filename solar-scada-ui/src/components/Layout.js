@@ -316,17 +316,17 @@ const Layout = ({ children }) => {
     ];
 
     const adminItems = [
-      { path: "/inverter", icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
-      { path: "/heatmap", icon: Layers, text: "Inverter Heatmap", color: "#ab47bc" },
+      { path: "/InverterScreen", icon: SolarPowerIcon, text: "Inverter", color: "#ffa726" },
+      { path: "/InverterHeatmap", icon: Layers, text: "Inverter Heatmap", color: "#ab47bc" },
       { path: "/SmbScreen", icon: SmbIcon, text: "SMB", color: "#26c6da" },
-      { path: "/smb", icon: ElectricalServicesIcon, text: "SMB Heatmap", color: "#29b6f6" },
-      { path: "/mfm", icon: Speed, text: "MFM", color: "#ffee58" },
-      { path: "/wms", icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
+      { path: "/SmbHeatmap", icon: ElectricalServicesIcon, text: "SMB Heatmap", color: "#29b6f6" },
+      { path: "/MfmScreen", icon: Speed, text: "MFM", color: "#ffee58" },
+      { path: "/WmsScreen", icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
       { path: "/TransformerScreen", icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
       { path: "/AlarmScreen", icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
       { path: "/SLDTemplate", icon: AccountTree, text: "SLD", color: "#ff6b6b" },
       { path: "/CustomTrend", icon: Timeline, text: "Custom Trend", color: "#26c6da" },
-      { path: "/formula", icon: Calculate, text: "Formula", color: "#8bc34a" },
+      { path: "/FormulaScreen", icon: Calculate, text: "Formula", color: "#8bc34a" },
       {
         path: "/report",
         icon: Description,

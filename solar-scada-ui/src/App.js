@@ -21,6 +21,10 @@ import PrivateRoute from "./components/PrivateRoute"; // <-- Import here
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import StartupScreen from "./pages/StartupScreen";
+import SmbScreen from "./pages/SmbScreen";
+import SmbHeatmap from "./pages/SmbHeatmap";
+
+
 
 const App = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -63,7 +67,7 @@ const App = () => {
           }
         />
         <Route
-          path="/inverter"
+          path="/InverterScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -73,7 +77,7 @@ const App = () => {
           }
         />
         <Route
-          path="/mfm"
+          path="/MfmScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -83,7 +87,7 @@ const App = () => {
           }
         />
         <Route
-          path="/wms"
+          path="/WmsScreen"
           element={
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
@@ -129,7 +133,7 @@ const App = () => {
           }
         />
         <Route
-          path="/heatmap"
+          path="/InverterHeatmap"
           element={
             <PrivateRoute>
               <Layout>
@@ -139,7 +143,7 @@ const App = () => {
           }
         />
         <Route
-          path="/formula"
+          path="/FormulaScreen"
           element={
             <PrivateRoute>
               <FormulaScreen />
@@ -152,6 +156,26 @@ const App = () => {
             <PrivateRoute>
               <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
                 <TransformerScreen />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/SmbScreen"
+          element={
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <SmbScreen />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/SmbHeatmap"
+          element={
+            <PrivateRoute>
+              <Layout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}>
+                <SmbHeatmap />
               </Layout>
             </PrivateRoute>
           }
