@@ -464,7 +464,7 @@ const Layout = ({ children }) => {
           <div className="header-center">
             <div className="project-info">
               <Typography variant="h6" className="project-title">
-                DEMO SOLAR SCADA
+                DEMO SOLAR SCADA - 21.5 Mw
               </Typography>
             </div>
           </div>

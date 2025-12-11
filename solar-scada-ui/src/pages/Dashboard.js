@@ -194,8 +194,10 @@ const Dashboard = () => {
 
   // Enhanced gauge rendering with better responsiveness
   const getGaugeRadii = (screenWidth) => {
-    if (screenWidth <= 1280) return { innerRadius: 25, outerRadius: 42 };
+    if (screenWidth <= 1280) return { innerRadius: 18, outerRadius: 30 };
+    if (screenWidth <= 1366) return { innerRadius: 18, outerRadius: 30 };
     if (screenWidth <= 1440) return { innerRadius: 28, outerRadius: 46 };
+    if (screenWidth <= 1536) return { innerRadius: 28, outerRadius: 46 };
     if (screenWidth <= 1920) return { innerRadius: 32, outerRadius: 52 };
     return { innerRadius: 35, outerRadius: 58 };
   };

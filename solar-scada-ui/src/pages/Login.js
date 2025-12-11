@@ -197,8 +197,8 @@ const Login = () => {
     <div style={styles.container}>
       <h2 style={styles.header}>
         DEMO SOLAR SCADA
-        {/* <br />
-        DHULE, MAHARASHTRA */}
+        <br />
+        21.5 Mw
       </h2>
 
       <div style={styles.mainContent}>

@@ -145,7 +145,7 @@
 
 /* Bolder Project Name */
 .project-title {
-  font-weight: 900 !important; /* Increased from 700 to 900 for extra boldness */
+  font-weight: 800 !important;
   font-size: 14px !important;
   letter-spacing: 0.3px; /* Slightly increased for better readability */
   margin: 0;
