@@ -57,6 +57,7 @@ getDbPool()
     app.use("/api/auth", require("./routes/authRoutes"));
     app.use("/api/data", require("./routes/dataRoutes"));
     app.use("/api/inverter", require("./routes/inverter"));
+    app.use("/api/smb", require("./routes/smb"));
     app.use("/api/mfm", require("./routes/mfm"));
     app.use("/api/wms", require("./routes/wms"));
     app.use("/api/dashboard", require("./routes/dashboard"));
