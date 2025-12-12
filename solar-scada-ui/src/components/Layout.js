@@ -325,8 +325,8 @@ const Layout = ({ children }) => {
       { path: `${basePrefix}/WmsScreen`, icon: WindPowerIcon, text: "WMS", color: "#42a5f5" },
       { path: `${basePrefix}/TransformerScreen`, icon: PowerIcon, text: "Transformer", color: "#66bb6a" },
       { path: `${basePrefix}/AlarmScreen`, icon: NotificationsActive, text: "Alarm", color: "#ef5350" },
-      { path: `${basePrefix}/SLDTemplate`, icon: AccountTree, text: "SLD", color: "#ff6b6b" },
       { path: `${basePrefix}/CustomTrend`, icon: Timeline, text: "Custom Trend", color: "#26c6da" },
+      { path: `${basePrefix}/SLDTemplate`, icon: AccountTree, text: "SLD", color: "#ff6b6b" },
       { path: `${basePrefix}/FormulaScreen`, icon: Calculate, text: "Formula", color: "#8bc34a" },
       { path: `${basePrefix}/ReportPage`, icon: Description, text: "Report", color: "#ff7043"}
     ];

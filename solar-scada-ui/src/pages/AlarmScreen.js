@@ -29,7 +29,6 @@ const AlarmScreen = () => {
   const [activeEndDate, setActiveEndDate] = useState("");
   const [historyStartDate, setHistoryStartDate] = useState("");
   const [historyEndDate, setHistoryEndDate] = useState("");
-  const [historyLoading, setHistoryLoading] = useState(false);
   const [showFilterPopup, setShowFilterPopup] = useState(false);
   const [filterFrom, setFilterFrom] = useState("");
   const [filterTo, setFilterTo] = useState("");
@@ -42,42 +41,36 @@ const AlarmScreen = () => {
       dataRef.current = response.data;
       setError(null);
     } catch (e) {
+      console.error("Failed to fetch alarms:", e);
       setError("Failed to fetch alarms. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchHistoryRange = async (start, end) => {
+  // Client-side filtering for both ACTIVE and HISTORY tabs
+  const applyDateFilter = (start, end, tab) => {
     if (!start || !end) {
-      alert('Please select both start and end dates for history.');
+      alert('Please select both start and end dates.');
       return;
     }
-    setHistoryLoading(true);
-    try {
-      const res = await axios.get(API_ENDPOINTS.alarm.history, { params: { startDate: `${start} 00:00:00`, endDate: `${end} 23:59:59` } });
-      setAlarms(res.data);
-      dataRef.current = res.data;
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch history.');
-    } finally {
-      setHistoryLoading(false);
-    }
-  };
 
-  const applyActiveDateFilter = () => {
-    if (!activeStartDate || !activeEndDate) {
-      // if no filter selected, refresh full alarms
-      fetchAlarms(false);
+    // Defensive: ensure start <= end
+    if (new Date(start) > new Date(end)) {
+      alert('From date cannot be after To date.');
       return;
     }
-    const start = new Date(`${activeStartDate}T00:00:00`);
-    const end = new Date(`${activeEndDate}T23:59:59`);
+
+    const startDate = new Date(`${start}T00:00:00`);
+    const endDate = new Date(`${end}T23:59:59`);
+
+    // Filter alarms by date range
     const filtered = dataRef.current.filter(a => {
-      const at = new Date(a.activeAt.replace(' ', 'T'));
-      return at >= start && at <= end;
+      // Parse activeAt which is in "YYYY-MM-DD HH:mm" format
+      const alarmDate = new Date(a.activeAt.replace(' ', 'T'));
+      return alarmDate >= startDate && alarmDate <= endDate;
     });
+
     setAlarms(filtered);
   };
 
@@ -125,6 +118,7 @@ const AlarmScreen = () => {
       }
       closePopup();
     } catch (error) {
+      console.error("Acknowledge alarm error:", error);
       alert("Could not acknowledge alarm. Try again.");
     }
   };
@@ -157,6 +151,7 @@ const AlarmScreen = () => {
       }
       closePopup();
     } catch (error) {
+      console.error("Acknowledge all alarms error:", error);
       alert("Could not acknowledge all alarms. Try again.");
     }
   };
@@ -184,6 +179,7 @@ const AlarmScreen = () => {
         ));
       }
     } catch (error) {
+      console.error("Clear alarm error:", error);
       alert("Failed to clear the alarm. Please try again.");
     }
   };
@@ -267,11 +263,13 @@ const AlarmScreen = () => {
                 )}
                 <button className="action-btn" onClick={() => {
                   if (isFilterApplied) {
-                    // Clear current tab filters
+                    // Clear current tab filters and reload all data
                     if (activeTab === 'ACTIVE') {
-                      setActiveStartDate(""); setActiveEndDate("");
+                      setActiveStartDate(""); 
+                      setActiveEndDate("");
                     } else {
-                      setHistoryStartDate(""); setHistoryEndDate("");
+                      setHistoryStartDate(""); 
+                      setHistoryEndDate("");
                     }
                     fetchAlarms(false);
                   } else {
@@ -394,7 +392,7 @@ const AlarmScreen = () => {
                         </span>
                       </td>
                       <td className="duration-cell">{alarm.duration || "--"}</td>
-                      <td className="comment-cell">{alarm.ackcomment || "--"}</td>
+                      <td className="comment-cell">{alarm.ackComment || "--"}</td>
                       {activeTab === 'ACTIVE' && (
                         <td className="actions-cell">
                           <div className="action-buttons">
@@ -510,20 +508,22 @@ const AlarmScreen = () => {
               </div>
               <div className="popup-actions">
                 <button className="popup-btn confirm-btn" onClick={() => {
-                  // apply filter depending on active tab
                   if (!filterFrom || !filterTo) {
                     alert('Please select both From and To dates.');
                     return;
                   }
+                  
+                  // Apply filter for both tabs using client-side filtering
                   if (activeTab === 'ACTIVE') {
                     setActiveStartDate(filterFrom);
                     setActiveEndDate(filterTo);
-                    applyActiveDateFilter();
                   } else {
                     setHistoryStartDate(filterFrom);
                     setHistoryEndDate(filterTo);
-                    fetchHistoryRange(filterFrom, filterTo);
                   }
+                  
+                  // Apply the date filter
+                  applyDateFilter(filterFrom, filterTo, activeTab);
                   setShowFilterPopup(false);
                 }}>
                   Apply

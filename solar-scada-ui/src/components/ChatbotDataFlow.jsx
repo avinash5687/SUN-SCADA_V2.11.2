@@ -1,23 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Box, 
-  Paper, 
-  Typography, 
-  Button, 
-  Avatar, 
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Avatar,
   Fade,
   IconButton,
   Tooltip
 } from '@mui/material';
-import { 
+import {
   SmartToy as BotIcon,
   Person as UserIcon,
   Refresh as RefreshIcon,
   Help as HelpIcon
 } from '@mui/icons-material';
 
-// Enhanced Professional Chatbot Component
-export const ChatbotComponent = ({ user, isChatOpen }) => {
+// Import the screen-based Q&A config
+import { getScreenOptions } from './chatbotScreenQA';
+
+// Screen-aware Chatbot Component
+// Pass currentScreen from parent (e.g., "Dashboard", "Inverter", "MFMScreen")
+export const ChatbotComponent = ({ user, isChatOpen, currentScreen }) => {
   const [messages, setMessages] = useState([]);
   const [currentStep, setCurrentStep] = useState('welcome');
   const [isTyping, setIsTyping] = useState(false);
@@ -36,156 +40,89 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
     if (isChatOpen && messages.length === 0) {
       initializeChat();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChatOpen]);
+
+  // Optional: when the screen changes and chat is open, refresh options
+  useEffect(() => {
+    if (!isChatOpen) return;
+    if (messages.length > 0) {
+      addBotMessage(`Switched to ${currentScreen || 'this section'}.`);
+      setTimeout(() => {
+        showMainMenu();
+      }, 500);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentScreen]);
 
   const initializeChat = () => {
     setMessages([]);
     setCurrentStep('welcome');
     setTimeout(() => {
       addBotMessage(
-        `Hello ${user?.username || 'there'}! I'm Zyra your Assistant. How can I assist you today?`,
+        `Hello ${user?.username || 'there'}! I'm Zyra your Assistant. How can I assist you${currentScreen ? ' with ' + currentScreen : ''} today?`,
         'welcome'
       );
       setTimeout(() => {
         showMainMenu();
-      }, 1500);
-    }, 500);
+      }, 800);
+    }, 300);
   };
 
   const addBotMessage = (text, step = null) => {
     setIsTyping(true);
     setTimeout(() => {
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        type: 'bot',
-        text,
-        timestamp: new Date(),
-        step
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          type: 'bot',
+          text,
+          timestamp: new Date(),
+          step
+        }
+      ]);
       setIsTyping(false);
-    }, 800);
+    }, 600);
   };
 
   const addUserMessage = (text) => {
-    setMessages(prev => [...prev, {
-      id: Date.now(),
-      type: 'user',
-      text,
-      timestamp: new Date()
-    }]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: 'user',
+        text,
+        timestamp: new Date()
+      }
+    ]);
   };
 
+  // Use screen-aware options from config
   const showMainMenu = () => {
-    const menuOptions = [
-      { id: 'low_pr', text: 'Why is PR low?', icon: '📊' },
-      { id: 'inverter_performance', text: 'Why is inverter performing low?', icon: '🔌' },
-      { id: 'module_cleaning', text: 'When does module cleaning need to be done?', icon: '🧽' }
-    ];
-
-    setMessages(prev => [...prev, {
-      id: Date.now(),
-      type: 'options',
-      options: menuOptions,
-      text: 'What would you like to know?'
-    }]);
+    const options = getScreenOptions(currentScreen);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: 'options',
+        options,
+        text: `What would you like to know${currentScreen ? ' about ' + currentScreen : ''}?`
+      }
+    ]);
   };
 
+  // Select an option with embedded answer
   const handleOptionSelect = (option) => {
     addUserMessage(option.text);
     setCurrentStep(option.id);
-    
-    setTimeout(() => {
-      switch(option.id) {
-        case 'low_pr':
-          handleDetailedResponse('low_pr');
-          break;
-        case 'inverter_performance':
-          handleDetailedResponse('inverter_performance');
-          break;
-        case 'module_cleaning':
-          handleDetailedResponse('module_cleaning');
-          break;
-        default:
-          showMainMenu();
-      }
-    }, 500);
-  };
-
-  const handleDetailedResponse = (topicId) => {
-    const responses = {
-      low_pr: `Low Plant Performance Ratio causes:
-
-**Primary Factors:**
-• Soiling/dust accumulation (2-5% loss)
-• Shading from structures/vegetation
-• Module degradation or hot spots
-• Inverter clipping during peak hours
-
-**Secondary Factors:**
-• Cable losses from poor connections
-• Grid voltage fluctuations
-• High ambient temperatures
-• Component aging
-
-**Action Items:**
-1. Check soiling levels and clean if >3% loss
-2. Review monitoring data for patterns
-3. Inspect for shading issues
-4. Verify inverter performance curves`,
-
-      inverter_performance: `Inverter low performance causes:
-
-**Common Issues:**
-• Over temperature conditions
-• Grid voltage/frequency variations
-• DC input voltage fluctuations
-• Component degradation over time
-
-**Diagnostic Steps:**
-1. Check inverter temperature and ventilation
-2. Verify DC input voltage levels
-3. Monitor AC output quality
-4. Review error logs and fault codes
-5. Compare with manufacturer specifications
-
-**Immediate Actions:**
-• Ensure proper cooling and ventilation
-• Check for loose DC connections
-• Verify grid parameters are within limits
-• Contact manufacturer if persistent issues`,
-
-      module_cleaning: `Module cleaning schedule and indicators:
-
-**Frequency Guidelines:**
-• Dusty areas: Every 2-4 weeks
-• Normal conditions: 6-8 weeks
-• After dust storms: Immediately
-• When power loss >3%
-
-**When to Clean:**
-• Visible dirt/dust accumulation
-• Performance drop of 3% or more
-• After sandstorms or heavy pollution
-• Monthly in industrial areas
-
-**Best Practices:**
-1. Early morning cleaning (avoid thermal shock)
-2. Use deionized water and soft brushes
-3. Work systematically from top to bottom
-4. Avoid walking on modules
-5. Check for damage during cleaning
-
-**Quality Control:**
-• Verify power improvement post-cleaning
-• Document before/after conditions`
-    };
 
     setTimeout(() => {
-      addBotMessage(responses[topicId] || 'Information not available for this topic.');
+      addBotMessage(option.answer || 'Information not available for this topic.');
       setTimeout(() => {
         showContinueOptions();
-      }, 2000);
-    }, 500);
+      }, 1200);
+    }, 300);
   };
 
   const showContinueOptions = () => {
@@ -194,29 +131,33 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
       { id: 'restart', text: '🔄 Start Over', icon: '🔄' }
     ];
 
-    setMessages(prev => [...prev, {
-      id: Date.now(),
-      type: 'options',
-      options: continueOptions,
-      text: 'What would you like to do next?'
-    }]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        type: 'options',
+        options: continueOptions,
+        text: 'What would you like to do next?'
+      }
+    ]);
   };
 
+  // Only handle navigation actions here
   const handleAction = (actionId) => {
-    switch(actionId) {
+    switch (actionId) {
       case 'back_to_main':
         addUserMessage('Ask another question');
         setTimeout(() => {
-          addBotMessage('Here are the questions I can help with:');
-          setTimeout(showMainMenu, 1000);
-        }, 500);
+          addBotMessage(`Here are the questions for ${currentScreen || 'this section'}:`);
+          setTimeout(showMainMenu, 600);
+        }, 300);
         break;
       case 'restart':
         addUserMessage('Start Over');
-        setTimeout(initializeChat, 500);
+        setTimeout(initializeChat, 300);
         break;
       default:
-        handleDetailedResponse(actionId);
+        break;
     }
   };
 
@@ -227,7 +168,7 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
   if (!isChatOpen) return null;
 
   return (
-    <Paper 
+    <Paper
       elevation={8}
       sx={{
         height: '100%',
@@ -238,12 +179,12 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
         overflow: 'hidden'
       }}
     >
-      {/* Reduced Header */}
+      {/* Header */}
       <Box
         sx={{
           background: 'linear-gradient(135deg, #667eea, #764ba2)',
           color: 'white',
-          p: 1.5, // Reduced padding from 2 to 1.5
+          p: 1.5,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -253,22 +194,21 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Avatar
             sx={{
-              width: 28, // Reduced from 32
-              height: 28, // Reduced from 32
+              width: 28,
+              height: 28,
               background: 'linear-gradient(135deg, #4facfe, #00f2fe)'
             }}
           >
-            <BotIcon sx={{ fontSize: 16 }} /> {/* Reduced from 18 */}
+            <BotIcon sx={{ fontSize: 16 }} />
           </Avatar>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '14px' }}>
             Zyra - Solar Plant Assistant
           </Typography>
-          {/* Removed the Chip component for status */}
         </Box>
         <Tooltip title="Restart Conversation">
-          <IconButton 
+          <IconButton
             onClick={resetChat}
-            sx={{ 
+            sx={{
               color: 'white',
               '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' }
             }}
@@ -278,7 +218,7 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
         </Tooltip>
       </Box>
 
-      {/* Messages Container */}
+      {/* Messages */}
       <Box
         ref={chatContainerRef}
         sx={{
@@ -288,13 +228,8 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: 1.5,
-          '&::-webkit-scrollbar': {
-            width: '6px'
-          },
-          '&::-webkit-scrollbar-track': {
-            background: 'rgba(0,0,0,0.05)',
-            borderRadius: '3px'
-          },
+          '&::-webkit-scrollbar': { width: '6px' },
+          '&::-webkit-scrollbar-track': { background: 'rgba(0,0,0,0.05)', borderRadius: '3px' },
           '&::-webkit-scrollbar-thumb': {
             background: 'linear-gradient(135deg, #667eea, #764ba2)',
             borderRadius: '3px'
@@ -380,14 +315,9 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
                       >
                         <HelpIcon sx={{ fontSize: 12 }} />
                       </Avatar>
-                      <Typography 
-                        variant="body2" 
-                        sx={{ 
-                          fontSize: '13px', 
-                          color: '#555',
-                          fontWeight: 500,
-                          mt: 0.3
-                        }}
+                      <Typography
+                        variant="body2"
+                        sx={{ fontSize: '13px', color: '#555', fontWeight: 500, mt: 0.3 }}
                       >
                         {message.text}
                       </Typography>
@@ -398,13 +328,16 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
                       <Button
                         key={option.id}
                         variant="outlined"
-                        onClick={() => handleAction(option.id)}
+                        onClick={() =>
+                          option.answer ? handleOptionSelect(option) : handleAction(option.id)
+                        }
                         sx={{
                           justifyContent: 'flex-start',
                           textAlign: 'left',
                           p: 1.5,
                           borderRadius: '10px',
-                          background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))',
+                          background:
+                            'linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05))',
                           border: '1px solid rgba(102, 126, 234, 0.3)',
                           color: '#667eea',
                           fontSize: '12px',
@@ -412,7 +345,8 @@ export const ChatbotComponent = ({ user, isChatOpen }) => {
                           textTransform: 'none',
                           transition: 'all 0.2s ease',
                           '&:hover': {
-                            background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
+                            background:
+                              'linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1))',
                             transform: 'translateY(-1px)',
                             boxShadow: '0 4px 12px rgba(102, 126, 234, 0.2)'
                           }
