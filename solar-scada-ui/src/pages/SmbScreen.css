@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 5px 10px;
   border-radius: 8px;
   box-sizing: border-box;
 }
@@ -17,36 +18,33 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2px;
-  padding: 8px 16px;
+  padding: 3px 16px 2px 16px;
   border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
-  min-height: 50px;
-  background: rgba(255, 255, 255, 0.95);
-  gap: 16px;
-  flex-wrap: wrap;
+  height: 5%;
+  min-height: 30px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.smb-header-left {
+.header-left {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
 }
 
-.smb-header-center {
-  flex: 0 0 auto;
+.header-center {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 16px;
   min-width: 0;
 }
 
-.smb-header-right {
-  flex: 1 1 auto;
+.header-right {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
 }
 
 .smb-title {
@@ -55,10 +53,9 @@
   color: #1a3b5d;
   margin: 0;
   font-family: Tahoma, Arial, sans-serif;
-  white-space: nowrap;
 }
 
-.smb-refresh-indicator {
+.refresh-indicator {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -66,66 +63,65 @@
   font-size: 0.7rem;
 }
 
-.smb-refresh-spinner {
+.refresh-spinner {
   width: 12px;
   height: 12px;
   border: 2px solid #f3f3f3;
   border-top: 2px solid #3498db;
   border-radius: 50%;
-  animation: smb-spin 1s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
-.smb-total-power-display {
+.total-power-display {
   font-size: 0.75rem;
-  padding: 6px 12px;
+  padding: 4px 8px;
   border-radius: 4px;
   background: rgba(40, 167, 69, 0.1);
   border: 1px solid #28a745;
   color: #155724;
   font-weight: 600;
-  white-space: nowrap;
 }
 
-.smb-last-updated {
+.last-updated {
   font-size: 0.7rem;
   color: #7f8c8d;
   font-weight: 500;
 }
 
 /* Filter Buttons in Header */
-.smb-filter-buttons {
+.filter-buttons {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   background: #f8f9fa;
-  padding: 3px;
+  padding: 2px;
   border-radius: 6px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
-.smb-filter-btn {
+.filter-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 10px;
+  gap: 2px;
+  padding: 3px 6px;
   background: transparent;
   border: none;
   border-radius: 4px;
   color: #6c757d;
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: Tahoma, Arial, sans-serif;
   white-space: nowrap;
 }
 
-.smb-filter-btn:hover {
+.filter-btn:hover {
   color: #2c3e50;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.smb-filter-btn.active {
+.filter-btn.active {
   background: linear-gradient(135deg, #2c3e50, #34495e);
   color: white;
   box-shadow: 0 2px 10px rgba(44, 62, 80, 0.3);
@@ -145,28 +141,26 @@
   margin: 20px;
 }
 
-.smb-loading-spinner {
+.loading-spinner {
   width: 30px;
   height: 30px;
   border: 3px solid #f3f3f3;
   border-top: 3px solid #3498db;
   border-radius: 50%;
-  animation: smb-spin 1s linear infinite;
+  animation: spin 1s linear infinite;
   margin-bottom: 15px;
 }
 
-@keyframes smb-spin {
+@keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* ========== Content Area - CRITICAL FIX ========== */
+/* ========== Content Area ========== */
 .smb-content {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 12px 16px;
-  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 0 16px 5px 16px;
 }
 
 .smb-device-grid {
@@ -229,27 +223,27 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.smb-device-info {
+.device-info {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.smb-device-title {
+.device-title {
   font-size: 0.9rem;
   font-weight: 700;
   color: #2c3e50;
   margin: 0;
 }
 
-.smb-details-btn {
+.details-btn {
   background: rgba(52, 152, 219, 0.1);
   border: 1px solid rgba(52, 152, 219, 0.3);
   color: #3498db;
   transition: all 0.2s ease;
 }
 
-.smb-details-btn:hover {
+.details-btn:hover {
   background: rgba(52, 152, 219, 0.2);
   transform: scale(1.1);
 }
@@ -260,14 +254,14 @@
   z-index: 1;
 }
 
-.smb-primary-metrics {
+.primary-metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.smb-metric-item {
+.metric-item {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -278,7 +272,7 @@
 }
 
 /* Enhanced Icon Backgrounds for Better Visibility */
-.smb-metric-icon {
+.metric-icon {
   width: 20px;
   height: 20px;
   flex-shrink: 0;
@@ -289,32 +283,32 @@
   justify-content: center;
 }
 
-.smb-metric-icon.power { 
+.metric-icon.power { 
   color: white;
   background: linear-gradient(135deg, #e74c3c, #c0392b);
 }
 
-.smb-metric-icon.current { 
+.metric-icon.current { 
   color: white;
   background: linear-gradient(135deg, #3498db, #2980b9);
 }
 
-.smb-metric-icon.voltage { 
+.metric-icon.voltage { 
   color: white;
   background: linear-gradient(135deg, #f39c12, #e67e22);
 }
 
-.smb-metric-icon.temperature { 
+.metric-icon.temperature { 
   color: white;
   background: linear-gradient(135deg, #9b59b6, #8e44ad);
 }
 
-.smb-metric-data {
+.metric-data {
   flex: 1;
   min-width: 0;
 }
 
-.smb-metric-label {
+.metric-label {
   display: block;
   font-size: 0.6rem;
   color: #64748b;
@@ -325,7 +319,7 @@
   margin-bottom: 1px;
 }
 
-.smb-metric-value {
+.metric-value {
   display: block;
   font-size: 0.75rem;
   font-weight: 700;
@@ -333,27 +327,27 @@
   line-height: 1;
 }
 
-/* String Status */
-.smb-string-status {
+/* String Status - Removed Badge */
+.string-status {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 8px;
 }
 
-.smb-string-summary {
+.string-summary {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.smb-active-strings {
+.active-strings {
   font-size: 0.7rem;
   font-weight: 600;
   color: #2c3e50;
 }
 
 /* String Current Display */
-.smb-string-current-display {
+.string-current-display {
   height: 40px;
   background: rgba(0, 0, 0, 0.02);
   border-radius: 4px;
@@ -361,14 +355,14 @@
   overflow: hidden;
 }
 
-.smb-string-grid {
+.string-grid {
   display: flex;
   height: 100%;
   gap: 1px;
   align-items: flex-end;
 }
 
-.smb-string-bar {
+.string-bar {
   flex: 1;
   min-height: 2px;
   border-radius: 1px;
@@ -377,16 +371,16 @@
   transition: all 0.2s ease;
 }
 
-.smb-string-bar:hover {
+.string-bar:hover {
   transform: scaleY(1.1);
   z-index: 10;
 }
 
-.smb-string-bar.inactive {
+.string-bar.inactive {
   background-color: #e9ecef !important;
 }
 
-.smb-string-value {
+.string-value {
   position: absolute;
   top: -16px;
   left: 50%;
@@ -399,53 +393,40 @@
   pointer-events: none;
 }
 
-.smb-string-bar:hover .smb-string-value {
+.string-bar:hover .string-value {
   opacity: 1;
 }
 
-.smb-string-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2px;
-}
-
-.smb-string-label {
-  flex: 1;
-  text-align: center;
-  font-size: 0.5rem;
-  color: #95a5a6;
-}
-
 /* ========== Compact Device Details Dialog ========== */
-.smb-compact-dialog-title {
+.compact-dialog-title {
   padding: 12px 16px !important;
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   border-bottom: 1px solid #dee2e6;
 }
 
-.smb-dialog-title-text {
+.dialog-title-text {
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   color: #2c3e50;
 }
 
-.smb-compact-dialog-content {
+.compact-dialog-content {
   padding: 16px !important;
 }
 
-.smb-compact-device-details {
+.compact-device-details {
   max-width: 100%;
 }
 
 /* Single Row Overview Grid - ALL 6 ITEMS IN ONE ROW */
-.smb-compact-overview-grid {
+.compact-overview-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 8px;
   margin-bottom: 16px;
 }
 
-.smb-compact-metric {
+.compact-metric {
   display: flex;
   flex-direction: column;
   padding: 8px 10px;
@@ -455,7 +436,7 @@
   min-width: 0;
 }
 
-.smb-compact-label {
+.compact-label {
   font-size: 0.65rem;
   color: #6c757d;
   font-weight: 500;
@@ -466,7 +447,7 @@
   text-overflow: ellipsis;
 }
 
-.smb-compact-value {
+.compact-value {
   font-size: 0.8rem;
   font-weight: 600;
   color: #2c3e50;
@@ -476,12 +457,12 @@
 }
 
 /* Compact String Section */
-.smb-compact-strings-section {
+.compact-strings-section {
   border-top: 1px solid #dee2e6;
   padding-top: 12px;
 }
 
-.smb-compact-section-title {
+.compact-section-title {
   font-size: 0.9rem;
   font-weight: 600;
   color: #2c3e50;
@@ -490,7 +471,7 @@
   border-bottom: 2px solid #3498db;
 }
 
-.smb-compact-string-grid {
+.compact-string-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   gap: 4px;
@@ -498,7 +479,7 @@
   overflow-y: auto;
 }
 
-.smb-compact-string-item {
+.compact-string-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -509,41 +490,41 @@
   transition: all 0.2s ease;
 }
 
-.smb-compact-string-item.active {
+.compact-string-item.active {
   background: rgba(40, 167, 69, 0.1);
   border-color: #28a745;
 }
 
-.smb-compact-string-item.inactive {
+.compact-string-item.inactive {
   background: rgba(108, 117, 125, 0.1);
   border-color: #6c757d;
 }
 
-.smb-string-num {
+.string-num {
   font-weight: 600;
   font-size: 0.65rem;
   margin-bottom: 1px;
 }
 
-.smb-string-val {
+.string-val {
   font-size: 0.6rem;
   color: #495057;
 }
 
-.smb-compact-dialog-actions {
+.compact-dialog-actions {
   padding: 8px 16px !important;
   background: #f8f9fa;
   border-top: 1px solid #dee2e6;
 }
 
-.smb-close-button {
+.close-button {
   background: linear-gradient(135deg, #3498db, #2980b9) !important;
   font-size: 0.8rem !important;
   padding: 6px 16px !important;
 }
 
 /* Error and No Data States */
-.smb-no-data-message {
+.no-data-message {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -554,30 +535,18 @@
 }
 
 /* ========== Responsive Design ========== */
-@media (max-width: 1400px) {
-  .smb-header {
-    flex-wrap: wrap;
-  }
-  
-  .smb-header-right {
-    flex: 1 1 100%;
-    justify-content: space-between;
-    margin-top: 8px;
-  }
-}
-
 @media (max-width: 1200px) {
   .smb-device-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 10px;
   }
   
-  .smb-primary-metrics {
+  .primary-metrics {
     grid-template-columns: 1fr;
   }
   
   /* Responsive Dialog - 3 columns on medium screens */
-  .smb-compact-overview-grid {
+  .compact-overview-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -585,35 +554,34 @@
 @media (max-width: 768px) {
   .smb-header {
     flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-    padding: 12px 16px;
+    gap: 4px;
+    align-items: flex-start;
+    height: auto;
+    padding: 8px 16px;
   }
   
-  .smb-header-left,
-  .smb-header-center,
-  .smb-header-right {
+  .header-left,
+  .header-center,
+  .header-right {
     width: 100%;
     justify-content: space-between;
   }
   
-  .smb-header-center {
+  .header-center {
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
   }
   
-  .smb-filter-buttons {
+  .filter-buttons {
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
   }
   
-  .smb-filter-btn {
+  .filter-btn {
     flex: 1;
-    min-width: 100px;
     justify-content: center;
-    font-size: 0.65rem;
-    padding: 6px 8px;
+    font-size: 0.6rem;
+    padding: 2px 4px;
   }
   
   .smb-device-grid {
@@ -622,11 +590,11 @@
   }
   
   /* Responsive Dialog - 2 columns on mobile */
-  .smb-compact-overview-grid {
+  .compact-overview-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .smb-compact-string-grid {
+  .compact-string-grid {
     grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   }
 }
@@ -636,24 +604,24 @@
     padding: 5px;
   }
   
-  .smb-device-title {
+  .device-title {
     font-size: 0.8rem;
   }
   
-  .smb-metric-value {
+  .metric-value {
     font-size: 0.7rem;
   }
   
   /* Responsive Dialog - 1 column on very small screens */
-  .smb-compact-overview-grid {
+  .compact-overview-grid {
     grid-template-columns: 1fr;
   }
   
-  .smb-compact-label {
+  .compact-label {
     font-size: 0.6rem;
   }
   
-  .smb-compact-value {
+  .compact-value {
     font-size: 0.75rem;
   }
 }
@@ -661,7 +629,7 @@
 /* ========== Ensure Dialog Always Fits Content ========== */
 @media (min-width: 1201px) {
   /* On large screens, keep all 6 items in one row */
-  .smb-compact-overview-grid {
+  .compact-overview-grid {
     grid-template-columns: repeat(6, 1fr);
   }
 }
