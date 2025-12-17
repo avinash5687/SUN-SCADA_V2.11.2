@@ -12,19 +12,17 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const { getDbPool } = require("./db");
 
 const app = express();
-const HTTPS_PORT = process.env.HTTPS_PORT || 8443; // Use a non-privileged port for development
-const HTTP_PORT = process.env.HTTP_PORT || 5000;   // Default to 5000 for local development
+const HTTPS_PORT = process.env.HTTPS_PORT || 8443;
+const HTTP_PORT = process.env.HTTP_PORT || 5000;
 
 // --- Middleware ---
-// A more secure CORS configuration.
-// This allows requests from your local dev environment and your production domain over HTTPS.
 app.use(cors({ 
   origin: [
-    "https://localhost:3000",      // For local React development server
-    "https://sun-scada.com",      // Your production domain
-    "https://www.sun-scada.com",   // Optional: if you use the 'www' subdomain
-    "https://103.102.234.177",    // Your server's public IP (HTTPS)
-    "http://103.102.234.177"      // Your server's public IP (HTTP)
+    "https://localhost:3000",
+    "https://sun-scada.com",
+    "https://www.sun-scada.com",
+    "https://103.102.234.177",
+    "http://103.102.234.177"
   ], 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -35,7 +33,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- Serve React App ---
-// This serves your production-built React app.
 const uiBuildPath = path.join(__dirname, '..', 'solar-scada-ui', 'build');
 app.use(express.static(uiBuildPath));
 
@@ -64,10 +61,9 @@ getDbPool()
     app.use("/api/alarm", require("./routes/alarm"));
     app.use("/api/custom-trend", require("./routes/customTrend"));
     app.use("/api/transformer", require("./routes/transformer"));
+    app.use('/api/report', require("./routes/reports"));  // ✅ Changed from 'report' to 'reports'
 
     // --- React Catch-all Route ---
-    // This must be AFTER your API routes. It serves the index.html for any
-    // request that doesn't match an API route, enabling client-side routing.
     app.get('*', (req, res) => {
       res.sendFile(path.join(uiBuildPath, 'index.html'));
     });

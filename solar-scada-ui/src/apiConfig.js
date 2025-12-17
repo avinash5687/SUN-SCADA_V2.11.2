@@ -38,11 +38,21 @@ export const API_ENDPOINTS = {
     getAll: "/api/mfm",
   },
 
+  // SMB
+  smb: {
+    getAll: "/api/smb",
+  },
+
   // WMS
   wms: {
     getAll: "/api/wms",
     chart: "/api/wms/WMS-CHART",
     soilChart: "/api/wms/SOIL-CHART",
+  },
+
+  // Transformer
+  transformer: {
+    getAll: "/api/transformer",
   },
 
   // Alarms
@@ -61,19 +71,13 @@ export const API_ENDPOINTS = {
     exportCsv: "/api/custom-trend/exportCSV",
   },
 
-  // Transformer
-  transformer: {
-    getAll: "/api/transformer",
-  },
-
-  // Report Server
-  // report: {
-  //   local: process.env.REACT_APP_LOCAL_REPORT_SERVER_URL,
-  // }
-
+  // Reports
   report: {
     list: "/api/report/list",
     devices: "/api/report/devices",
-    run: "/api/report/run"
-  }
+    run: "/api/report/generate",
+    generate: "/api/report/generate",
+  },
 };
+
+export default API_ENDPOINTS;
