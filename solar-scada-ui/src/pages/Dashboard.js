@@ -8,6 +8,7 @@ import CylinderChart from "../components/CylinderChart";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
+
 const Dashboard = () => {
   // State management with loading states
   const [plantKPI, setPlantKPI] = useState({});
@@ -18,7 +19,7 @@ const Dashboard = () => {
   const [cuf, setCUF] = useState(0);
   const [barChartData, setBarChartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [selectedDate, setSelectedDate] = useState("2025-08-05"); // Changed default date
   const [trendType, setTrendType] = useState("day");
   const [wmsData, setWMSData] = useState({});
   const [lastUpdated, setLastUpdated] = useState("");
@@ -33,17 +34,21 @@ const Dashboard = () => {
     devices: true
   });
 
+
   const chartRef = useRef(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
 
   // Optimized data fetching with skeleton loading
   const fetchData = useCallback(async () => {
     const API_TIMEOUT = 8000; // 8 seconds timeout
     const axiosConfig = { timeout: API_TIMEOUT };
 
+
     try {
       // Set initial loading to false to show skeleton immediately
       setLoading(false);
+
 
       // Fetch all data simultaneously
       const apiPromises = [
@@ -68,6 +73,7 @@ const Dashboard = () => {
             setDataLoadingStates(prev => ({ ...prev, kpi: false }));
           }),
 
+
         // Line chart data
         axios.get(API_ENDPOINTS.dashboard.lineChart, axiosConfig)
           .then(({ data }) => {
@@ -80,11 +86,13 @@ const Dashboard = () => {
             setDataLoadingStates(prev => ({ ...prev, charts: false }));
           }),
 
+
         // WMS data
         axios.get(API_ENDPOINTS.dashboard.wmsData, axiosConfig)
           .then(({ data }) => {
             const newWMSData = data?.[0] || {};
             setWMSData((prev) => (JSON.stringify(prev) !== JSON.stringify(newWMSData) ? newWMSData : prev));
+
 
             if (newWMSData.Date_Time) {
               setLastUpdated(`Last updated: ${newWMSData.Date_Time}`);
@@ -96,6 +104,7 @@ const Dashboard = () => {
             console.error('❌ WMS API Error:', err);
             setDataLoadingStates(prev => ({ ...prev, wms: false }));
           }),
+
 
         // Device status
         axios.get(API_ENDPOINTS.dashboard.deviceStatus, axiosConfig)
@@ -110,19 +119,24 @@ const Dashboard = () => {
           })
       ];
 
+
       await Promise.allSettled(apiPromises);
+
 
     } catch (error) {
       console.error("Critical API Error:", error);
     }
   }, []);
 
+
   const fetchBarChartData = useCallback(async () => {
     let apiUrl = API_ENDPOINTS.dashboard.barChart;
+
 
     if (trendType === "week") apiUrl = API_ENDPOINTS.dashboard.barChartWeek;
     else if (trendType === "month") apiUrl = API_ENDPOINTS.dashboard.barChartMonth;
     else if (trendType === "year") apiUrl = API_ENDPOINTS.dashboard.barChartYear;
+
 
     try {
       const { data } = await axios.get(apiUrl, { params: { date: selectedDate } });
@@ -131,6 +145,7 @@ const Dashboard = () => {
       console.error("Bar Chart API Error:", error);
     }
   }, [trendType, selectedDate]);
+
 
   useEffect(() => {
     fetchData();
@@ -142,6 +157,7 @@ const Dashboard = () => {
     return () => clearInterval(intervalId);
   }, [fetchData, fetchBarChartData]);
 
+
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
@@ -151,6 +167,7 @@ const Dashboard = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+
   // Skeleton loading components
   const SkeletonGauge = () => (
     <div className="skeleton-gauge">
@@ -158,6 +175,7 @@ const Dashboard = () => {
       <div className="skeleton-gauge-circle"></div>
     </div>
   );
+
 
   const SkeletonChart = () => (
     <div className="skeleton-chart">
@@ -168,6 +186,7 @@ const Dashboard = () => {
       <div className="skeleton-chart-body"></div>
     </div>
   );
+
 
   const SkeletonTable = () => (
     <div className="skeleton-table">
@@ -182,6 +201,7 @@ const Dashboard = () => {
     </div>
   );
 
+
   const SkeletonMetricCard = () => (
     <div className="skeleton-metric-card">
       <div className="skeleton-metric-icon"></div>
@@ -191,6 +211,7 @@ const Dashboard = () => {
       </div>
     </div>
   );
+
 
   // Enhanced gauge rendering with better responsiveness
   const getGaugeRadii = (screenWidth) => {
@@ -202,19 +223,23 @@ const Dashboard = () => {
     return { innerRadius: 35, outerRadius: 58 };
   };
 
+
   const renderGauge = (value, label, max = 100, displayType = "percent") => {
     const { innerRadius, outerRadius } = getGaugeRadii(screenWidth);
     const segments = 20;
     const filledSegments = Math.round((value / max) * segments);
 
+
     let fillColor = "#27ae60"; // Green for good values
     if ((value / max) * 100 < 70) fillColor = "#e74c3c"; // Red for low values
     else if ((value / max) * 100 <= 80) fillColor = "#f39c12"; // Orange for medium values
+
 
     const data = Array.from({ length: segments }, (_, index) => ({
       value: 1,
       color: index < filledSegments ? fillColor : "#ecf0f1",
     }));
+
 
     let centerText = "";
     if (displayType === "value") {
@@ -223,6 +248,7 @@ const Dashboard = () => {
       const percentValue = (value / max) * 100;
       centerText = percentValue === 100 ? "100" : percentValue.toFixed(1).replace(/\.0$/, "");
     }
+
 
     return (
       <div className="gauge-wrapper">
@@ -248,6 +274,7 @@ const Dashboard = () => {
     );
   };
 
+
   // Chart configurations
   const getSpacingForWidth = (width) => {
     if (width <= 1229) return [10, 2, 14, 0];
@@ -257,6 +284,7 @@ const Dashboard = () => {
     return [18, 10, 10, 0];
   };
 
+
   const getHeightForWidth = (width) => {
     if (width <= 1229) return 180;
     if (width <= 1280) return 180;
@@ -265,8 +293,10 @@ const Dashboard = () => {
     return 250;
   };
 
+
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
+
 
   const getLineChartOptions = (data, height, spacing) => {
     // Helper function to convert "HH:MM" string to decimal hours
@@ -275,9 +305,11 @@ const Dashboard = () => {
       return hours + (minutes / 60);
     };
 
+
     // Process minute-wise data to extract hour information
     const processedData = data.map(d => {
       const decimalHour = timeStringToDecimalHour(d.Date_Time);
+
 
       return {
         x: decimalHour,
@@ -289,9 +321,11 @@ const Dashboard = () => {
       };
     });
 
+
     // Remove duplicates and sort by time
     const uniqueData = [];
     const seen = new Set();
+
 
     processedData.forEach(item => {
       const key = item.x.toFixed(4); // Use decimal hour as key with 4 decimal precision
@@ -301,15 +335,19 @@ const Dashboard = () => {
       }
     });
 
+
     // Sort by decimal hour
     uniqueData.sort((a, b) => a.x - b.x);
+
 
     // Create series data with x-y coordinates
     const poaSeries = uniqueData.map(d => [d.x, d.poa]);
     const activePowerSeries = uniqueData.map(d => [d.x, d.activePower]);
 
+
     const maxPOA = Math.max(...uniqueData.map(d => d.poa), 100);
     const maxActivePower = Math.max(...uniqueData.map(d => d.activePower), 100);
+
 
     return {
       chart: {
@@ -370,7 +408,9 @@ const Dashboard = () => {
           const minute = Math.round((this.x - hour) * 60);
           const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 
+
           let tooltipContent = `<b>Time: ${timeStr}</b><br/>`;
+
 
           this.points.forEach(point => {
             const color = point.series.color;
@@ -379,6 +419,7 @@ const Dashboard = () => {
             const unit = name === 'POA' ? 'W/m²' : 'kW';
             tooltipContent += `<span style="color:${color}">●</span> ${name}: <b>${value} ${unit}</b><br/>`;
           });
+
 
           return tooltipContent;
         }
@@ -421,6 +462,7 @@ const Dashboard = () => {
   };
 
 
+
   return (
     <div className="dashboard-container">
       {/* Formula Screen Style Header - FIXED */}
@@ -436,6 +478,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+
 
       {/* Main Dashboard Content */}
       <div className="dashboard-content">
@@ -470,6 +513,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+
 
         {/* Charts Section */}
         <div className="dashboard-section charts-section">
@@ -516,6 +560,7 @@ const Dashboard = () => {
               )}
             </div>
 
+
             {/* Line Chart */}
             <div className="chart-card">
               {dataLoadingStates.charts ? (
@@ -537,6 +582,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
 
         {/* Data Tables Section - Compact for 1280x632 */}
         <div className="dashboard-section tables-section">
@@ -599,11 +645,20 @@ const Dashboard = () => {
                           {plantKPI.WMS_CNT >= 1 ? 'Good' : 'Critical'}
                         </span></td>
                       </tr>
+                      <tr>
+                        <td>SMB</td>
+                        <td>75</td>
+                        <td>{plantKPI.SMB_CNT || 0}</td>
+                        <td><span className={`status-badge ${plantKPI.SMB_CNT >= 60 ? 'good' : plantKPI.SMB_CNT >= 45 ? 'warning' : 'critical'}`}>
+                          {plantKPI.SMB_CNT >= 60 ? 'Good' : plantKPI.SMB_CNT >= 45 ? 'Warning' : 'Critical'}
+                        </span></td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
               )}
             </div>
+
 
             {/* Weather Data */}
             <div className="table-card">
@@ -666,6 +721,7 @@ const Dashboard = () => {
           </div>
         </div>
 
+
         {/* KPI Cards Section - Compact */}
         <div className="dashboard-section metrics-section">
           <div className="metrics-container">
@@ -720,6 +776,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
 
       {/* Device Status Popup */}
       {showPopup && (

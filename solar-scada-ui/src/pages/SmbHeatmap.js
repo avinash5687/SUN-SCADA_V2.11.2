@@ -70,12 +70,12 @@ const SMB_Heatmap = () => {
               string_current22: smb.STR_CRNT22 || 0,
               string_current23: smb.STR_CRNT23 || 0,
               string_current24: smb.STR_CRNT24 || 0,
-              total_current: smb.TOTAL_CRNT || smb.total_current || 0,
-              voltage: smb.VOLTAGE || smb.voltage || 0,
-              power: smb.POWER || smb.power || 0,
               int_temp: smb.INT_TEMP || smb.int_temp || 0,
               ext_temp: smb.EXT_TEMP || smb.ext_temp || 0,
               panel_temp: smb.PANEL_TEMP || smb.panel_temp || 0,
+              total_current: smb.TOTAL_CRNT || smb.total_current || 0,
+              voltage: smb.VOLTAGE || smb.voltage || 0,
+              power: smb.POWER || smb.power || 0,
             };
           } else {
             newSmbData[id] = null;
@@ -119,12 +119,12 @@ const SMB_Heatmap = () => {
       unit: "A",
       type: "string_current"
     })),
-    { name: "TOT CRNT", key: "total_current", unit: "A", type: "numeric" },
-    { name: "DC Voltage", key: "voltage", unit: "V", type: "numeric" },
-    { name: "Power", key: "power", unit: "KW", type: "numeric" },
     { name: "INT Temp", key: "int_temp", unit: "°C", type: "temperature" },
     { name: "EXT Temp", key: "ext_temp", unit: "°C", type: "temperature" },
     { name: "Panel Temp", key: "panel_temp", unit: "°C", type: "temperature" },
+    { name: "TOT CRNT", key: "total_current", unit: "A", type: "numeric" },
+    { name: "DC Voltage", key: "voltage", unit: "V", type: "numeric" },
+    { name: "Power", key: "power", unit: "KW", type: "numeric" },
   ];
 
   // Get color class based on deviation from max value

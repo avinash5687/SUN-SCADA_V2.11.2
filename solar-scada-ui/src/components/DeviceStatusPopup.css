@@ -1,79 +1,185 @@
-/* ========== Simple Device Status Popup ========== */
+/* ========== Compact Device Status Popup ========== */
 .device-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  padding: 20px;
+  padding: 15px;
 }
+
 
 .device-popup {
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   width: 100%;
-  max-width: 550px;
-  max-height: 70vh;
+  max-width: 680px;
+  max-height: 75vh;
   overflow: hidden;
-  font-family: 'Tahoma', Arial, sans-serif;
-  border: 1px solid #ddd;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  border: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
 }
+
 
 /* ========== Compact Header ========== */
 .device-header {
-  padding: 12px 16px;
-  background: #f1f3f5;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: 1px solid #5568d3;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
+
 
 .header-info h3 {
   margin: 0 0 4px 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #495057;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.3px;
 }
+
 
 .quick-stats {
   display: flex;
-  gap: 12px;
-  font-size: 0.75rem;
-  color: #6c757d;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
+
+.stat-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+.stat-badge.online {
+  background: rgba(40, 167, 69, 0.3);
+  border-color: rgba(40, 167, 69, 0.5);
+}
+
+
+.stat-badge.offline {
+  background: rgba(220, 53, 69, 0.3);
+  border-color: rgba(220, 53, 69, 0.5);
+}
+
+
 .close-x {
-  background: none;
-  border: 1px solid #ccc;
-  width: 24px;
-  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 26px;
+  height: 26px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
-  color: #666;
+  font-size: 1.2rem;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
 }
+
 
 .close-x:hover {
-  background: #f8f9fa;
-  border-color: #999;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
-/* ========== Data Table - Removed status cards section ========== */
+
+/* ========== Compact Filter Chips ========== */
+.filter-chips {
+  padding: 8px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: #ffffff;
+  color: #495057;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+
+.chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.chip.active {
+  background: #495057;
+  color: #ffffff;
+  border-color: #495057;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+.chip-inv.active {
+  background: #1976d2;
+  border-color: #1976d2;
+}
+
+
+.chip-mfm.active {
+  background: #7b1fa2;
+  border-color: #7b1fa2;
+}
+
+
+.chip-smb.active {
+  background: #e65100;
+  border-color: #e65100;
+}
+
+
+.chip-wms.active {
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+
+
+.chip-trf.active {
+  background: #c2185b;
+  border-color: #c2185b;
+}
+
+
+/* ========== Compact Data Table ========== */
 .table-wrap {
   overflow-y: auto;
-  max-height: 350px; /* Increased height since we removed status cards */
-  padding-bottom: 16px; /* Added margin bottom to prevent last row cutting */
+  flex: 1;
+  padding: 0;
 }
+
 
 .device-grid {
   width: 100%;
@@ -81,216 +187,447 @@
   font-size: 0.8rem;
 }
 
+
 .device-grid thead {
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
+
 .device-grid th {
   background: #495057;
   color: #ffffff;
-  padding: 6px 8px;
+  padding: 8px 10px;  /* Reduced horizontal padding */
   text-align: left;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.7rem;
   text-transform: uppercase;
   cursor: pointer;
-  border-bottom: 1px solid #343a40;
+  border-bottom: 2px solid #343a40;
+  letter-spacing: 0.3px;
 }
+
 
 .device-grid th:hover {
   background: #5a6268;
 }
 
-.sort {
-  float: right;
-  font-size: 0.6rem;
-  opacity: 0.7;
+
+.device-grid th.col-name {
+  width: 40%;
 }
 
+
+.device-grid th.col-type {
+  width: 12%;
+  text-align: center;
+}
+
+
+.device-grid th.col-status {
+  width: 18%;
+  text-align: center;
+}
+
+
+.device-grid th.col-time {
+  width: 30%;
+}
+
+
+.sort {
+  float: right;
+  font-size: 0.65rem;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+
 .device-grid td {
-  padding: 8px;
+  padding: 8px 10px;  /* Reduced horizontal padding */
   border-bottom: 1px solid #e9ecef;
   vertical-align: middle;
 }
+
+
+.device-grid tbody tr {
+  transition: background-color 0.15s ease;
+}
+
 
 .device-grid tbody tr:hover {
   background: #f8f9fa;
 }
 
-.device-grid tbody tr:last-child td {
-  padding-bottom: 12px; /* Extra padding for last row */
+
+.device-grid tbody tr.offline-row {
+  background: #fff5f5;
 }
 
-/* ========== Table Cell Styles ========== */
+
+.device-grid tbody tr.offline-row:hover {
+  background: #ffe8e8;
+}
+
+
+/* ========== Compact Cell Styles ========== */
 .device-name {
   font-weight: 600;
   color: #2c3e50;
-  max-width: 120px;
+  max-width: 220px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.8rem;
 }
+
+
+.device-type {
+  text-align: center;
+}
+
 
 .type-tag {
   display: inline-block;
-  padding: 2px 6px;
-  border-radius: 3px;
+  padding: 3px 8px;
+  border-radius: 4px;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
+  min-width: 40px;
+  text-align: center;
+  letter-spacing: 0.3px;
 }
+
 
 .type-tag.inv {
   background: #e3f2fd;
-  color: #1976d2;
+  color: #1565c0;
+  border: 1px solid #90caf9;
 }
 
-.type-tag.mfm { /* Changed from mtr to mfm styling */
+
+.type-tag.mfm {
   background: #f3e5f5;
-  color: #7b1fa2;
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
 }
+
+
+.type-tag.smb {
+  background: #fff3e0;
+  color: #d84315;
+  border: 1px solid #ffb74d;
+}
+
 
 .type-tag.wms {
-  background: #e8f5e8;
+  background: #e8f5e9;
   color: #2e7d32;
+  border: 1px solid #81c784;
 }
+
+
+.type-tag.trf {
+  background: #fce4ec;
+  color: #ad1457;
+  border: 1px solid #f48fb1;
+}
+
 
 .type-tag.dev {
   background: #f5f5f5;
-  color: #616161;
+  color: #424242;
+  border: 1px solid #bdbdbd;
 }
+
+
+.device-status {
+  text-align: center;
+}
+
 
 .status {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
 }
+
 
 .status.online {
-  color: #28a745;
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
+
 .status.offline {
-  color: #dc3545;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
+
 
 .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: currentColor;
+  animation: pulse 2s infinite;
 }
+
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+
+.timestamp {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: #6c757d;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+
+.no-data {
+  text-align: center;
+  padding: 30px 20px !important;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+
+/* ========== Compact Cell Styles ========== */
+.device-name {
+  font-weight: 600;
+  color: #2c3e50;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+}
+
+
+.device-type {
+  text-align: center;
+}
+
+
+.type-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  min-width: 40px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+
+.type-tag.inv {
+  background: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+
+.type-tag.mfm {
+  background: #f3e5f5;
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
+}
+
+
+.type-tag.smb {
+  background: #fff3e0;
+  color: #d84315;
+  border: 1px solid #ffb74d;
+}
+
+
+.type-tag.wms {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+
+.type-tag.trf {
+  background: #fce4ec;
+  color: #ad1457;
+  border: 1px solid #f48fb1;
+}
+
+
+.type-tag.dev {
+  background: #f5f5f5;
+  color: #424242;
+  border: 1px solid #bdbdbd;
+}
+
+
+.device-status {
+  text-align: center;
+}
+
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+}
+
+
+.status.online {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+
+.status.offline {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 
 .timestamp {
   font-family: 'Courier New', monospace;
   font-size: 0.75rem;
   color: #6c757d;
+  font-weight: 500;
 }
 
-.age {
-  font-family: 'Courier New', monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #495057;
+
+.no-data {
   text-align: center;
-}
-
-/* ========== Simple Footer ========== */
-.device-footer {
-  padding: 8px 16px;
-  background: #f8f9fa;
-  border-top: 1px solid #e0e0e0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.75rem;
+  padding: 30px 20px !important;
   color: #6c757d;
+  font-style: italic;
+  font-size: 0.85rem;
 }
 
-.refresh-btn {
-  padding: 4px 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  font-weight: 600;
-}
 
-.refresh-btn:hover {
-  background: #0056b3;
-}
-
-/* ========== Simple Scrollbar ========== */
+/* ========== Compact Scrollbar ========== */
 .table-wrap::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
+
 
 .table-wrap::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f3f5;
 }
+
 
 .table-wrap::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+  background: #adb5bd;
+  border-radius: 4px;
 }
+
 
 .table-wrap::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #868e96;
 }
 
-/* ========== Responsive ========== */
+
+/* ========== Responsive Design ========== */
 @media (max-width: 768px) {
   .device-popup {
     max-width: 95%;
-    max-height: 80vh;
+    max-height: 85vh;
   }
 
+
   .device-header {
-    padding: 10px 14px;
+    padding: 8px 14px;
   }
+
+
+  .header-info h3 {
+    font-size: 0.9rem;
+  }
+
+
+  .filter-chips {
+    padding: 6px 14px;
+  }
+
+
+  .chip {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+  }
+
 
   .device-grid th,
   .device-grid td {
-    padding: 6px;
+    padding: 6px 10px;
     font-size: 0.75rem;
   }
 
+
   /* Hide type column on mobile */
-  .device-grid th:nth-child(2),
-  .device-grid td:nth-child(2) {
+  .device-grid th.col-type,
+  .device-grid td.device-type {
     display: none;
   }
 }
+
 
 @media (max-width: 480px) {
   .device-popup {
     max-width: 98%;
   }
 
-  .header-info h3 {
-    font-size: 0.9rem;
-  }
 
   .quick-stats {
-    flex-direction: column;
-    gap: 2px;
-    font-size: 0.7rem;
+    gap: 4px;
   }
 
-  .table-wrap {
-    max-height: 300px;
+
+  .stat-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
   }
 
-  /* Show only essential columns */
-  .device-grid th:nth-child(4),
-  .device-grid td:nth-child(4) {
-    display: none;
+
+  .device-name {
+    max-width: 120px;
   }
 }
