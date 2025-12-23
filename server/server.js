@@ -19,8 +19,10 @@ const HTTP_PORT = process.env.HTTP_PORT || 5000;
 app.use(cors({ 
   origin: [
     "https://localhost:3000",
+    "http://sun-scada.com",
     "https://sun-scada.com",
     "https://www.sun-scada.com",
+    "http://www.sun-scada.com",
     "https://103.102.234.177",
     "http://103.102.234.177"
   ], 

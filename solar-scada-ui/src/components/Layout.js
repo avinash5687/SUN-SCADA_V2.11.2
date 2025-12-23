@@ -443,12 +443,12 @@ const Layout = ({ children }) => {
                 <img src={project_logo} alt="Brand Logo" className="brand-logo" />
               </div>
             </div>
-          </div>
+          </div> 
 
           <div className="header-center">
             <div className="project-info">
               <Typography variant="h6" className="project-title">
-                DEMO SOLAR SCADA - 21.5 Mw
+                DEMO SOLAR SCADA - 21 MW
               </Typography>
             </div>
           </div>
