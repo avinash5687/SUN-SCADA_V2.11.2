@@ -37,7 +37,7 @@ const formulaItems = [
   },
   {
     key: "pr",
-    title: "Performance Ratio",
+    title: "PR (Performance Ratio)",
     text: "PR = (Total Power Generation / (Cumulative POA × Plant Capacity)) × 100",
     calc: (data) => ((data.P_EXP / (data.POA * data.DC_CAP)) * 100).toFixed(2),
     formula: (data, val) => `(${data.P_EXP} / (${data.POA} × ${data.DC_CAP})) × 100 = ${val}`,
@@ -47,7 +47,7 @@ const formulaItems = [
   },
   {
     key: "acCuf",
-    title: "AC CUF",
+    title: "AC CUF (Capacity Utilization Factor)",
     text: "AC CUF = (Total Power Generation / (24 × Plant AC Capacity)) × 100",
     calc: (data) => ((data.P_EXP / (24 * data.AC_CAP)) * 100).toFixed(2),
     formula: (data, val) => `(${data.P_EXP} / (24 × ${data.AC_CAP})) × 100 = ${val}`,
@@ -57,8 +57,8 @@ const formulaItems = [
   },
   {
     key: "dcCuf",
-    title: "DC CUF",
-    text: "DC CUF = (Total Power Generation / (24 × Plant DC Capacity)) × 100",
+    title: "DC PUF (Plant Utilization Factor)",
+    text: "DC PUF = (Total Power Generation / (24 × Plant DC Capacity)) × 100",
     calc: (data) => ((data.P_EXP / (24 * data.DC_CAP)) * 100).toFixed(2),
     formula: (data, val) => `(${data.P_EXP} / (24 × ${data.DC_CAP})) × 100 = ${val}`,
     unit: "%",
