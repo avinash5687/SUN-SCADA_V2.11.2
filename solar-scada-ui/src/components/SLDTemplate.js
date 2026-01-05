@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
 import sldImage from '../assets/Plant_SLD_21MWp.png';
 import axios from 'axios';
-import './sldScreen.css';
+import './SLDTemplate.css';
 import { API_ENDPOINTS } from '../apiConfig';
+import Assessment from '@mui/icons-material/Assessment';
+import Bolt from '@mui/icons-material/Bolt';
 
 const SLDScreen = () => {
   const [inverterStatus, setInverterStatus] = useState({});
@@ -242,7 +244,7 @@ const SLDScreen = () => {
             {/* Device Control Panel */}
             <div className="device-control-panel">
               <div className="control-section">
-                <h4 className="control-title">📊 Meters</h4>
+                <h4 className="control-title"><Assessment /> Meters</h4>
                 <div className="device-buttons">
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(id => {
                     const isLoading = loadingStates.mfm[id];
@@ -262,7 +264,7 @@ const SLDScreen = () => {
                         disabled={!hasData}
                         title={status?.ICR || `MFM ${id}${!hasData ? ' (No Data)' : ''}`}
                       >
-                        <span className="btn-icon">📊</span>
+                        <Assessment className="btn-icon" />
                         <span className="btn-text">MFM {id}</span>
                         <div className={`btn-status-dot ${hasData ? (isOnline ? 'online' : 'offline') : 'no-data'}`}></div>
                       </button>
@@ -272,7 +274,7 @@ const SLDScreen = () => {
               </div>
 
               <div className="control-section">
-                <h4 className="control-title">⚡ Inverters</h4>
+                <h4 className="control-title"><Bolt /> Inverters</h4>
                 <div className="device-buttons">
                   {[1, 2, 3, 4].map(id => {
                     const isLoading = loadingStates.inverters[id];
@@ -292,7 +294,7 @@ const SLDScreen = () => {
                         disabled={!hasData}
                         title={status?.Name || `Inverter ${id}${!hasData ? ' (No Data)' : ''}`}
                       >
-                        <span className="btn-icon">⚡</span>
+                        <Bolt className="btn-icon" />
                         <span className="btn-text">INV {id}</span>
                         <div className={`btn-status-dot ${hasData ? (isOnline ? 'online' : 'offline') : 'no-data'}`}></div>
                       </button>
@@ -316,7 +318,7 @@ const SLDScreen = () => {
               <div className="compact-popup-header">
                 <div className="popup-title-section">
                   <div className={`device-badge ${popupData.type}`}>
-                    {popupData.type === 'inverter' ? '⚡' : '📊'} {popupData.title}
+                    {popupData.type === 'inverter' ? <Bolt /> : <Assessment />} {popupData.title}
                   </div>
                   <div className={`status-indicator ${popupData.status}`}>
                     <span className="status-dot"></span>
