@@ -1,12 +1,12 @@
 /* ========== Trend Container ========== */
 .trend-container {
   width: 100%;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 48px);
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 8px;
 }
 
@@ -58,8 +58,9 @@
 /* ========== Main Content ========== */
 .trend-content {
   flex: 1;
-  padding: 12px 16px 16px 16px;
-  overflow: hidden;
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -68,12 +69,10 @@
 .trend-form-section {
   background: linear-gradient(145deg, #ffffff, #f8f9fa);
   border-radius: 12px;
-  padding: 16px;
+  padding: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
   flex-shrink: 0;
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
 }
 
 .compact-form-grid {
@@ -99,32 +98,293 @@
 /* ========== COMPACT Form Controls ========== */
 .compact-select,
 .compact-input {
-  padding: 6px 10px;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  padding: 8px 12px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
   font-family: inherit;
-  transition: all 0.2s ease-in-out;
-  background: white;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
   color: #2c3e50;
-  min-height: 32px;
+  min-height: 38px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  position: relative;
+}
+
+.compact-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233498db' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
 }
 
 .compact-select:focus,
 .compact-input:focus {
   outline: none;
   border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15), 0 4px 12px rgba(52, 152, 219, 0.2);
+  transform: translateY(-1px);
 }
 
 .compact-select:hover,
 .compact-input:hover {
-  border-color: #bdc3c7;
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Custom Dropdown Wrapper */
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  padding: 8px 36px 8px 12px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  color: #2c3e50;
+  min-height: 38px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  position: relative;
+  user-select: none;
+}
+
+.custom-select-trigger::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #3498db;
+  transition: transform 0.3s ease;
+}
+
+.custom-select-trigger.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-trigger:hover {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-1px);
+}
+
+.custom-select-trigger.open {
+  border-color: #3498db;
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.custom-select-options.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.custom-select-option {
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #2c3e50;
+  border-bottom: 1px solid #f0f3f5;
+}
+
+.custom-select-option:last-child {
+  border-bottom: none;
+}
+
+.custom-select-option:hover {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #1976d2;
+}
+
+.custom-select-option.selected {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: black;
+  font-weight: 700;
+}
+
+.custom-select-option.disabled {
+  color: #95a5a6;
+  font-style: italic;
+  cursor: default;
+  background: #f8f9fa;
+}
+
+.custom-select-option.disabled:hover {
+  background: #f8f9fa;
+  color: #95a5a6;
+}
+
+/* Scrollbar styling for dropdown */
+.custom-select-options::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2980b9, #1e70a5);
+}
+
+/* ========== Enhanced Dropdown Styling for Tables and Dates ========== */
+
+/* Table dropdown options styling */
+.compact-select option {
+  padding: 10px 14px;
+  margin: 3px 6px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #2c3e50;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.compact-select option:hover {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #1976d2;
+  border-color: #90caf9;
+  cursor: pointer;
+}
+
+.compact-select option:checked {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 700;
+  border-color: #2874a6;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* Default option styling */
+.compact-select option[value=""] {
+  color: #95a5a6;
+  font-style: italic;
+  background: #f8f9fa;
+}
+
+.compact-select option[value=""]:hover {
+  background: #ecf0f1;
+  color: #7f8c8d;
+}
+
+/* Date input specific styling */
+input[type="date"] {
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+}
+
+/* Custom Date Picker Styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  padding: 2px 4px;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  background: transparent;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  color: #95a5a6;
+  padding: 0 3px;
+  font-weight: 600;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #2c3e50;
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.25));
+  color: #2980b9;
+  border-radius: 4px;
+  outline: none;
+  font-weight: 700;
+}
+
+/* Date input with value - enhanced styling */
+input[type="date"]:valid {
+  border-color: #27ae60;
+  background: linear-gradient(135deg, #ffffff, #e8f8f5);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15), inset 0 1px 3px rgba(39, 174, 96, 0.05);
+}
+
+input[type="date"]:valid:hover {
+  border-color: #229954;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+}
+
+/* Date input placeholder/empty state */
+input[type="date"]:invalid {
+  color: #95a5a6;
 }
 
 /* Compact Multi-select specific styling */
 .compact-multi-select {
-  min-height: 80px;
+  min-height: 120px;
+  max-height: 120px;
+  overflow-y: auto;
   font-size: 0.75rem;
 }
 
@@ -136,14 +396,14 @@
   color: #2c3e50;
 }
 
+.compact-multi-select option:hover {
+  background: #ecf0f1;
+}
+
 .compact-multi-select option:checked {
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   font-weight: 600;
-}
-
-.compact-multi-select option:hover {
-  background: #ecf0f1;
 }
 
 .helper-text {
@@ -240,7 +500,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 24px 16px;
   border-bottom: 1px solid #e9ecef;
   background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   flex-shrink: 0;

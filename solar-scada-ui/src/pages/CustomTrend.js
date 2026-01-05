@@ -5,31 +5,76 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { API_ENDPOINTS } from "../apiConfig";
 import "./CustomTrend.css";
+import Assessment from '@mui/icons-material/Assessment';
+import TrendingUp from '@mui/icons-material/TrendingUp';
+import DateRange from '@mui/icons-material/DateRange';
+import Refresh from '@mui/icons-material/Refresh';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import Download from '@mui/icons-material/Download';
 
-// Primary and secondary color palettes (distinct, visible, no white)
+// Custom Dropdown Component
+const CustomDropdown = ({ options, value, onChange, placeholder = "-- Choose Table --" }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (option) => {
+    onChange(option);
+    setIsOpen(false);
+  };
+
+  const displayValue = value || placeholder;
+
+  return (
+    <div className="custom-select-wrapper" ref={dropdownRef}>
+      <div 
+        className={`custom-select-trigger ${isOpen ? 'open' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span style={{ color: value ? '#2c3e50' : '#95a5a6', fontStyle: value ? 'normal' : 'italic' }}>
+          {displayValue}
+        </span>
+      </div>
+      <div className={`custom-select-options ${isOpen ? 'open' : ''}`}>
+        <div 
+          className="custom-select-option disabled"
+          onClick={() => handleSelect("")}
+        >
+          {placeholder}
+        </div>
+        {options.map((option) => (
+          <div
+            key={option}
+            className={`custom-select-option ${value === option ? 'selected' : ''}`}
+            onClick={() => handleSelect(option)}
+          >
+            {option}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Primary and secondary color palettes
 const PRIMARY_COLORS = [
-  '#1976D2', // Blue
-  '#E53935', // Red
-  '#43A047', // Green
-  '#FB8C00', // Orange
-  '#8E24AA', // Purple
-  '#00897B', // Teal
-  '#6D4C41', // Brown
+  '#1976D2', '#E53935', '#43A047', '#FB8C00', '#8E24AA', '#00897B', '#6D4C41',
 ];
 
 const SECONDARY_COLORS = [
-  '#3949AB', // Indigo
-  '#FDD835', // Yellow (dark)
-  '#D81B60', // Pink
-  '#00ACC1', // Cyan
-  '#F4511E', // Deep Orange
-  '#7CB342', // Light Green
-  '#C0CA33', // Lime
-  '#5E35B1', // Deep Purple
-  '#039BE5', // Light Blue
+  '#3949AB', '#FDD835', '#D81B60', '#00ACC1', '#F4511E', '#7CB342', '#C0CA33', '#5E35B1', '#039BE5',
 ];
 
-// Shuffle helper to randomize color order
 function shuffle(array) {
   let arr = array.slice();
   for (let i = arr.length - 1; i > 0; i--) {
@@ -165,13 +210,11 @@ const CustomTrend = () => {
     setTrendData([]);
   };
 
-  // Build dynamic yAxis and series
   const allColumns = [
     ...selectedColumns1.map(col => ({ table: selectedTable1, column: col })),
     ...selectedColumns2.map(col => ({ table: selectedTable2, column: col }))
   ];
 
-  // Combine and shuffle primary and secondary colors
   const colorList = [...shuffle(PRIMARY_COLORS), ...shuffle(SECONDARY_COLORS)];
 
   const yAxis = allColumns.map((colObj, index) => ({
@@ -226,12 +269,10 @@ const CustomTrend = () => {
   return (
     <Layout>
       <div className="trend-container">
-        {/* Formula Screen Style Header */}
         <div className="trend-header">
           <h2 className="trend-title">Custom Trend Analysis</h2>
         </div>
 
-        {/* Loading State */}
         {loading && (
           <div className="trend-loading">
             <div className="loading-spinner"></div>
@@ -239,29 +280,24 @@ const CustomTrend = () => {
           </div>
         )}
 
-        {/* Main Content */}
         {!loading && (
           <div className="trend-content">
             {showForm && (
               <div className="trend-form-section">
                 <div className="compact-form-grid">
                   <div className="input-group">
-                    <label>📊 Select Primary Table:</label>
-                    <select 
-                      value={selectedTable1} 
-                      onChange={(e) => setSelectedTable1(e.target.value)}
-                      className="compact-select"
-                    >
-                      <option value="">-- Choose Table --</option>
-                      {tables.map(table => (
-                        <option key={table} value={table}>{table}</option>
-                      ))}
-                    </select>
+                    <label><Assessment /> Select Primary Table:</label>
+                    <CustomDropdown
+                      options={tables}
+                      value={selectedTable1}
+                      onChange={setSelectedTable1}
+                      placeholder="-- Choose Table --"
+                    />
                   </div>
 
                   {selectedTable1 && (
                     <div className="input-group">
-                      <label>📈 Select Columns for {selectedTable1}:</label>
+                      <label><TrendingUp /> Select Columns for {selectedTable1}:</label>
                       <select 
                         multiple 
                         value={selectedColumns1} 
@@ -279,22 +315,18 @@ const CustomTrend = () => {
                   )}
 
                   <div className="input-group">
-                    <label>📊 Select Secondary Table (Optional):</label>
-                    <select 
-                      value={selectedTable2} 
-                      onChange={(e) => setSelectedTable2(e.target.value)}
-                      className="compact-select"
-                    >
-                      <option value="">-- Choose Table --</option>
-                      {tables.map(table => (
-                        <option key={table} value={table}>{table}</option>
-                      ))}
-                    </select>
+                    <label><Assessment /> Select Secondary Table (Optional):</label>
+                    <CustomDropdown
+                      options={tables}
+                      value={selectedTable2}
+                      onChange={setSelectedTable2}
+                      placeholder="-- Choose Table --"
+                    />
                   </div>
 
                   {selectedTable2 && (
                     <div className="input-group">
-                      <label>📈 Select Columns for {selectedTable2}:</label>
+                      <label><TrendingUp /> Select Columns for {selectedTable2}:</label>
                       <select 
                         multiple 
                         value={selectedColumns2} 
@@ -312,7 +344,7 @@ const CustomTrend = () => {
                   )}
 
                   <div className="input-group">
-                    <label>📅 Start Date:</label>
+                    <label><DateRange /> Start Date:</label>
                     <input 
                       type="date" 
                       value={startDate} 
@@ -322,7 +354,7 @@ const CustomTrend = () => {
                   </div>
 
                   <div className="input-group">
-                    <label>📅 End Date:</label>
+                    <label><DateRange /> End Date:</label>
                     <input 
                       type="date" 
                       value={endDate} 
@@ -334,10 +366,10 @@ const CustomTrend = () => {
 
                 <div className="button-group">
                   <button onClick={fetchTrendData} className="primary-btn">
-                    📊 Generate Trend
+                    <Assessment /> Generate Trend
                   </button>
                   <button onClick={() => window.location.reload()} className="secondary-btn">
-                    🔄 Reset Form
+                    <Refresh /> Reset Form
                   </button>
                 </div>
               </div>
@@ -349,10 +381,10 @@ const CustomTrend = () => {
                   <h3 className="chart-title">Trend Analysis Results</h3>
                   <div className="chart-header-buttons">
                     <button onClick={goBackToForm} className="back-btn">
-                      ← Go Back to Main Page
+                      <ArrowBack /> Go Back to Main Page
                     </button>
                     <button onClick={exportCSV} className="export-btn">
-                      📥 Export CSV
+                      <Download /> Export CSV
                     </button>
                   </div>
                 </div>
