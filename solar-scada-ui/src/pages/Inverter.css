@@ -1,7 +1,7 @@
 /* ========== Inverter Container - Formula Screen Style ========== */
 .inverter-container {
   width: 100%;
-  height: calc(100vh - 48px);
+  height: 100%;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
@@ -14,18 +14,91 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 16px 8px 16px;
+  padding: 4px 12px; /* Reduced padding */
   border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
 }
 
 .inverter-title {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem; /* Reduced font size */
   color: #1a3b5d;
   margin: 0;
   font-family: Tahoma, Arial, sans-serif;
 }
+
+/* ========== Tabs Styling (from MFM) ========== */
+.inverter-tabs {
+  display: flex;
+  gap: 4px;
+  background: #f8f9fa;
+  padding: 2px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: #6c757d;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  min-height: 28px;
+}
+
+.tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(44, 62, 80, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.tab-button:hover::before {
+  left: 100%;
+}
+
+.tab-button:hover {
+  color: #2c3e50;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tab-button.active {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  box-shadow: 0 2px 10px rgba(44, 62, 80, 0.3);
+}
+
+.tab-button.active::before {
+  display: none;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #2c3e50;
+}
+
 
 /* ========== Refresh Indicator ========== */
 .refresh-indicator {
@@ -46,7 +119,6 @@
   animation: spin 1s linear infinite;
 }
 
-/* ========== Loading State - Formula Screen Style ========== */
 .inverter-loading {
   display: flex;
   flex-direction: column;
@@ -77,27 +149,57 @@
 .inverter-content {
   flex: 1;
   padding: 5px;
-  overflow: auto;
-
+  overflow: visible;
+  height: 100%;
     /* Hide scrollbar for Chrome, Safari and Opera */
   -webkit-scrollbar: none;
-  
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
+}
 
+.inverter-main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  padding: 5px;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.inverter-table-container {
+  width: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  position: relative;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.inverter-table-container::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 /* ========== Table Styling (Classic Grid with Modern Touches) ========== */
 .inverter-table {
   width: 100%;
-  border-collapse: collapse; 
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: center;
-  background-color: #ffffff;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
-  overflow: auto;
-  border: 1px solid #d6dde3;
-  
+  background-color: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.inverter-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 /* ========== Header Styling ========== */
@@ -107,7 +209,7 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 8px;
+  padding: 5px;
 }
 
 .header-inverter-image {
@@ -134,6 +236,10 @@
   padding: 0px 10px;
   vertical-align: middle;
   font-size: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .inverter-table th, .inverter-table td {
@@ -209,6 +315,75 @@
 
 .inverter-table tbody tr:nth-child(even) .no-data-cell {
   background-color: #e9ecef !important;
+}
+
+.inverter-graph-container {
+  width: 50%;
+  /* padding-left: 2px; */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #ffffff;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  /* border: 1px solid #d6dde3; */
+  padding: 8px;
+}
+
+.inverter-graph-container .highcharts-container {
+  /* height: 100% !important; */
+  border-radius: 4px;
+}
+
+.inverter-graph-container > div {
+  flex: 1;
+  /* height: 100%; */
+}
+
+/* Chart styling to match table aesthetics */
+.inverter-graph-container .highcharts-background {
+  fill: #ffffff;
+}
+
+.inverter-graph-container .highcharts-plot-background {
+  fill: #f8f9fa;
+}
+
+.inverter-graph-container .highcharts-grid-line {
+  stroke: #e9ecef;
+  stroke-width: 1px;
+}
+
+.inverter-graph-container .highcharts-axis-line {
+  stroke: #d6dde3;
+  stroke-width: 1px;
+}
+
+.inverter-graph-container .highcharts-axis-title {
+  fill: #2c3e50;
+  font-weight: 600;
+  font-family: 'Tahoma', Arial, sans-serif;
+}
+
+.inverter-graph-container .highcharts-axis-labels text {
+  fill: #495057;
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-size: 0.85rem;
+}
+
+.inverter-graph-container .highcharts-legend-item text {
+  fill: #2c3e50 !important;
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.inverter-graph-container .highcharts-tooltip-box {
+  fill: #feffff;
+  fill-opacity: 0.95;
+  stroke: #d6dde3;
+  stroke-width: 1px;
 }
 
 /* ========== Skeleton Loading Styles ========== */
@@ -354,6 +529,103 @@
   animation-delay: 0.8s;
 }
 
+/* ========== Chart Skeleton Styles ========== */
+.chart-skeleton-container {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d6dde3;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.chart-skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.chart-skeleton-title {
+  width: 200px;
+  height: 24px;
+  background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 2s infinite;
+}
+
+.chart-skeleton-legend {
+  display: flex;
+  gap: 15px;
+  padding: 10px 0;
+  flex-wrap: wrap;
+}
+
+.chart-skeleton-legend-item {
+  width: 120px;
+  height: 16px;
+  background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 2s infinite;
+}
+
+.chart-skeleton-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 10px;
+  position: relative;
+}
+
+.chart-skeleton-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 20px;
+}
+
+.chart-skeleton-line {
+  width: 100%;
+  height: 1px;
+  background: #e9ecef;
+}
+
+.chart-skeleton-graph {
+  position: absolute;
+  top: 20%;
+  left: 10px;
+  right: 10px;
+  height: 60%;
+  display: flex;
+  align-items: flex-end;
+  gap: 2%;
+}
+
+.chart-skeleton-bar {
+  flex: 1;
+  background: linear-gradient(180deg, rgba(52, 152, 219, 0.3) 0%, rgba(52, 152, 219, 0.1) 100%);
+  border-radius: 4px 4px 0 0;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.chart-skeleton-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
+.chart-skeleton-bar:nth-child(2) { height: 70%; animation-delay: 0.2s; }
+.chart-skeleton-bar:nth-child(3) { height: 50%; animation-delay: 0.4s; }
+.chart-skeleton-bar:nth-child(4) { height: 85%; animation-delay: 0.6s; }
+.chart-skeleton-bar:nth-child(5) { height: 60%; animation-delay: 0.8s; }
+.chart-skeleton-bar:nth-child(6) { height: 75%; animation-delay: 1s; }
+.chart-skeleton-bar:nth-child(7) { height: 45%; animation-delay: 1.2s; }
+.chart-skeleton-bar:nth-child(8) { height: 65%; animation-delay: 1.4s; }
+
 /* ========== Responsive Media Queries ========== */
 @media (min-width: 1024px) and (max-width: 1278px) {
   .inverter-table td {
@@ -379,30 +651,29 @@
 
 @media (min-width: 1440px) and (max-width: 1600px) {
   .inverter-container {
-    height: 100vh;
-    overflow: auto;
+    height: 100%;
   }
   .inverter-table {
     overflow: hidden;
     border: 1px solid #d6dde3;
-    height: 80vh;
+    height: 100%;
   }
 }
 
 @media (min-width: 1601px) and (max-width: 1920px) {
   .inverter-container {
-    height: 100vh;
+    height: 100%;
   }
   .inverter-table {
     overflow: hidden;
     border: 1px solid #d6dde3;
-    height: 88vh;
+    height: 100%;
   }
 }
 
 @media (min-width: 1921px) {
   .inverter-container {
-    height: 100vh;
+    height: 100%;
   }
   .inverter-table td {
     padding: 10px;
@@ -473,3 +744,4 @@
     height: 10px;
   }
 }
+

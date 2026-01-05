@@ -31,6 +31,7 @@ export const API_ENDPOINTS = {
   inverter: {
     getAll: "/api/inverter",
     heatmap: "/api/inverter/Heatmap",
+    chart: "/api/inverter/chart",
   },
 
   // MFM

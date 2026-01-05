@@ -242,9 +242,8 @@ const HeatmapScreen = () => {
                   let inverterLabel = `INVERTER-${id}`;
                   if (item.Inverter_Name) {
                     if (item.Inverter_Name.includes("_")) {
-                      // Extract "INVERTER-1" from "ICR-1_INVERTER-1"
-                      const parts = item.Inverter_Name.split("_");
-                      inverterLabel = parts[parts.length - 1] || `INV-${id}`;
+                      // Replace "_" with " " to show "ICR-1 INVERTER-1"
+                      inverterLabel = item.Inverter_Name.replace("_", " ");
                     } else {
                       inverterLabel = item.Inverter_Name;
                     }
