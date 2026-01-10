@@ -89,7 +89,8 @@ const useLocalStorage = (key, initialValue) => {
 
 const ChatbotWidget = ({ user, currentScreen }) => {
   // Persist both chat open state and visibility across navigation
-  const [isChatFeatureVisible, setIsChatFeatureVisible] = useLocalStorage("chatFeatureVisible", true);
+  // Chatbot hidden by default on first login
+  const [isChatFeatureVisible, setIsChatFeatureVisible] = useLocalStorage("chatFeatureVisible", false);
   const [isChatOpen, setIsChatOpen] = useLocalStorage("chatOpen", false);
 
   // Force re-read from localStorage on mount to ensure consistency

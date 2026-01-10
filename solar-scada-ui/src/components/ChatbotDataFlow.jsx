@@ -74,6 +74,7 @@ export const ChatbotComponent = ({ user, isChatOpen, currentScreen }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const prevScreenRef = useRef(currentScreen);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -99,14 +100,23 @@ export const ChatbotComponent = ({ user, isChatOpen, currentScreen }) => {
     }
   }, [isChatOpen]);
 
-  // Optional: when the screen changes and chat is open, refresh options
+  // Only refresh when screen actually changes to a different value (not just route change)
   useEffect(() => {
-    if (!isChatOpen) return;
-    if (messages.length > 0) {
-      addBotMessage(`Switched to ${currentScreen || 'this section'}.`);
-      setTimeout(() => {
-        showMainMenu();
-      }, 500);
+    if (!isChatOpen || messages.length === 0) return;
+    
+    // Only trigger update if the screen name truly changed AND it's not just moving between Default screens
+    if (currentScreen !== prevScreenRef.current) {
+      const prevScreen = prevScreenRef.current;
+      prevScreenRef.current = currentScreen;
+      
+      // Don't show notification if switching between screens that both map to 'Default'
+      const bothAreDefault = prevScreen === 'Default' && currentScreen === 'Default';
+      if (!bothAreDefault) {
+        addBotMessage(`Switched to ${currentScreen || 'this section'}.`);
+        setTimeout(() => {
+          showMainMenu();
+        }, 500);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentScreen]);
