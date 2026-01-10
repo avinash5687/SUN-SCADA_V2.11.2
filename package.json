@@ -3,6 +3,8 @@
     "@mui/x-charts": "^8.10.1",
     "@radix-ui/react-progress": "^1.1.7",
     "class-variance-authority": "^0.7.1",
+    "date-fns": "^4.1.0",
+    "react-datepicker": "^9.1.0",
     "react-gauge-chart": "^0.5.1",
     "tailwind-merge": "^3.3.1"
   }
