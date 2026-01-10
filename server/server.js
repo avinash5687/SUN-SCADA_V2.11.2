@@ -20,12 +20,12 @@ app.use(cors({
   origin: [
     "https://localhost:4200",
     "http://localhost:4200",
-    "http://sun-scada.com",
-    "https://sun-scada.com",
-    "https://www.sun-scada.com",
-    "http://www.sun-scada.com",
-    "https://103.102.234.177",
-    "http://103.102.234.177"
+    "http://sun-scada.com:4200",
+    "https://sun-scada.com:4200",
+    "https://www.sun-scada.com:4200",
+    "http://www.sun-scada.com:4200",
+    "https://103.102.234.177:4200",
+    "http://103.102.234.177:4200"
   ], 
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
