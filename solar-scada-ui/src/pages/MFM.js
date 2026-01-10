@@ -233,6 +233,54 @@ const MFM = () => {
     </td>
   );
 
+  // Full MFM Table Skeleton Component
+  const MFMTableSkeleton = () => (
+    <div className="mfm-table-skeleton">
+      <div className="skeleton-table-wrapper">
+        <table className="skeleton-mfm-table">
+          <thead>
+            <tr>
+              <th className="skeleton-parameter-header">
+                <div className="skeleton-param-label"></div>
+              </th>
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <th key={idx} className="skeleton-header-cell">
+                  <div className="skeleton-mfm-header-content">
+                    <div className="skeleton-mfm-image"></div>
+                    <div className="skeleton-header-text">
+                      <div className="skeleton-name"></div>
+                      <div className="skeleton-status-dot"></div>
+                    </div>
+                  </div>
+                </th>
+              ))}
+              <th className="skeleton-unit-header">
+                <div className="skeleton-unit-label"></div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 12 }).map((_, rowIdx) => (
+              <tr key={rowIdx} className={`skeleton-param-row ${rowIdx % 2 === 0 ? 'even' : 'odd'}`}>
+                <td className="skeleton-parameter-name">
+                  <div className="skeleton-param-text"></div>
+                </td>
+                {Array.from({ length: 4 }).map((_, colIdx) => (
+                  <td key={colIdx} className="skeleton-data-cell">
+                    <div className="skeleton-data-content"></div>
+                  </td>
+                ))}
+                <td className="skeleton-unit-cell">
+                  <div className="skeleton-unit-text"></div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
   // Check if we should show the table (has data or loading)
   const shouldShowTable = filteredData.length > 0 || loadingDataForBlock.length > 0;
   const totalColumns = Math.max(filteredData.length + loadingDataForBlock.length, 1);
@@ -285,12 +333,9 @@ const MFM = () => {
         </div>
       </div>
 
-      {/* Loading State - Only show if all are loading initially */}
+      {/* Loading State - Show skeleton while loading */}
       {initialLoad && Object.values(loadingStates).every(state => state) && (
-        <div className="mfm-loading">
-          <div className="loading-spinner"></div>
-          <span>Loading MFM data...</span>
-        </div>
+        <MFMTableSkeleton />
       )}
 
       {/* Table Content or No Data Message */}

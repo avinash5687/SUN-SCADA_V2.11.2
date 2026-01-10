@@ -24,6 +24,79 @@ import {
 } from "@mui/icons-material";
 import "./SmbScreen.css";
 
+// SMB Screen Skeleton Component
+const SMBScreenSkeleton = ({ count = 4 }) => {
+  return (
+    <div className="smb-skeleton-container">
+      <div className="smb-skeleton-header">
+        <div className="skeleton-stat">
+          <div className="skeleton-stat-label"></div>
+          <div className="skeleton-stat-value"></div>
+        </div>
+        <div className="skeleton-stat">
+          <div className="skeleton-stat-label"></div>
+          <div className="skeleton-stat-value"></div>
+        </div>
+        <div className="skeleton-stat">
+          <div className="skeleton-stat-label"></div>
+          <div className="skeleton-stat-value"></div>
+        </div>
+        <div className="skeleton-stat">
+          <div className="skeleton-stat-label"></div>
+          <div className="skeleton-stat-value"></div>
+        </div>
+      </div>
+
+      <div className="smb-skeleton-grid">
+        {Array.from({ length: count }).map((_, idx) => (
+          <div key={idx} className="skeleton-device-card">
+            <div className="skeleton-card-header">
+              <div className="skeleton-card-title"></div>
+              <div className="skeleton-card-chip"></div>
+            </div>
+            <div className="skeleton-card-content">
+              <div className="skeleton-metric-item">
+                <div className="skeleton-metric-icon"></div>
+                <div className="skeleton-metric-data">
+                  <div className="skeleton-metric-label"></div>
+                  <div className="skeleton-metric-value"></div>
+                </div>
+              </div>
+              <div className="skeleton-metric-item">
+                <div className="skeleton-metric-icon"></div>
+                <div className="skeleton-metric-data">
+                  <div className="skeleton-metric-label"></div>
+                  <div className="skeleton-metric-value"></div>
+                </div>
+              </div>
+              <div className="skeleton-metric-item">
+                <div className="skeleton-metric-icon"></div>
+                <div className="skeleton-metric-data">
+                  <div className="skeleton-metric-label"></div>
+                  <div className="skeleton-metric-value"></div>
+                </div>
+              </div>
+              <div className="skeleton-metric-item">
+                <div className="skeleton-metric-icon"></div>
+                <div className="skeleton-metric-data">
+                  <div className="skeleton-metric-label"></div>
+                  <div className="skeleton-metric-value"></div>
+                </div>
+              </div>
+            </div>
+            <div className="skeleton-string-display">
+              <div className="skeleton-string-bar"></div>
+              <div className="skeleton-string-bar"></div>
+              <div className="skeleton-string-bar"></div>
+              <div className="skeleton-string-bar"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const SMBScreen = () => {
     // State management following your Inverter.js pattern
     const [smbData, setSMBData] = useState([]);
@@ -400,10 +473,7 @@ const SMBScreen = () => {
 
             {/* Loading State */}
             {initialLoad && loading && (
-                <div className="smb-loading">
-                    <div className="loading-spinner"></div>
-                    <span>Loading SMB data...</span>
-                </div>
+                <SMBScreenSkeleton count={4} />
             )}
 
             {/* Main Content */}

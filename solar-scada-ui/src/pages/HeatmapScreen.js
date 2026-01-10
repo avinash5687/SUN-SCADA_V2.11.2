@@ -10,6 +10,42 @@ const heatmapCategories = [
   { key: "PR", deviationKey: "Dev_Per_PR", label: "Performance\nRatio", unit: "%" },
 ];
 
+// Skeleton component for loading state
+const HeatmapSkeleton = ({ inverterCount = 4 }) => {
+  return (
+    <div className="heatmap-skeleton">
+      <div className="skeleton-header">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-legend">
+          <div className="skeleton-legend-item"></div>
+          <div className="skeleton-legend-item"></div>
+          <div className="skeleton-legend-item"></div>
+          <div className="skeleton-legend-item"></div>
+        </div>
+      </div>
+      
+      <div className="skeleton-content">
+        {heatmapCategories.map((category, rowIdx) => (
+          <div key={rowIdx} className="skeleton-row">
+            <div className="skeleton-category-header">
+              <div className="skeleton-label"></div>
+              <div className="skeleton-unit"></div>
+            </div>
+            <div className="skeleton-cells" style={{ gridTemplateColumns: `repeat(${inverterCount}, minmax(120px, 1fr))` }}>
+              {Array.from({ length: inverterCount }).map((_, cellIdx) => (
+                <div key={cellIdx} className="skeleton-cell">
+                  <div className="skeleton-cell-value"></div>
+                  <div className="skeleton-cell-label"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const getStatus = (deviation) => {
   if (deviation < 25) return { text: "Excellent", color: "#27ae60", emoji: "🟢" };
   if (deviation < 50) return { text: "Good", color: "#f1c40f", emoji: "🟡" };
@@ -197,10 +233,7 @@ const HeatmapScreen = () => {
 
       {/* Loading State */}
       {loading && (
-        <div className="heatmap-loading">
-          <div className="loading-spinner"></div>
-          <span>Loading heatmap data...</span>
-        </div>
+        <HeatmapSkeleton inverterCount={4} />
       )}
 
       {/* Main Content */}

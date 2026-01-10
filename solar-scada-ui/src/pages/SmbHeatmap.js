@@ -2,6 +2,44 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import "./SmbHeatmap.css";
 
+// SMB Heatmap Skeleton Component
+const SmbHeatmapSkeleton = ({ count = 12 }) => {
+  return (
+    <div className="smb-heatmap-skeleton">
+      <div className="skeleton-heatmap-header">
+        <div className="skeleton-heatmap-title"></div>
+        <div className="skeleton-pagination">
+          <div className="skeleton-page-btn"></div>
+          <div className="skeleton-page-info"></div>
+          <div className="skeleton-page-btn"></div>
+        </div>
+      </div>
+
+      <div className="skeleton-heatmap-grid" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(200px, 1fr))` }}>
+        {Array.from({ length: count }).map((_, idx) => (
+          <div key={idx} className="skeleton-heatmap-cell">
+            <div className="skeleton-cell-header">
+              <div className="skeleton-cell-name"></div>
+              <div className="skeleton-cell-status"></div>
+            </div>
+            <div className="skeleton-cell-content">
+              <div className="skeleton-cell-metric"></div>
+              <div className="skeleton-cell-metric"></div>
+              <div className="skeleton-cell-metric"></div>
+            </div>
+            <div className="skeleton-cell-bars">
+              <div className="skeleton-mini-bar"></div>
+              <div className="skeleton-mini-bar"></div>
+              <div className="skeleton-mini-bar"></div>
+              <div className="skeleton-mini-bar"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const SMB_Heatmap = () => {
   const [smbData, setSmbData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -222,10 +260,7 @@ const SMB_Heatmap = () => {
 
       {/* Content */}
       {loading ? (
-        <div className="smb-heatmap__loading">
-          <div className="smb-heatmap__loading-spinner"></div>
-          <span>Loading SMB data...</span>
-        </div>
+        <SmbHeatmapSkeleton count={smbsPerPage} />
       ) : (
         <div className="smb-heatmap__content">
           <div className="smb-heatmap__table-wrapper">
