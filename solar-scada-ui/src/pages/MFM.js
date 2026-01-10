@@ -1,8 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Tooltip, styled, tooltipClasses } from "@mui/material";
 import "./MFM.css";
 import mfmImage from '../assets/Meter.jpg';
 import { API_ENDPOINTS } from "../apiConfig";
+
+// Custom styled tooltip matching the theme
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    backdropFilter: 'blur(10px)',
+    color: '#e0e6ed',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: '8px',
+    border: '1px solid rgba(100, 149, 237, 0.4)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.2)',
+    letterSpacing: '0.3px',
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'rgba(26, 54, 93, 0.98)',
+    '&::before': {
+      border: '1px solid rgba(100, 149, 237, 0.4)',
+      background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    },
+  },
+}));
 
 const MFM = () => {
   const [mfmData, setMfmData] = useState({});
@@ -292,12 +318,17 @@ const MFM = () => {
                           <img src={mfmImage} alt="MFM" className="header-mfm-image" />
                           <div className="header-text-status">
                             <span className="header-name">{meter.ICR || `MFM ${index + 1}`}</span>
-                            <div
-                              className={`status-indicator ${
-                                meter.CUM_STS === 1 ? "status-green" : "status-red"
-                              }`}
-                              title={meter.CUM_STS === 1 ? 'Online' : 'Offline'}
-                            ></div>
+                            <StyledTooltip 
+                              title={meter.CUM_STS === 1 ? 'Online' : 'Offline'} 
+                              placement="top" 
+                              arrow
+                            >
+                              <div
+                                className={`status-indicator ${
+                                  meter.CUM_STS === 1 ? "status-green" : "status-red"
+                                }`}
+                              ></div>
+                            </StyledTooltip>
                           </div>
                         </div>
                       </th>

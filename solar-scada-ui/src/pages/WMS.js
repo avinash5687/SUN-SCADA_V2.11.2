@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { Tooltip as MuiTooltip, styled, tooltipClasses } from "@mui/material";
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Brush, CartesianGrid
 } from "recharts";
@@ -8,6 +9,31 @@ import HighchartsReact from "highcharts-react-official";
 import "./WMS.css";
 import ProgressBarCell from './ProgressBarCell';
 import { API_ENDPOINTS } from "../apiConfig";
+
+// Custom styled tooltip matching the theme
+const StyledTooltip = styled(({ className, ...props }) => (
+  <MuiTooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    backdropFilter: 'blur(10px)',
+    color: '#e0e6ed',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: '8px',
+    border: '1px solid rgba(100, 149, 237, 0.4)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.2)',
+    letterSpacing: '0.3px',
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'rgba(26, 54, 93, 0.98)',
+    '&::before': {
+      border: '1px solid rgba(100, 149, 237, 0.4)',
+      background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    },
+  },
+}));
 
 const parametersConfig = [
   { name: "Timestamp", key: "Date_Time", unit: "", max: null },
@@ -30,15 +56,39 @@ const parametersConfig = [
   { name: "Transmission Loss 2", key: "SOI_LS2", unit: "%", max: 100 },
 ];
 
-// Skeleton Components
+// Enhanced Skeleton Components
 const TableSkeleton = () => (
   <div className="table-skeleton">
+    {/* Skeleton Header - matches actual table header */}
+    <div className="skeleton-header-row">
+      <div className="skeleton-header-cell skeleton-param-header">Parameters</div>
+      {[1, 2, 3].map(i => (
+        <div key={i} className="skeleton-header-cell">
+          <div className="skeleton-sensor-header">
+            <div className="skeleton-sensor-name"></div>
+            <div className="skeleton-status-dot"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+    {/* Skeleton Body Rows */}
     {parametersConfig.map((param, idx) => (
-      <div key={idx} className="skeleton-row">
+      <div 
+        key={idx} 
+        className="skeleton-row"
+        style={{ animationDelay: `${idx * 0.05}s` }}
+      >
         <div className="skeleton-cell skeleton-param">{param.name}</div>
         {[1, 2, 3].map(i => (
           <div key={i} className="skeleton-cell">
-            <div className="skeleton-content"></div>
+            {param.max ? (
+              <div className="skeleton-progress-bar">
+                <div className="skeleton-progress-fill"></div>
+                <div className="skeleton-progress-value"></div>
+              </div>
+            ) : (
+              <div className="skeleton-content"></div>
+            )}
           </div>
         ))}
       </div>
@@ -46,11 +96,49 @@ const TableSkeleton = () => (
   </div>
 );
 
-const ChartSkeleton = ({ height = "400px" }) => (
+const ChartSkeleton = ({ height = "400px", title = "Loading Chart Data..." }) => (
   <div className="chart-skeleton" style={{ height }}>
-    <div className="skeleton-chart-content">
-      <div className="skeleton-chart-title"></div>
-      <div className="skeleton-chart-body"></div>
+    <div className="skeleton-chart-wrapper">
+      {/* Title */}
+      <div className="skeleton-chart-header">
+        <div className="skeleton-chart-title-text">{title}</div>
+      </div>
+      
+      {/* Chart Body */}
+      <div className="skeleton-chart-body">
+        {/* Y-Axis Labels */}
+        <div className="skeleton-y-axis">
+          {[100, 75, 50, 25, 0].map((val, i) => (
+            <div key={i} className="skeleton-y-label"></div>
+          ))}
+        </div>
+        
+        {/* Chart Area */}
+        <div className="skeleton-chart-area">
+          {/* Grid Lines */}
+          <div className="skeleton-grid-lines">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="skeleton-grid-line"></div>
+            ))}
+          </div>
+          
+          {/* Wave Animation */}
+          <div className="skeleton-wave-container">
+            <svg className="skeleton-wave" viewBox="0 0 100 40" preserveAspectRatio="none">
+              <path className="skeleton-wave-path wave-1" d="M0,20 Q25,10 50,20 T100,20" />
+              <path className="skeleton-wave-path wave-2" d="M0,25 Q25,15 50,25 T100,25" />
+              <path className="skeleton-wave-path wave-3" d="M0,30 Q25,20 50,30 T100,30" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      {/* X-Axis Labels */}
+      <div className="skeleton-x-axis">
+        {['06:00', '09:00', '12:00', '15:00', '18:00'].map((time, i) => (
+          <div key={i} className="skeleton-x-label"></div>
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -333,33 +421,46 @@ const WMS = () => {
       align: 'center',
       verticalAlign: 'bottom',
       itemStyle: {
-        fontSize: '12px' // Slightly reduced
+        fontSize: '12px'
+      },
+      itemHiddenStyle: {
+        color: '#999999',
+        textDecoration: 'line-through'
       }
     },
     series: [
-      { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8', animation: { duration: 1000, easing: 'easeOutElastic' } },
-      { name: 'POA (W/m²)', data: data.map(d => d.POA), yAxis: 0, color: '#82ca9d' },
-      { name: 'DHI (W/m²)', data: data.map(d => d.DHI), yAxis: 0, color: '#1E90FF' },
-      { name: 'GHI Cumulative (kWh/m²)', data: data.map(d => d.CUM_GHI), yAxis: 1, color: '#FFD700' },
-      { name: 'POA Cumulative (kWh/m²)', data: data.map(d => d.CUM_POA), yAxis: 1, color: '#A0E7E5' },
-      { name: 'DHI Cumulative (kWh/m²)', data: data.map(d => d.DHI_CUMM), yAxis: 1, color: '#B19CD9' },
-      { name: 'Module Temperature 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500' },
-      { name: 'Module Temperature 2 (°C)', data: data.map(d => d.MOD_TEMP2), yAxis: 2, color: '#DA70D6' },
-      { name: 'Ambient Temperature (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32' },
-      { name: 'Humidity (%)', data: data.map(d => d.RH), yAxis: 2, color: '#FFDAB9' },
-      { name: 'Soiling 1 (%)', data: data.map(d => d.SOI1), yAxis: 2, color: '#556B2F' },
-      { name: 'Transmission Loss 1 (%)', data: data.map(d => d.SOI_LS1), yAxis: 2, color: '#8B4513' },
-      { name: 'Soiling 2 (%)', data: data.map(d => d.SOI2), yAxis: 2, color: '#2F4F4F' },
-      { name: 'Transmission Loss 2 (%)', data: data.map(d => d.SOI_LS2), yAxis: 2, color: '#708090' },
-      { name: 'Wind Speed (m/s)', data: data.map(d => d.WND_SPD), yAxis: 3, color: '#6A5ACD' },
-      { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB' },
+      // Visible by default
+      { name: 'GHI (W/m²)', data: data.map(d => d.GHI), yAxis: 0, color: '#8884d8', visible: true },
+      { name: 'POA (W/m²)', data: data.map(d => d.POA), yAxis: 0, color: '#82ca9d', visible: true },
+      { name: 'DHI (W/m²)', data: data.map(d => d.DHI), yAxis: 0, color: '#1E90FF', visible: true },
+      { name: 'Module Temperature 1 (°C)', data: data.map(d => d.MOD_TEMP1), yAxis: 2, color: '#FF4500', visible: true },
+      { name: 'Ambient Temperature (°C)', data: data.map(d => d.AMB_TEMP), yAxis: 2, color: '#32CD32', visible: true },
+      { name: 'Humidity (%)', data: data.map(d => d.RH), yAxis: 2, color: '#FFDAB9', visible: true },
+      { name: 'Wind Speed (m/s)', data: data.map(d => d.WND_SPD), yAxis: 3, color: '#6A5ACD', visible: true },
+      // Hidden by default - users can enable via legend click
+      { name: 'GHI Cumulative (kWh/m²)', data: data.map(d => d.CUM_GHI), yAxis: 1, color: '#FFD700', visible: false },
+      { name: 'POA Cumulative (kWh/m²)', data: data.map(d => d.CUM_POA), yAxis: 1, color: '#A0E7E5', visible: false },
+      { name: 'DHI Cumulative (kWh/m²)', data: data.map(d => d.DHI_CUMM), yAxis: 1, color: '#B19CD9', visible: false },
+      { name: 'Module Temperature 2 (°C)', data: data.map(d => d.MOD_TEMP2), yAxis: 2, color: '#DA70D6', visible: false },
+      { name: 'Soiling 1 (%)', data: data.map(d => d.SOI1), yAxis: 2, color: '#556B2F', visible: false },
+      { name: 'Transmission Loss 1 (%)', data: data.map(d => d.SOI_LS1), yAxis: 2, color: '#8B4513', visible: false },
+      { name: 'Soiling 2 (%)', data: data.map(d => d.SOI2), yAxis: 2, color: '#2F4F4F', visible: false },
+      { name: 'Transmission Loss 2 (%)', data: data.map(d => d.SOI_LS2), yAxis: 2, color: '#708090', visible: false },
+      { name: 'Wind Direction (°)', data: data.map(d => d.WND_DIR), yAxis: 4, color: '#9370DB', visible: false },
     ],
     plotOptions: {
       series: {
         animation: {
           duration: 1500,
           easing: 'easeOutBounce' 
-        }
+        },
+        events: {
+          legendItemClick: function() {
+            // Allow toggling series visibility via legend click
+            return true;
+          }
+        },
+        showInLegend: true
       }
     }
   });
@@ -391,7 +492,13 @@ const WMS = () => {
                     <th key={index}>
                       <div className="wms-header-content">
                         <span className="header-name">{sensor.ICR || `Sensor ${index + 1}`}</span>
-                        <div className={`status-indicator ${sensor.CUM_STS === 1 ? "status-green" : "status-red"}`}></div>
+                        <StyledTooltip 
+                          title={sensor.CUM_STS === 1 ? 'Online' : 'Offline'} 
+                          placement="top" 
+                          arrow
+                        >
+                          <div className={`status-indicator ${sensor.CUM_STS === 1 ? "status-green" : "status-red"}`}></div>
+                        </StyledTooltip>
                       </div>
                     </th>
                   ))}
@@ -420,7 +527,7 @@ const WMS = () => {
         <div className="charts-stack">
           <div className="chart-container main-chart">
             {initialLoading ? (
-              <ChartSkeleton height={`${mainChartHeight}px`} />
+              <ChartSkeleton height={`${mainChartHeight}px`} title="Loading Weather Trend..." />
             ) : (
               <HighchartsReact
                 highcharts={Highcharts} 
@@ -432,7 +539,7 @@ const WMS = () => {
 
           <div className="chart-container soil-chart">
             {initialLoading ? (
-              <ChartSkeleton height={`${soilChartHeight}px`} />
+              <ChartSkeleton height={`${soilChartHeight}px`} title="Loading Soiling Data..." />
             ) : (
               <HighchartsReact
                 highcharts={Highcharts}

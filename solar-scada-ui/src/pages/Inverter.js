@@ -1,10 +1,36 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Tooltip, styled, tooltipClasses } from "@mui/material";
 import "./Inverter.css";
 import inverterImage from '../assets/Sungrow_inv.png';
 import { API_ENDPOINTS } from "../apiConfig";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+
+// Custom styled tooltip matching the theme
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    backdropFilter: 'blur(10px)',
+    color: '#e0e6ed',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: '8px',
+    border: '1px solid rgba(100, 149, 237, 0.4)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.2)',
+    letterSpacing: '0.3px',
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'rgba(26, 54, 93, 0.98)',
+    '&::before': {
+      border: '1px solid rgba(100, 149, 237, 0.4)',
+      background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    },
+  },
+}));
 
 const Inverter = () => {
   const [inverterData, setInverterData] = useState({});
@@ -474,16 +500,18 @@ const Inverter = () => {
                               <span className="header-name">
                                 {inverter?.Name || `INV ${id}`}
                               </span>
-                              <div
-                                className={`status-indicator ${
-                                  inverter?.CUM_STS === 1 ? "status-green" : 
-                                  inverter ? "status-red" : "status-gray"
-                                }`}
-                                title={
-                                  inverter?.CUM_STS === 1 ? 'Online' : 
-                                  inverter ? 'Offline' : 'No Data'
-                                }
-                              ></div>
+                              <StyledTooltip 
+                                title={inverter?.CUM_STS === 1 ? 'Online' : inverter ? 'Offline' : 'No Data'} 
+                                placement="top" 
+                                arrow
+                              >
+                                <div
+                                  className={`status-indicator ${
+                                    inverter?.CUM_STS === 1 ? "status-green" : 
+                                    inverter ? "status-red" : "status-gray"
+                                  }`}
+                                ></div>
+                              </StyledTooltip>
                             </div>
                           </div>
                         </th>

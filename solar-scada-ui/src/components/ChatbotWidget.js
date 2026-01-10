@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { IconButton, Tooltip, Fade } from '@mui/material';
+import { IconButton, Tooltip, Fade, styled, tooltipClasses } from '@mui/material';
 import { 
   Close as CloseIcon, 
   Chat as ChatIcon, 
@@ -9,6 +9,31 @@ import {
 import { ChatbotComponent } from './ChatbotDataFlow';
 import ChatBot_Icon from '../assets/ChatBot_Icon.png';
 import './ChatbotWidget.css';
+
+// Custom styled tooltip matching the theme
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    backdropFilter: 'blur(10px)',
+    color: '#e0e6ed',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: '8px',
+    border: '1px solid rgba(100, 149, 237, 0.4)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.2)',
+    letterSpacing: '0.3px',
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'rgba(26, 54, 93, 0.98)',
+    '&::before': {
+      border: '1px solid rgba(100, 149, 237, 0.4)',
+      background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    },
+  },
+}));
 
 // Enhanced Custom hook for localStorage persistence with sync across tabs/navigation
 const useLocalStorage = (key, initialValue) => {
@@ -111,7 +136,7 @@ const ChatbotWidget = ({ user }) => {
 
             {/* Chat icon with cross positioned on top-right */}
             <div className="chatbot-icon-with-cross">
-              <Tooltip title="Hide Chat Assistant" placement="left" arrow>
+              <StyledTooltip title="Hide Chat Assistant" placement="left" arrow>
                 <IconButton 
                   className="chatbot-cross-button-top" 
                   onClick={toggleChatFeature}
@@ -119,9 +144,9 @@ const ChatbotWidget = ({ user }) => {
                 >
                   <CloseIcon sx={{ fontSize: '14px' }} />
                 </IconButton>
-              </Tooltip>
+              </StyledTooltip>
 
-              <Tooltip title={isChatOpen ? "Close Chat" : "Open Assistant"} placement="left" arrow>
+              <StyledTooltip title={isChatOpen ? "Close Chat" : "Open Assistant"} placement="left" arrow>
                 <IconButton 
                   className="chatbot-toggle-button" 
                   onClick={toggleChatPopup}
@@ -136,7 +161,7 @@ const ChatbotWidget = ({ user }) => {
                     />
                   )}
                 </IconButton>
-              </Tooltip>
+              </StyledTooltip>
             </div>
           </>
         ) : null}
@@ -145,7 +170,7 @@ const ChatbotWidget = ({ user }) => {
       {/* Right-side indicator when hidden */}
       {!isChatFeatureVisible && (
         <div className="chatbot-right-indicator">
-          <Tooltip title="Show Assistant" placement="left" arrow>
+          <StyledTooltip title="Show Assistant" placement="left" arrow>
             <IconButton 
               className="chatbot-unhide-indicator" 
               onClick={toggleChatFeature}
@@ -157,7 +182,7 @@ const ChatbotWidget = ({ user }) => {
               />
               <ArrowLeftIcon sx={{ fontSize: '14px' }} className="indicator-arrow" />
             </IconButton>
-          </Tooltip>
+          </StyledTooltip>
         </div>
       )}
     </>

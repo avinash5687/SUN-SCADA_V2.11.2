@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   IconButton, Tooltip, Avatar, Badge, Chip, Fade, Slide,
-  useTheme, useMediaQuery, Typography, Box, Divider
+  useTheme, useMediaQuery, Typography, Box, Divider, styled, tooltipClasses
 } from "@mui/material";
 import {
   Menu as MenuIcon, Close as CloseIcon, KeyboardArrowDown as ArrowDownIcon,
@@ -25,6 +25,31 @@ import { API_ENDPOINTS } from "../apiConfig";
 
 // Import the ChatbotWidget component
 import ChatbotWidget from "./ChatbotWidget";
+
+// Custom styled tooltip matching the theme
+const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    backdropFilter: 'blur(10px)',
+    color: '#e0e6ed',
+    fontSize: '0.8rem',
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: '8px',
+    border: '1px solid rgba(100, 149, 237, 0.4)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.2)',
+    letterSpacing: '0.3px',
+  },
+  [`& .${tooltipClasses.arrow}`]: {
+    color: 'rgba(26, 54, 93, 0.98)',
+    '&::before': {
+      border: '1px solid rgba(100, 149, 237, 0.4)',
+      background: 'linear-gradient(135deg, rgba(26, 54, 93, 0.98) 0%, rgba(35, 45, 63, 0.98) 100%)',
+    },
+  },
+}));
 
 // Utility functions
 const getOrdinalSuffix = (day) => {
@@ -500,7 +525,7 @@ const Layout = ({ children }) => {
           <nav className="modern-nav">
             <div className="nav-items">
               {navItems.map((item, index) => (
-                <Tooltip
+                <StyledTooltip
                   key={item.path}
                   title={isCollapsed && !isMobile ? item.text : ""}
                   placement="right"
@@ -521,7 +546,7 @@ const Layout = ({ children }) => {
                       <div className="active-indicator" />
                     )}
                   </div>
-                </Tooltip>
+                </StyledTooltip>
               ))}
             </div>
           </nav>
