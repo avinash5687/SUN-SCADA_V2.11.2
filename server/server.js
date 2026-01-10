@@ -12,13 +12,14 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const { getDbPool } = require("./db");
 
 const app = express();
-const HTTPS_PORT = process.env.HTTPS_PORT || 8443;
-const HTTP_PORT = process.env.HTTP_PORT || 5000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 4443;
+const HTTP_PORT = process.env.HTTP_PORT || 4500;
 
 // --- Middleware ---
 app.use(cors({ 
   origin: [
-    "https://localhost:3000",
+    "https://localhost:4200",
+    "http://localhost:4200",
     "http://sun-scada.com",
     "https://sun-scada.com",
     "https://www.sun-scada.com",

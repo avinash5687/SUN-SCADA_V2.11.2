@@ -35,9 +35,9 @@
     "recharts": "^2.15.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:4500",
   "scripts": {
-    "start": "cross-env HOST=0.0.0.0 PORT=3000 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
+    "start": "cross-env HOST=0.0.0.0 PORT=4200 DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
