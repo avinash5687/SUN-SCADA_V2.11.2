@@ -87,7 +87,7 @@ const useLocalStorage = (key, initialValue) => {
   return [value, setStoredValue];
 };
 
-const ChatbotWidget = ({ user }) => {
+const ChatbotWidget = ({ user, currentScreen }) => {
   // Persist both chat open state and visibility across navigation
   const [isChatFeatureVisible, setIsChatFeatureVisible] = useLocalStorage("chatFeatureVisible", true);
   const [isChatOpen, setIsChatOpen] = useLocalStorage("chatOpen", false);
@@ -130,7 +130,7 @@ const ChatbotWidget = ({ user }) => {
           <>
             <Fade in={isChatOpen}>
               <div className="chatbot-popup">
-                <ChatbotComponent user={user} isChatOpen={isChatOpen} />
+                <ChatbotComponent user={user} isChatOpen={isChatOpen} currentScreen={currentScreen} />
               </div>
             </Fade>
 

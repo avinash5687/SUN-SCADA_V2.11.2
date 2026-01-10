@@ -336,6 +336,24 @@ const Layout = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // Extract current screen name from URL for chatbot
+  const getCurrentScreen = useMemo(() => {
+    const pathname = location.pathname;
+    if (pathname.includes('Dashboard')) return 'Dashboard';
+    if (pathname.includes('InverterScreen')) return 'Inverter';
+    if (pathname.includes('InverterHeatmap')) return 'Inverter';
+    if (pathname.includes('MfmScreen')) return 'MFMScreen';
+    if (pathname.includes('WmsScreen')) return 'WMS';
+    if (pathname.includes('SmbScreen')) return 'SMB';
+    if (pathname.includes('SmbHeatmap')) return 'SMB';
+    if (pathname.includes('AlarmScreen')) return 'Default';
+    if (pathname.includes('CustomTrend')) return 'Default';
+    if (pathname.includes('FormulaScreen')) return 'Default';
+    if (pathname.includes('TransformerScreen')) return 'Default';
+    if (pathname.includes('ReportPage')) return 'Default';
+    return 'Default';
+  }, [location.pathname]);
+
   // State management with custom hooks
   const [isSidebarOpen, setIsSidebarOpen] = useLocalStorage('sidebarState', true);
   const [isCollapsed, setIsCollapsed] = useLocalStorage('sidebarCollapsed', false);
@@ -569,7 +587,7 @@ const Layout = ({ children }) => {
       )}
 
       {/* Chatbot Widget */}
-      <ChatbotWidget />
+      <ChatbotWidget currentScreen={getCurrentScreen} />
 
     </div>
   );

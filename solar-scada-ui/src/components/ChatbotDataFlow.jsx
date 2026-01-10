@@ -13,11 +13,58 @@ import {
   SmartToy as BotIcon,
   Person as UserIcon,
   Refresh as RefreshIcon,
-  Help as HelpIcon
+  Help as HelpIcon,
+  TrendingDown as TrendingDownIcon,
+  Warning as WarningIcon,
+  BatteryChargingFull as BatteryChargingFullIcon,
+  ShowChart as ShowChartIcon,
+  ElectricalServices as ElectricalServicesIcon,
+  Thermostat as ThermostatIcon,
+  TrendingUp as TrendingUpIcon,
+  SignalCellularAlt as SignalCellularAltIcon,
+  SignalCellularNull as SignalCellularNullIcon,
+  CheckCircle as CheckCircleIcon,
+  CompareArrows as CompareArrowsIcon,
+  Radar as RadarIcon,
+  CleaningServices as CleaningServicesIcon,
+  MonitorHeart as MonitorHeartIcon,
+  Construction as ConstructionIcon,
+  BugReport as BugReportIcon
 } from '@mui/icons-material';
 
 // Import the screen-based Q&A config
-import { getScreenOptions } from './chatbotScreenQA';
+import { getScreenOptions } from './ChatbotScreenQA';
+
+// Icon mapper function to render MUI icons based on icon name string
+const IconMapper = ({ iconName, sx = { fontSize: 18 } }) => {
+  const iconMap = {
+    'TrendingDownIcon': TrendingDownIcon,
+    'WarningIcon': WarningIcon,
+    'BatteryChargingFullIcon': BatteryChargingFullIcon,
+    'ShowChartIcon': ShowChartIcon,
+    'ElectricalServicesIcon': ElectricalServicesIcon,
+    'ThermostatIcon': ThermostatIcon,
+    'TrendingUpIcon': TrendingUpIcon,
+    'SignalCellularAltIcon': SignalCellularAltIcon,
+    'SignalCellularNullIcon': SignalCellularNullIcon,
+    'CheckCircleIcon': CheckCircleIcon,
+    'CompareArrowsIcon': CompareArrowsIcon,
+    'RadarIcon': RadarIcon,
+    'CleaningServicesIcon': CleaningServicesIcon,
+    'MonitorHeartIcon': MonitorHeartIcon,
+    'ConstructionIcon': ConstructionIcon,
+    'BugReportIcon': BugReportIcon
+  };
+
+  const IconComponent = iconMap[iconName];
+  
+  if (!IconComponent) {
+    // Fallback if icon not found
+    return <HelpIcon sx={sx} />;
+  }
+
+  return <IconComponent sx={sx} />;
+};
 
 // Screen-aware Chatbot Component
 // Pass currentScreen from parent (e.g., "Dashboard", "Inverter", "MFMScreen")
@@ -41,6 +88,15 @@ export const ChatbotComponent = ({ user, isChatOpen, currentScreen }) => {
       initializeChat();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChatOpen]);
+
+  // Reset conversation when chatbot is closed
+  useEffect(() => {
+    if (!isChatOpen) {
+      setMessages([]);
+      setCurrentStep('welcome');
+      setIsTyping(false);
+    }
   }, [isChatOpen]);
 
   // Optional: when the screen changes and chat is open, refresh options
@@ -353,7 +409,7 @@ export const ChatbotComponent = ({ user, isChatOpen, currentScreen }) => {
                         }}
                       >
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <span style={{ fontSize: '14px' }}>{option.icon}</span>
+                          <IconMapper iconName={option.icon} sx={{ fontSize: 16 }} />
                           {option.text}
                         </Box>
                       </Button>
