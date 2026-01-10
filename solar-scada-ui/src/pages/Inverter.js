@@ -16,6 +16,14 @@ const Inverter = () => {
   const [chartLoading, setChartLoading] = useState(true);
   const [initialChartLoad, setInitialChartLoad] = useState(true);
 
+  // Chart parameter configuration with visibility state
+  const [chartParamVisibility, setChartParamVisibility] = useState({
+    'Active Power': true,
+    'DC Power': false,
+    'Apparent Power': false,
+    'Frequency': false,
+  });
+
   // Initialize loading states for inverters
   useEffect(() => {
     const initialLoadingStates = {};
@@ -123,6 +131,11 @@ const Inverter = () => {
     return () => clearInterval(interval);
   }, [activeTab]); // Refetch when activeTab changes
 
+  // Force chart re-render when visibility changes
+  useEffect(() => {
+    // This will trigger a re-render of the chart with new options
+  }, [chartParamVisibility, chartData]);
+
   const calculatePR = (E_Today, DC_Capacity, POA) => {
     const e = parseFloat(E_Today);
     const c = parseFloat(DC_Capacity);
@@ -206,19 +219,16 @@ const Inverter = () => {
 
   const inverterIds = activeTab === 'ICR 1' ? [1, 2] : [3, 4];
 
-  // Chart parameter configuration
   const chartParams = [
-    { name: 'Active Power', suffix: 'ACT_PWR', unit: 'kW', visible: true },
-    { name: 'DC Power', suffix: 'DC_PWR', unit: 'kW', visible: false },
-    { name: 'Apparent Power', suffix: 'APPT_PWR', unit: 'kVA', visible: false },
-    { name: 'Frequency', suffix: 'FREQUENCY', unit: 'Hz', visible: false },
+    { name: 'Active Power', suffix: 'ACT_PWR', unit: 'kW' },
+    { name: 'DC Power', suffix: 'DC_PWR', unit: 'kW' },
+    { name: 'Apparent Power', suffix: 'APPT_PWR', unit: 'kVA' },
+    { name: 'Frequency', suffix: 'FREQUENCY', unit: 'Hz' },
   ];
 
-  // Generate series data from chart API
+// Generate series data from chart API with dynamic visibility and y-axis assignment
   const generateChartSeries = () => {
     const series = [];
-    
-    // Define primary colors for chart
     const primaryColors = [
       '#3498db', // Blue
       '#e74c3c', // Red
@@ -229,32 +239,139 @@ const Inverter = () => {
       '#34495e', // Dark Gray
       '#e67e22'  // Carrot Orange
     ];
-    
-    let colorIndex = 0;
-    
+
+    let seriesIndex = 0;
+    let visibleAxisIndex = 0;
+
     inverterIds.forEach(invId => {
-      chartParams.forEach(param => {
+      chartParams.forEach((param, paramIndex) => {
+        const isVisible = chartParamVisibility[param.name];
         const columnName = `INV${invId}_${param.suffix}`;
         const data = chartData.map(item => [
           new Date(item.DATE_TIME).getTime(),
           item[columnName] || 0
         ]);
-        
+
         series.push({
           name: `INV${invId} - ${param.name}`,
           data: data,
-          color: primaryColors[colorIndex % primaryColors.length],
+          color: primaryColors[seriesIndex % primaryColors.length],
           tooltip: {
             valueSuffix: ` ${param.unit}`
           },
-          visible: param.visible
+          visible: isVisible,
+          yAxis: isVisible ? visibleAxisIndex : 0, // Assign to corresponding visible y-axis
+          showInLegend: true
         });
-        
-        colorIndex++;
+
+        if (isVisible) {
+          visibleAxisIndex++;
+        }
+        seriesIndex++;
       });
     });
-    
+
     return series;
+  };
+
+  // Generate dynamic y-axes based on visible series
+  const generateYAxis = () => {
+    const yAxes = [];
+    const primaryColors = [
+      '#3498db', // Blue
+      '#e74c3c', // Red
+      '#2ecc71', // Green
+      '#f39c12', // Orange
+      '#9b59b6', // Purple
+      '#1abc9c', // Turquoise
+      '#34495e', // Dark Gray
+      '#e67e22'  // Carrot Orange
+    ];
+
+    let axisIndex = 0;
+
+    inverterIds.forEach((invId, invIndex) => {
+      chartParams.forEach((param, paramIndex) => {
+        const isVisible = chartParamVisibility[param.name];
+
+        if (isVisible) {
+          yAxes.push({
+            title: {
+              text: `INV${invId} - ${param.name} (${param.unit})`,
+              style: {
+                color: primaryColors[axisIndex % primaryColors.length]
+              }
+            },
+            labels: {
+              style: {
+                color: primaryColors[axisIndex % primaryColors.length]
+              }
+            },
+            opposite: invIndex === 1, // First inverter (index 0) on left, second (index 1) on right
+            showEmpty: false,
+            lineColor: primaryColors[axisIndex % primaryColors.length],
+            tickColor: primaryColors[axisIndex % primaryColors.length]
+          });
+        }
+
+        axisIndex++;
+      });
+    });
+
+    // If no y-axes are visible, show a default one
+    if (yAxes.length === 0) {
+      yAxes.push({
+        title: {
+          text: 'Value'
+        }
+      });
+    }
+
+    return yAxes;
+  };
+
+  // Custom legend component for chart series
+  const CustomLegend = () => {
+    const primaryColors = [
+      '#3498db', '#e74c3c', '#2ecc71', '#f39c12',
+      '#9b59b6', '#1abc9c', '#34495e', '#e67e22'
+    ];
+
+    let legendIndex = 0;
+
+    return (
+      <div className="custom-chart-legend">
+        {inverterIds.map(invId =>
+          chartParams.map(param => {
+            const isVisible = chartParamVisibility[param.name];
+            const color = primaryColors[legendIndex % primaryColors.length];
+
+            const legendItem = (
+              <div
+                key={`legend-${invId}-${param.name}`}
+                className={`custom-legend-item ${!isVisible ? 'disabled' : ''}`}
+                onClick={() => setChartParamVisibility(prev => ({
+                  ...prev,
+                  [param.name]: !prev[param.name]
+                }))}
+                style={{ cursor: 'pointer' }}
+              >
+                <div
+                  className="legend-color-box"
+                  style={{ backgroundColor: color }}
+                ></div>
+                <span className="legend-text">
+                  INV{invId} - {param.name}
+                </span>
+              </div>
+            );
+
+            legendIndex++;
+            return legendItem;
+          })
+        )}
+      </div>
+    );
   };
 
   const chartOptions = {
@@ -265,6 +382,12 @@ const Inverter = () => {
       panning: {
         enabled: true,
         type: 'x'
+      },
+      events: {
+        load: function() {
+          // Force chart to update when visibility changes
+          this.redraw();
+        }
       }
     },
     title: {
@@ -279,23 +402,13 @@ const Inverter = () => {
         text: 'Time'
       }
     },
-    yAxis: {
-      title: {
-        text: 'Value'
-      }
-    },
+    yAxis: generateYAxis(),
     legend: {
-      enabled: true,
-      align: 'center',
-      verticalAlign: 'bottom'
+      enabled: false // Disable built-in legend, using custom legend instead
     },
     plotOptions: {
       series: {
-        events: {
-          legendItemClick: function () {
-            return true;
-          }
-        }
+        // Removed legendItemClick to avoid Highcharts internal conflicts
       }
     },
     series: generateChartSeries()
@@ -418,7 +531,16 @@ const Inverter = () => {
           {chartLoading ? (
             <ChartSkeleton />
           ) : (
-            <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+            <>
+              <div className="chart-container">
+                <HighchartsReact
+                  key={JSON.stringify(chartParamVisibility)}
+                  highcharts={Highcharts}
+                  options={chartOptions}
+                />
+              </div>
+              <CustomLegend />
+            </>
           )}
         </div>
       </div>

@@ -113,6 +113,193 @@
   position: relative;
 }
 
+/* Date Picker Styles for CustomTrend */
+.date-picker-container-trend {
+  position: relative;
+}
+
+/* Custom Date Input with inline calendar icon */
+.custom-date-input-trend {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  height: 38px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  color: #2c3e50;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.custom-date-input-trend:hover {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+}
+
+.custom-date-input-trend .date-input-field {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #2c3e50;
+  cursor: text;
+  width: 100%;
+}
+
+.custom-date-input-trend .date-input-field::placeholder {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.custom-date-input-trend .date-input-field:focus {
+  cursor: text;
+}
+
+.custom-date-input-trend .calendar-icon-inline {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.custom-date-input-trend:hover .calendar-icon-inline {
+  transform: scale(1.1);
+}
+
+/* DatePicker wrapper */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+/* Calendar dropdown styling for CustomTrend */
+
+.custom-calendar-trend {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 10;
+}
+
+.custom-calendar-trend .react-datepicker__header {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+.custom-calendar-trend .react-datepicker__month {
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.custom-calendar-trend .react-datepicker__current-month,
+.custom-calendar-trend .react-datepicker-time__header {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.custom-calendar-trend .react-datepicker__day-names {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  padding: 4px 0;
+}
+
+.custom-calendar-trend .react-datepicker__day-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.custom-calendar-trend .react-datepicker__day {
+  color: #2c3e50;
+  font-size: 0.85rem;
+  padding: 6px;
+  margin: 1px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.custom-calendar-trend .react-datepicker__day:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.custom-calendar-trend .react-datepicker__day--selected {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 600;
+}
+
+.custom-calendar-trend .react-datepicker__day--selected:hover {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.custom-calendar-trend .react-datepicker__day--keyboard-selected {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.custom-calendar-trend .react-datepicker__day--today {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  font-weight: 600;
+}
+
+.custom-calendar-trend .react-datepicker__navigation {
+  border: none;
+  background: none;
+  color: white;
+  top: 12px;
+}
+
+.custom-calendar-trend .react-datepicker__navigation:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.custom-calendar-trend .react-datepicker__navigation-icon::before {
+  border-color: white;
+  border-width: 2px 2px 0 0;
+}
+
+.custom-calendar-trend .react-datepicker__triangle {
+  display: none;
+}
+
+/* ========== COMPACT Form Controls ========== */
+.compact-select {
+  padding: 8px 12px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  color: #2c3e50;
+  min-height: 38px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  position: relative;
+}
+
 .compact-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233498db' d='M6 9L1 4h10z'/%3E%3C/svg%3E");

@@ -13,6 +13,40 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./AlarmScreen.css";
 import { API_ENDPOINTS } from "../apiConfig";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// Custom Date Input Component with Calendar Icon
+const CustomDateInput = React.forwardRef(({ value, onClick, onChange }, ref) => (
+  <div className="custom-date-input-alarm" onClick={onClick}>
+    <input
+      type="text"
+      value={value || ""}
+      onChange={onChange}
+      placeholder="YYYY-MM-DD"
+      className="date-input-field-alarm"
+      ref={ref}
+      onFocus={(e) => e.target.select()}
+    />
+    <svg
+      className="calendar-icon-inline-alarm"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#3498db"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  </div>
+));
 
 const AlarmScreen = () => {
   const [alarms, setAlarms] = useState([]);
@@ -30,8 +64,10 @@ const AlarmScreen = () => {
   const [historyStartDate, setHistoryStartDate] = useState("");
   const [historyEndDate, setHistoryEndDate] = useState("");
   const [showFilterPopup, setShowFilterPopup] = useState(false);
-  const [filterFrom, setFilterFrom] = useState("");
-  const [filterTo, setFilterTo] = useState("");
+  const [filterFrom, setFilterFrom] = useState(null);
+  const [filterTo, setFilterTo] = useState(null);
+  const [showFromCalendar, setShowFromCalendar] = useState(false);
+  const [showToCalendar, setShowToCalendar] = useState(false);
 
   const fetchAlarms = async (showLoading = false) => {
     if (showLoading) setLoading(true);
@@ -56,13 +92,15 @@ const AlarmScreen = () => {
     }
 
     // Defensive: ensure start <= end
-    if (new Date(start) > new Date(end)) {
+    if (start > end) {
       alert('From date cannot be after To date.');
       return;
     }
 
-    const startDate = new Date(`${start}T00:00:00`);
-    const endDate = new Date(`${end}T23:59:59`);
+    const startDate = new Date(start);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(end);
+    endDate.setHours(23, 59, 59, 999);
 
     // Filter alarms by date range
     const filtered = dataRef.current.filter(a => {
@@ -498,11 +536,33 @@ const AlarmScreen = () => {
                 <div style={{display:'flex', gap:8, alignItems:'center'}}>
                   <div style={{display:'flex',flexDirection:'column'}}>
                     <label style={{fontSize:12,color:'#6c757d'}}>From</label>
-                    <input type="date" value={filterFrom} onChange={(e)=>setFilterFrom(e.target.value)} />
+                    <div className="date-picker-container-alarm">
+                      <DatePicker
+                        selected={filterFrom}
+                        onChange={(date) => setFilterFrom(date)}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<CustomDateInput />}
+                        calendarClassName="custom-calendar-alarm"
+                        portalId="root"
+                        withPortal
+                        placeholderText="yyyy-mm-dd"
+                      />
+                    </div>
                   </div>
                   <div style={{display:'flex',flexDirection:'column'}}>
                     <label style={{fontSize:12,color:'#6c757d'}}>To</label>
-                    <input type="date" value={filterTo} onChange={(e)=>setFilterTo(e.target.value)} />
+                    <div className="date-picker-container-alarm">
+                      <DatePicker
+                        selected={filterTo}
+                        onChange={(date) => setFilterTo(date)}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<CustomDateInput />}
+                        calendarClassName="custom-calendar-alarm"
+                        portalId="root"
+                        withPortal
+                        placeholderText="yyyy-mm-dd"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -515,11 +575,11 @@ const AlarmScreen = () => {
                   
                   // Apply filter for both tabs using client-side filtering
                   if (activeTab === 'ACTIVE') {
-                    setActiveStartDate(filterFrom);
-                    setActiveEndDate(filterTo);
+                    setActiveStartDate(filterFrom.toISOString().split('T')[0]);
+                    setActiveEndDate(filterTo.toISOString().split('T')[0]);
                   } else {
-                    setHistoryStartDate(filterFrom);
-                    setHistoryEndDate(filterTo);
+                    setHistoryStartDate(filterFrom.toISOString().split('T')[0]);
+                    setHistoryEndDate(filterTo.toISOString().split('T')[0]);
                   }
                   
                   // Apply the date filter

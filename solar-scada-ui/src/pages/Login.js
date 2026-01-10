@@ -198,7 +198,7 @@ const Login = () => {
       <h2 style={styles.header}>
         DEMO SOLAR SCADA
         <br />
-        21.5 MW
+        21 MW
       </h2>
 
       <div style={styles.mainContent}>

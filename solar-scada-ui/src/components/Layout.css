@@ -319,75 +319,120 @@
 
 .modern-user-menu {
   position: absolute;
-  top: calc(100% + 5px);
+  top: calc(100% + 12px);
   right: 0;
-  width: 180px;
-  background: linear-gradient(135deg,
-    rgba(26, 54, 93, 0.98) 0%,
-    rgba(25, 42, 86, 0.98) 100%);
-  backdrop-filter: blur(20px);
-  border-radius: 10px;
-  padding: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(100, 149, 237, 0.3);
+  width: 280px;
+  background: #232d3f; /* Solid dark blue-grey background */
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   z-index: 1001;
   transform-origin: top right;
+  overflow: hidden;
+  animation: menuSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.user-menu-header {
+@keyframes menuSlideIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modern-user-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4ecdc4, #5777dd);
+}
+
+.user-menu-header-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 5px;
+}
+
+.user-menu-avatar-col {
+  flex-shrink: 0;
+}
+
+.user-menu-details-col {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 4px;
-  color: #fff;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0; /* Prevents overflow */
 }
 
-/* Redesigned Logout Button with Better Colors */
+.user-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Redesigned Logout Button */
 .modern-logout-btn {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: linear-gradient(135deg, #4a5568, #2d3748); /* Changed to professional gray gradient */
-  color: white;
-  border: none;
-  border-radius: 8px;
+  gap: 10px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(220, 20, 60, 0.1), rgba(178, 34, 34, 0.1));
+  color: #ff6b6b;
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 11px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.modern-logout-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(46, 183, 219, 0.3), transparent);
-  transition: left 0.5s;
-}
-
-.modern-logout-btn:hover::before {
-  left: 100%;
 }
 
 .modern-logout-btn:hover {
-  background: linear-gradient(135deg, #e53e3e, #c53030); /* Changes to red on hover */
+  background: linear-gradient(135deg, #e53e3e, #c53030);
+  color: white;
+  border-color: transparent;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
 }
 
 .modern-logout-btn:active {
   transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+  box-shadow: 0 2px 6px rgba(229, 62, 62, 0.2);
+}
+
+/* Cancel Button */
+.modern-cancel-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: transparent;
+  color: #a0aec0;
+  border: 1px solid rgba(160, 174, 192, 0.15);
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.modern-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Avatar and user info details styling for header user menu */

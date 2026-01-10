@@ -7,7 +7,9 @@ import "./Dashboard.css";
 import CylinderChart from "../components/CylinderChart";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Star, Power, WarningAmber, Brightness7, DarkMode, HourglassEmpty } from "@mui/icons-material";
 
 const Dashboard = () => {
   // State management with loading states
@@ -297,6 +299,29 @@ const Dashboard = () => {
   const spacing = getSpacingForWidth(windowWidth);
   const height = getHeightForWidth(windowWidth);
 
+  // Custom Date Input Component with Calendar Icon
+const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
+  <div className="custom-date-input" onClick={onClick} ref={ref}>
+    <span className="date-value">{value}</span>
+    <svg 
+      className="calendar-icon-inline"
+      xmlns="http://www.w3.org/2000/svg" 
+      width="12" 
+      height="12" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="#3498db" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  </div>
+));
 
   const getLineChartOptions = (data, height, spacing) => {
     // Helper function to convert "HH:MM" string to decimal hours
@@ -527,12 +552,21 @@ const Dashboard = () => {
                   <div className="table-header">
                     <h4 className="table-title">Energy Generation</h4>
                     <div className="chart-controls">
-                      <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        className="date-picker"
-                      />
+                      <div className="date-picker-container">
+                        <DatePicker
+                          selected={new Date(selectedDate)}
+                          onChange={(date) => {
+                            const formattedDate = date.toISOString().split('T')[0];
+                            setSelectedDate(formattedDate);
+                          }}
+                          dateFormat="yyyy-MM-dd"
+                          customInput={<CustomDateInput />}
+                          calendarClassName="custom-calendar"
+                          portalId="root"
+                          popperPlacement="bottom-start"
+                        />
+                      </div>
+
                       <div className="trend-buttons">
                         {['day', 'week', 'month', 'year'].map(type => (
                           <button
@@ -730,42 +764,42 @@ const Dashboard = () => {
             ) : (
               <>
                 <div className="metric-card green">
-                  <div className="metric-icon">🌟</div>
+                  <div className="metric-icon"><Star /></div>
                   <div className="metric-content">
                     <div className="metric-label">Plant Export</div>
                     <div className="metric-value">{plantKPI.P_EXP || 0} kWh</div>
                   </div>
                 </div>
                 <div className="metric-card red">
-                  <div className="metric-icon">⚡</div>
+                  <div className="metric-icon"><Power /></div>
                   <div className="metric-content">
                     <div className="metric-label">Plant Import</div>
                     <div className="metric-value">{plantKPI.P_IMP || 0} kWh</div>
                   </div>
                 </div>
                 <div className="metric-card blue">
-                  <div className="metric-icon">⚠️</div>
+                  <div className="metric-icon"><WarningAmber /></div>
                   <div className="metric-content">
                     <div className="metric-label">Grid Downtime</div>
                     <div className="metric-value">{plantKPI.P_DOWN || "00:00"} Hrs</div>
                   </div>
                 </div>
                 <div className="metric-card orange">
-                  <div className="metric-icon">🌄</div>
+                  <div className="metric-icon"><Brightness7 /></div>
                   <div className="metric-content">
                     <div className="metric-label">Start Time</div>
                     <div className="metric-value">{plantKPI.P_START || "00:00"} Hrs</div>
                   </div>
                 </div>
                 <div className="metric-card gray">
-                  <div className="metric-icon">🌃</div>
+                  <div className="metric-icon"><DarkMode /></div>
                   <div className="metric-content">
                     <div className="metric-label">Stop Time</div>
                     <div className="metric-value">{plantKPI.P_STOP || "00:00"} Hrs</div>
                   </div>
                 </div>
                 <div className="metric-card purple">
-                  <div className="metric-icon">⏳</div>
+                  <div className="metric-icon"><HourglassEmpty /></div>
                   <div className="metric-content">
                     <div className="metric-label">Running Time</div>
                     <div className="metric-value">{plantKPI.P_RUN || "00:00"} Hrs</div>

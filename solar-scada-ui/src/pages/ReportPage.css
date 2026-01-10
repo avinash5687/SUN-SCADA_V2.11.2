@@ -127,6 +127,7 @@
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
+  overflow: visible;
 }
 
 .report-section.disabled {
@@ -338,6 +339,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: visible;
 }
 
 .form-row {
@@ -376,6 +378,224 @@
 .input-field:disabled {
   background: #f5f6f7;
   cursor: not-allowed;
+}
+
+/* Enhanced Select Dropdown Styling - Matching CustomTrend */
+select.input-field {
+  padding: 8px 12px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  color: #2c3e50;
+  min-height: 38px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233498db' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+select.input-field:hover:not(:disabled) {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-1px);
+}
+
+select.input-field:focus {
+  outline: none;
+  border-color: #3498db;
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15), 0 4px 12px rgba(52, 152, 219, 0.2);
+  transform: translateY(-1px);
+}
+
+select.input-field:disabled {
+  background: #f5f6f7;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Table dropdown options styling - Matching CustomTrend */
+select.input-field option {
+  padding: 10px 14px;
+  margin: 3px 6px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #2c3e50;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+select.input-field option:hover {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #1976d2;
+  border-color: #90caf9;
+  cursor: pointer;
+}
+
+select.input-field option:checked {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 700;
+  border-color: #2874a6;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* ========== Custom Dropdown Styling - Matching CustomTrend ========== */
+.custom-select-wrapper-report {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-wrapper-report.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.custom-select-trigger-report {
+  padding: 12px 36px 12px 14px;
+  border: 2px solid #d1d8e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  color: #2c3e50;
+  min-height: 42px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  position: relative;
+  user-select: none;
+}
+
+.custom-select-trigger-report::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #3498db;
+  transition: transform 0.3s ease;
+}
+
+.custom-select-trigger-report.open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.custom-select-trigger-report:hover {
+  border-color: #3498db;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+  transform: translateY(-1px);
+}
+
+.custom-select-trigger-report.open {
+  border-color: #3498db;
+  background: linear-gradient(135deg, #ffffff, #eef7ff);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.custom-select-trigger-report.disabled {
+  background: #f5f6f7;
+  cursor: not-allowed;
+}
+
+.custom-select-trigger-report.disabled::after {
+  border-top-color: #999;
+}
+
+.custom-select-options-report {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.custom-select-options-report.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* Upward dropdown positioning */
+.custom-select-options-report.upward {
+  top: auto;
+  bottom: calc(100% + 4px);
+  transform: translateY(10px);
+}
+
+.custom-select-options-report.upward.open {
+  transform: translateY(0);
+}
+
+.custom-select-option-report {
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #2c3e50;
+  border-bottom: 1px solid #f0f3f5;
+}
+
+.custom-select-option-report:last-child {
+  border-bottom: none;
+}
+
+.custom-select-option-report:hover {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  color: #1976d2;
+}
+
+.custom-select-option-report.selected {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 600;
+}
+
+/* Scrollbar styling for dropdown */
+.custom-select-options-report::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-select-options-report::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.custom-select-options-report::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-radius: 4px;
+}
+
+.custom-select-options-report::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2980b9, #1e70a5);
 }
 
 /* ========== Report Summary Section ========== */
@@ -584,4 +804,155 @@
   .summary-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ================================
+   Custom Date Picker Styles - Report Screen
+================================= */
+.date-picker-container-report {
+  position: relative;
+  width: 100%;
+}
+
+.custom-date-input-report {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  min-height: 20px;
+}
+
+.custom-date-input-report:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.custom-date-input-report:focus-within {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  outline: none;
+}
+
+.date-input-field-report {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 0.9rem;
+  color: #495057;
+  cursor: pointer;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+.date-input-field-report::placeholder {
+  color: #6c757d;
+}
+
+.calendar-icon-inline-report {
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.custom-date-input-report:hover .calendar-icon-inline-report {
+  transform: scale(1.1);
+}
+
+/* Custom Calendar Styles */
+.custom-calendar-report {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 10;
+}
+
+.custom-calendar-report .react-datepicker__header {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+.custom-calendar-report .react-datepicker__month {
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.custom-calendar-report .react-datepicker__current-month,
+.custom-calendar-report .react-datepicker-time__header {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.custom-calendar-report .react-datepicker__day-names {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  padding: 4px 0;
+}
+
+.custom-calendar-report .react-datepicker__day-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.custom-calendar-report .react-datepicker__day {
+  color: #2c3e50;
+  font-size: 0.85rem;
+  padding: 6px;
+  margin: 1px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.custom-calendar-report .react-datepicker__day:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.custom-calendar-report .react-datepicker__day--selected {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 600;
+}
+
+.custom-calendar-report .react-datepicker__day--selected:hover {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.custom-calendar-report .react-datepicker__day--keyboard-selected {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.custom-calendar-report .react-datepicker__day--today {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  font-weight: 600;
+}
+
+.custom-calendar-report .react-datepicker__navigation {
+  border: none;
+  background: none;
+  color: white;
+  top: 12px;
+}
+
+.custom-calendar-report .react-datepicker__navigation:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.custom-calendar-report .react-datepicker__triangle {
+  display: none;
 }

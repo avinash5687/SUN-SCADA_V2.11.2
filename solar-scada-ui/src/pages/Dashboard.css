@@ -17,10 +17,10 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2px;
-  padding: 3px 16px 2px 16px; /* Minimal padding */
+  padding: 3px 16px 2px 16px;
   border-bottom: 1px solid #e9ecef;
   flex-shrink: 0;
-  height: 5%; /* Exactly 5% */
+  height: 5%;
   min-height: 30px;
 }
 
@@ -70,17 +70,17 @@
 .dashboard-content {
   flex: 1;
   overflow: hidden;
-  padding: 0 16px 5px 16px; /* Minimal padding */
+  padding: 0 16px 5px 16px;
   display: flex;
   flex-direction: column;
-  height: 95%; /* Remaining 95% after header */
+  height: 95%;
 }
 
 .dashboard-section {
   flex-shrink: 0;
 }
 
-/* ========== Gauge Container - 17% (remaining space after other allocations) ========== */
+/* ========== Gauge Container - 18% ========== */
 .gauges-section {
   height: 18%; 
   margin-bottom: 3px;
@@ -106,8 +106,8 @@
   border-radius: 6px;
   transition: transform 0.2s ease;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-  min-height: 90px; /* Add a minimum height to keep compact */
-  padding: 2px 0;   /* Reduce vertical padding */
+  min-height: 90px;
+  padding: 2px 0;
 }
 
 .gauge-item:hover {
@@ -143,7 +143,7 @@
   color: #2c3e50;
 }
 
-/* ========== Charts Container - 38% of available space ========== */
+/* ========== Charts Container - 40% ========== */
 .charts-section {
   height: 40%;
   margin-bottom: 3px;
@@ -159,7 +159,7 @@
 .chart-card {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
-  padding: 6px; /* Minimal padding */
+  padding: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
@@ -173,31 +173,213 @@
   margin-bottom: 3px;
   padding-bottom: 2px;
   border-bottom: 1px solid #ecf0f1;
-  height: 22px; /* Reduced header height */
+  height: 22px;
   flex-shrink: 0;
 }
 
 .chart-title {
-  font-size: 0.75rem; /* Smaller title */
+  font-size: 0.75rem;
   font-weight: 600;
   color: #2c3e50;
   margin: 0;
 }
 
+/* ========== FIXED: Date Picker with Icon AFTER Date ========== */
 .chart-controls {
   display: flex;
   align-items: center;
   gap: 3px;
 }
 
-.date-picker {
-  padding: 2px 4px;
-  border: 1px solid #ddd;
+/* Wrapper for date picker + icon */
+.date-picker-container {
+  display: flex;
+  align-items: center;
+  /* gap: 4px; */
+  position: relative;
+}
+
+/* Custom Date Input with inline calendar icon */
+.custom-date-input {
+  display: flex;
+  align-items: center;
+  /* gap: 4px; */
+  padding: 2px 6px 2px 4px;
+  border: 1px solid #3498db;
   border-radius: 3px;
   font-size: 0.65rem;
   height: 18px;
+  width: 85px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
 }
 
+.custom-date-input:hover {
+  border-color: #2980b9;
+  box-shadow: 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+.date-value {
+  flex: 1;
+  text-align: left;
+}
+
+.calendar-icon-inline {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.custom-date-input:hover .calendar-icon-inline {
+  transform: scale(1.1);
+}
+
+/* DatePicker wrapper */
+.react-datepicker-wrapper {
+  display: inline-block;
+}
+
+.react-datepicker__input-container {
+  display: inline-block;
+}
+
+/* Date input styling */
+.date-picker {
+  padding: 2px 6px 2px 4px;
+  border: 1px solid #3498db;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  height: 18px;
+  width: 110px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.date-picker:hover {
+  border-color: #2980b9;
+  box-shadow: 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+.date-picker:focus {
+  outline: none;
+  border-color: #2980b9;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* ✅ Custom icon positioned AFTER the input */
+.calendar-icon-custom {
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.calendar-icon-custom:hover {
+  transform: scale(1.1);
+}
+
+/* Calendar dropdown styling */
+.custom-calendar {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 10;
+}
+
+.custom-calendar .react-datepicker__header {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+.custom-calendar .react-datepicker__month {
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.custom-calendar .react-datepicker__current-month,
+.custom-calendar .react-datepicker-time__header {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.custom-calendar .react-datepicker__day-names {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  padding: 4px 0;
+}
+
+.custom-calendar .react-datepicker__day-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.custom-calendar .react-datepicker__day {
+  color: #2c3e50;
+  font-size: 0.85rem;
+  padding: 6px;
+  margin: 1px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.custom-calendar .react-datepicker__day:hover {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.custom-calendar .react-datepicker__day--selected {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: 600;
+}
+
+.custom-calendar .react-datepicker__day--selected:hover {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.custom-calendar .react-datepicker__day--keyboard-selected {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.custom-calendar .react-datepicker__day--today {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  font-weight: 600;
+}
+
+.custom-calendar .react-datepicker__navigation {
+  border: none;
+  background: none;
+  color: white;
+  top: 12px;
+}
+
+.custom-calendar .react-datepicker__navigation:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.custom-calendar .react-datepicker__navigation-icon::before {
+  border-color: white;
+  border-width: 2px 2px 0 0;
+}
+
+.custom-calendar .react-datepicker__triangle {
+  display: none;
+}
+
+.custom-calendar .react-datepicker__navigation:hover *::before {
+  border-color: #ecf8ff;
+}
+
+/* Trend buttons */
 .trend-buttons {
   display: flex;
   gap: 2px;
@@ -251,7 +433,7 @@
   min-height: 0;
 }
 
-/* ========== Tables Container - 30% of available space ========== */
+/* ========== Tables Container - 32% ========== */
 .tables-section {
   height: 32%;
   margin-bottom: 3px;
@@ -267,7 +449,7 @@
 .table-card {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 8px;
-  padding: 6px; /* Minimal padding */
+  padding: 4px 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   display: flex;
   flex-direction: column;
@@ -292,28 +474,28 @@
   margin: 0;
 }
 
-/* ========== Enhanced View Details Button - More Visible ========== */
+/* ========== Enhanced View Details Button ========== */
 .action-btn {
-  padding: 5px 12px; /* Compact but visible */
+  padding: 5px 12px;
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   border: none;
   border-radius: 6px;
   font-size: 0.7rem;
-  font-weight: 700; /* Bold text */
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 120px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4); /* Strong shadow */
-  border: 1px solid #2980b9; /* Border for definition */
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+  border: 1px solid #2980b9;
 }
 
 .action-btn:hover:not(:disabled) {
   background: linear-gradient(135deg, #2980b9, #1e70a5);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.6); /* Stronger hover shadow */
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.6);
 }
 
 .action-btn:disabled {
@@ -332,7 +514,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 0.65rem;
-  border: 1px solid #3498db; /* Blue theme border */
+  border: 1px solid #3498db;
 }
 
 .status-table th, .weather-table th {
@@ -344,14 +526,14 @@
   font-size: 0.6rem;
   position: sticky;
   top: 0;
-  border: 1px solid #2c3e50; /* Header borders */
+  border: 1px solid #2c3e50;
 }
 
 .status-table td, .weather-table td {
   padding: 3px;
   text-align: center;
   font-size: 0.65rem;
-  border: 1px solid #bdc3c7; /* Theme-matching cell borders */
+  border: 1px solid #bdc3c7;
 }
 
 .status-table tbody tr:hover, .weather-table tbody tr:hover {
@@ -381,7 +563,7 @@
   color: #721c24;
 }
 
-/* ========== Metrics Container - 10% of available space ========== */
+/* ========== Metrics Container - 8% ========== */
 .metrics-section {
   height: 8%;
 }
@@ -396,7 +578,7 @@
 .metric-card {
   background: linear-gradient(145deg, #ffffff, #f8f9fa);
   border-radius: 6px;
-  padding: 4px; /* Minimal padding */
+  padding: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
@@ -424,9 +606,9 @@
 }
 
 .metric-icon {
-  width: 24px; /* Smaller icon */
-  height: 24px;
-  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -435,13 +617,18 @@
   flex-shrink: 0;
 }
 
+.metric-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
 .metric-content {
   flex: 1;
   min-width: 0;
 }
 
 .metric-label {
-  font-size: 0.5rem; /* Very small label */
+  font-size: 0.5rem;
   color: #64748b;
   margin-bottom: 1px;
   font-weight: 500;
@@ -451,7 +638,7 @@
 }
 
 .metric-value {
-  font-size: 0.65rem; /* Small value */
+  font-size: 0.65rem;
   font-weight: 700;
   color: #1e293b;
   line-height: 1;

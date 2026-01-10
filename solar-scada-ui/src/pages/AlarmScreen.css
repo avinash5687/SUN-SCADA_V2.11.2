@@ -521,8 +521,8 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 600px;
   border: 1px solid #e9ecef;
   overflow: hidden;
 }
@@ -530,7 +530,8 @@
 .popup-header {
   background: linear-gradient(135deg, #2c3e50, #34495e);
   color: white;
-  padding: 16px 20px;
+  padding: 18px 24px;
+  border-radius: 12px 12px 0px 0px;
   border-bottom: 1px solid #e9ecef;
 }
 
@@ -545,7 +546,7 @@
 }
 
 .popup-content {
-  padding: 20px;
+  padding: 24px;
 }
 
 .comment-textarea {
@@ -570,9 +571,10 @@
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 16px 20px;
+  padding: 10px;
   background: #f8f9fa;
   border-top: 1px solid #e9ecef;
+  border-radius: 0 0 12px 12px;
 }
 
 .popup-btn {
@@ -788,4 +790,118 @@
 .alarm-table-wrapper,
 .alarm-popup {
   will-change: transform, opacity;
+}
+
+/* ================================
+   Custom Date Picker Styles - Alarm Screen
+================================= */
+.date-picker-container-alarm {
+  position: relative;
+  width: 140px;
+}
+
+.custom-date-input-alarm {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  min-height: 32px;
+}
+
+.custom-date-input-alarm:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+}
+
+.custom-date-input-alarm:focus-within {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.date-input-field-alarm {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 0.85rem;
+  color: #495057;
+  cursor: pointer;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.date-input-field-alarm::placeholder {
+  color: #6c757d;
+}
+
+.calendar-icon-inline-alarm {
+  margin-left: 6px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.custom-date-input-alarm:hover .calendar-icon-inline-alarm {
+  transform: scale(1.1);
+}
+
+/* Custom Calendar Styles */
+.custom-calendar-alarm {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  font-family: Tahoma, Arial, sans-serif;
+  z-index: 1100 !important;
+}
+
+.custom-calendar-alarm .react-datepicker__month {
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Ensure popper/portal rendering isn't clipped by other layout elements */
+.react-datepicker-popper,
+.react-datepicker__portal,
+.custom-calendar-alarm,
+.react-datepicker-popper[data-placement] {
+  z-index: 99999 !important;
+}
+
+/* Allow overflow on the popup so popper arrow and small positioning shifts aren't clipped */
+.alarm-popup {
+  overflow: visible;
+}
+
+.custom-calendar-alarm .react-datepicker__header {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-bottom: 1px solid #e9ecef;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+.custom-calendar-alarm .react-datepicker__current-month,
+.custom-calendar-alarm .react-datepicker-time__header {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.custom-calendar-alarm .react-datepicker__day-names {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  padding: 4px 0;
+}
+
+.custom-calendar-alarm .react-datepicker__day-name {
+  color: white;
+  font-weight: 600;
+  font-size: 0.8rem;
 }

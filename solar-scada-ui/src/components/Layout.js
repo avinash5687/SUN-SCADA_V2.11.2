@@ -223,36 +223,53 @@ const ModernUserMenu = ({ user, showMenu, onToggle, onLogout }) => {
 
       <Fade in={showMenu} timeout={200}>
         <div className={`modern-user-menu ${showMenu ? 'visible' : ''}`}>
-          <div className="user-menu-header">
-            <Avatar
-              sx={{
-                width: 28,
-                height: 28,
-                bgcolor: getRoleColor(user.role),
-                mb: 1
-              }}
-            >
-              {getInitials(user.username)}
-            </Avatar>
-            <Typography variant="body2" fontWeight="600" fontSize="0.7rem">
-              {user.username}
-            </Typography>
-            <Chip
-              label={user.role}
-              size="small"
-              sx={{
-                bgcolor: getRoleColor(user.role),
-                color: 'white',
-                fontSize: '0.55rem',
-                height: 14
-              }}
-            />
+          <div className="user-menu-header-row">
+            <div className="user-menu-avatar-col">
+              <Avatar
+                sx={{
+                  width: 50,
+                  height: 50,
+                  bgcolor: getRoleColor(user.role),
+                  boxShadow: `0 0 15px ${getRoleColor(user.role)}40`,
+                  fontSize: '1.2rem',
+                  fontWeight: 600
+                }}
+              >
+                {getInitials(user.username)}
+              </Avatar>
+            </div>
+            <div className="user-menu-details-col">
+              <Typography variant="body1" fontWeight="700" sx={{ color: '#fff', fontSize: '1rem', lineHeight: 1.2 }}>
+                {user.username}
+              </Typography>
+              <Chip
+                label={user.role}
+                size="small"
+                sx={{
+                  bgcolor: `${getRoleColor(user.role)}`,
+                  color: '#fff', 
+                  fontSize: '0.65rem',
+                  height: 20,
+                  fontWeight: 600,
+                  mt: 0.5,
+                  alignSelf: 'flex-start'
+                }}
+              />
+            </div>
           </div>
-          <Divider sx={{ my: 1 }} />
-          <button className="modern-logout-btn" onClick={onLogout}>
-            <PowerSettingsNew sx={{ fontSize: '0.9rem' }} />
-            <span>Sign Out</span>
-          </button>
+          
+          <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+          
+          <div className="user-menu-actions">
+            <button className="modern-logout-btn" onClick={onLogout}>
+              <PowerSettingsNew sx={{ fontSize: '1.1rem' }} />
+              <span>Logout</span>
+            </button>
+            <button className="modern-cancel-btn" onClick={onToggle}>
+              <CloseIcon sx={{ fontSize: '1.1rem' }} />
+              <span>Cancel</span>
+            </button>
+          </div>
         </div>
       </Fade>
     </div>

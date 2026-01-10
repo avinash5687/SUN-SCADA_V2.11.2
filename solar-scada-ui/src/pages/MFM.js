@@ -243,7 +243,7 @@ const MFM = () => {
               onClick={() => handleBlockSwitch('BLOCK1')}
               disabled={refreshing}
             >
-              <span className="btn-icon">🏢</span>
+              {/* <span className="btn-icon">🏢</span> */}
               BLOCK 1
             </button>
             <button
@@ -251,7 +251,7 @@ const MFM = () => {
               onClick={() => handleBlockSwitch('BLOCK2')}
               disabled={refreshing}
             >
-              <span className="btn-icon">🏭</span>
+              {/* <span className="btn-icon">🏭</span> */}
               BLOCK 2
             </button>
           </div>

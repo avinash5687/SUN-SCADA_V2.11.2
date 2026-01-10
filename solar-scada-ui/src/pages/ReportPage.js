@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { API_ENDPOINTS } from "../apiConfig";
 import "./ReportPage.css";
@@ -19,6 +19,111 @@ import {
   TouchApp as PointerIcon,
   HourglassEmpty as EmptyIcon,
 } from "@mui/icons-material";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// Custom Dropdown Component
+const CustomDropdown = ({ options, value, onChange, placeholder = "-- Select --", disabled = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
+  const dropdownRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleToggle = () => {
+    if (disabled) return;
+    
+    if (!isOpen && triggerRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - triggerRect.bottom;
+      const spaceAbove = triggerRect.top;
+      const dropdownHeight = Math.min(options.length * 44, 200); // Approximate height
+      
+      // Open upward if not enough space below and more space above
+      setOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
+    }
+    
+    setIsOpen(!isOpen);
+  };
+
+  const handleSelect = (option) => {
+    onChange(option.value);
+    setIsOpen(false);
+  };
+
+  const selectedOption = options.find(opt => opt.value === value);
+  const displayValue = selectedOption ? selectedOption.label : placeholder;
+
+  return (
+    <div className={`custom-select-wrapper-report ${disabled ? 'disabled' : ''}`} ref={dropdownRef}>
+      <div 
+        ref={triggerRef}
+        className={`custom-select-trigger-report ${isOpen ? 'open' : ''} ${disabled ? 'disabled' : ''}`}
+        onClick={handleToggle}
+      >
+        <span style={{ color: value ? '#2c3e50' : '#95a5a6', fontStyle: value ? 'normal' : 'italic' }}>
+          {displayValue}
+        </span>
+      </div>
+      {!disabled && (
+        <div className={`custom-select-options-report ${isOpen ? 'open' : ''} ${openUpward ? 'upward' : ''}`}>
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className={`custom-select-option-report ${value === option.value ? 'selected' : ''}`}
+              onClick={() => handleSelect(option)}
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Custom Date Input Component with Calendar Icon
+const CustomDateInput = React.forwardRef(({ value, onClick, onChange }, ref) => (
+  <div className="custom-date-input-report" onClick={onClick}>
+    <input
+      type="text"
+      value={value || ""}
+      onChange={onChange}
+      placeholder="YYYY-MM-DD"
+      className="date-input-field-report"
+      ref={ref}
+      onFocus={(e) => e.target.select()}
+    />
+    <svg
+      className="calendar-icon-inline-report"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#3498db"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  </div>
+));
 
 const ReportPage = () => {
   // Default report types (shown even without API)
@@ -36,8 +141,8 @@ const ReportPage = () => {
   const [selectedReport, setSelectedReport] = useState("");
   const [deviceList, setDeviceList] = useState([]);
   const [selectedDeviceIds, setSelectedDeviceIds] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [frequency, setFrequency] = useState("15");
   const [format, setFormat] = useState("csv");
   const [loading, setLoading] = useState(false);
@@ -257,12 +362,12 @@ const ReportPage = () => {
     try {
       const params = {
         reportType: selectedReport,
-        startDate,
+        startDate: startDate.toISOString().split('T')[0],
         format,
       };
 
       if (config.needsEndDate) {
-        params.endDate = endDate;
+        params.endDate = endDate.toISOString().split('T')[0];
       }
 
       if (config.needsDevices) {
@@ -289,8 +394,8 @@ const ReportPage = () => {
 
       const reportName = reportNameMap[selectedReport] || "Report";
       const fileName = config.needsEndDate
-        ? `${reportName}_${startDate}_to_${endDate}.${ext}`
-        : `${reportName}_${startDate}.${ext}`;
+        ? `${reportName}_${startDate.toISOString().split('T')[0]}_to_${endDate.toISOString().split('T')[0]}.${ext}`
+        : `${reportName}_${startDate.toISOString().split('T')[0]}.${ext}`;
 
       const blob = new Blob([response.data], { type: mime });
       const url = window.URL.createObjectURL(blob);
@@ -511,26 +616,34 @@ const ReportPage = () => {
                   <label>
                     {config.needsEndDate ? "Start Date" : "Select Date"}
                   </label>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="input-field"
-                    disabled={!selectedReport}
-                  />
+                  <div className="date-picker-container-report">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      dateFormat="yyyy-MM-dd"
+                      customInput={<CustomDateInput />}
+                      calendarClassName="custom-calendar-report"
+                      placeholderText="yyyy-mm-dd"
+                      disabled={!selectedReport}
+                    />
+                  </div>
                 </div>
 
                 {config.needsEndDate && (
                   <div className="form-field">
                     <label>End Date</label>
-                    <input
-                      type="date"
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="input-field"
-                      min={startDate}
-                      disabled={!selectedReport}
-                    />
+                    <div className="date-picker-container-report">
+                      <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<CustomDateInput />}
+                        calendarClassName="custom-calendar-report"
+                        placeholderText="yyyy-mm-dd"
+                        minDate={startDate}
+                        disabled={!selectedReport}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -539,30 +652,32 @@ const ReportPage = () => {
                 {config.needsFrequency && (
                   <div className="form-field">
                     <label>Frequency</label>
-                    <select
+                    <CustomDropdown
+                      options={[
+                        { value: "1", label: "1 minute" },
+                        { value: "15", label: "15 minutes" },
+                        { value: "30", label: "30 minutes" },
+                        { value: "60", label: "60 minutes" },
+                      ]}
                       value={frequency}
-                      onChange={(e) => setFrequency(e.target.value)}
-                      className="input-field"
+                      onChange={setFrequency}
+                      placeholder="Select Frequency"
                       disabled={!selectedReport}
-                    >
-                      <option value="1">1 minute</option>
-                      <option value="15">15 minutes</option>
-                      <option value="30">30 minutes</option>
-                      <option value="60">60 minutes</option>
-                    </select>
+                    />
                   </div>
                 )}
                 <div className="form-field">
                   <label>Format</label>
-                  <select
+                  <CustomDropdown
+                    options={[
+                      { value: "csv", label: "CSV File" },
+                      { value: "xlsx", label: "Excel File" },
+                    ]}
                     value={format}
-                    onChange={(e) => setFormat(e.target.value)}
-                    className="input-field"
+                    onChange={setFormat}
+                    placeholder="Select Format"
                     disabled={!selectedReport}
-                  >
-                    <option value="csv">CSV File</option>
-                    <option value="xlsx">Excel File</option>
-                  </select>
+                  />
                 </div>
               </div>
             </div>

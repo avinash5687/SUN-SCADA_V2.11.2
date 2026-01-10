@@ -11,6 +11,40 @@ import DateRange from '@mui/icons-material/DateRange';
 import Refresh from '@mui/icons-material/Refresh';
 import ArrowBack from '@mui/icons-material/ArrowBack';
 import Download from '@mui/icons-material/Download';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
+// Custom Date Input Component with Calendar Icon
+const CustomDateInput = React.forwardRef(({ value, onClick, onChange }, ref) => (
+  <div className="custom-date-input-trend" onClick={onClick}>
+    <input
+      type="text"
+      value={value || ""}
+      onChange={onChange}
+      placeholder="YYYY-MM-DD"
+      className="date-input-field"
+      ref={ref}
+      onFocus={(e) => e.target.select()}
+    />
+    <svg
+      className="calendar-icon-inline"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#3498db"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  </div>
+));
 
 // Custom Dropdown Component
 const CustomDropdown = ({ options, value, onChange, placeholder = "-- Choose Table --" }) => {
@@ -345,22 +379,60 @@ const CustomTrend = () => {
 
                   <div className="input-group">
                     <label><DateRange /> Start Date:</label>
-                    <input 
-                      type="date" 
-                      value={startDate} 
-                      onChange={(e) => setStartDate(e.target.value)}
-                      className="compact-input"
-                    />
+                    <div className="date-picker-container-trend">
+                      <DatePicker
+                        selected={startDate ? new Date(startDate) : null}
+                        onChange={(date) => {
+                          const formattedDate = date ? date.toISOString().split('T')[0] : "";
+                          setStartDate(formattedDate);
+                        }}
+                        onChangeRaw={(e) => {
+                          const value = e.target.value;
+                          // Allow typing and validate date format
+                          if (value === "" || /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                            // Additional validation for valid date
+                            if (value === "" || !isNaN(new Date(value).getTime())) {
+                              setStartDate(value);
+                            }
+                          }
+                        }}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<CustomDateInput />}
+                        calendarClassName="custom-calendar-trend"
+                        portalId="root"
+                        popperPlacement="bottom-start"
+                        placeholderText="yyyy-mm-dd"
+                      />
+                    </div>
                   </div>
 
                   <div className="input-group">
                     <label><DateRange /> End Date:</label>
-                    <input 
-                      type="date" 
-                      value={endDate} 
-                      onChange={(e) => setEndDate(e.target.value)}
-                      className="compact-input"
-                    />
+                    <div className="date-picker-container-trend">
+                      <DatePicker
+                        selected={endDate ? new Date(endDate) : null}
+                        onChange={(date) => {
+                          const formattedDate = date ? date.toISOString().split('T')[0] : "";
+                          setEndDate(formattedDate);
+                        }}
+                        onChangeRaw={(e) => {
+                          const value = e.target.value;
+                          // Allow typing and validate date format
+                          if (value === "" || /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                            // Additional validation for valid date
+                            if (value === "" || !isNaN(new Date(value).getTime())) {
+                              setEndDate(value);
+                            }
+                          }
+                        }}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<CustomDateInput />}
+                        calendarClassName="custom-calendar-trend"
+                        portalId="root"
+                        popperPlacement="bottom-start"
+                        placeholderText="yyyy-mm-dd"
+                      />
+                    </div>
                   </div>
                 </div>
 

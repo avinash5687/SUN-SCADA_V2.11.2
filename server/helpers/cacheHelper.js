@@ -2,15 +2,32 @@ const redisClient = require("../config/redisClient");
 const CACHE_TTL = 60; // Default TTL in seconds
 
 async function getOrSetCache(key, fetchFunction, ttl = CACHE_TTL) {
-  const cachedData = await redisClient.get(key);
-  if (cachedData) {
-    console.log(`✅ Returning ${key} from cache`);
-    return JSON.parse(cachedData);
+  try {
+    // Check if Redis is connected
+    if (redisClient.isConnected) {
+      const cachedData = await redisClient.get(key);
+      if (cachedData) {
+        console.log(`✅ Returning ${key} from cache`);
+        return JSON.parse(cachedData);
+      }
+    }
+  } catch (err) {
+    console.log(`⚠️ Redis not available for ${key}, fetching fresh data`);
   }
+
   console.log(`⏳ Fetching fresh data for ${key}`);
   const freshData = await fetchFunction();
-  await redisClient.setEx(key, ttl, JSON.stringify(freshData));
-  console.log(`✅ Cached ${key} in Redis`);
+
+  try {
+    // Try to cache if Redis is available
+    if (redisClient.isConnected) {
+      await redisClient.setEx(key, ttl, JSON.stringify(freshData));
+      console.log(`✅ Cached ${key} in Redis`);
+    }
+  } catch (err) {
+    console.log(`⚠️ Could not cache ${key}, Redis not available`);
+  }
+
   return freshData;
 }
 
