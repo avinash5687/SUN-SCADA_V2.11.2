@@ -292,7 +292,21 @@
   overflow: hidden;
 }
 
+.skeleton-area-container {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
 .skeleton-wave {
+  width: 100%;
+  height: 100%;
+}
+
+.skeleton-area {
   width: 100%;
   height: 100%;
 }
@@ -302,6 +316,20 @@
   stroke-width: 2;
   stroke-linecap: round;
   opacity: 0.6;
+}
+
+.skeleton-area-path {
+  opacity: 0.7;
+  animation: areaPulse 2s ease-in-out infinite;
+}
+
+.skeleton-area-path.area-1 {
+  animation-delay: 0s;
+}
+
+.skeleton-area-path.area-2 {
+  animation-delay: 0.5s;
+  opacity: 0.5;
 }
 
 .skeleton-wave-path.wave-1 {
@@ -392,6 +420,17 @@
   50% {
     d: path("M0,20 Q25,30 50,20 T100,20");
     opacity: 0.8;
+  }
+}
+
+@keyframes areaPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scaleY(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scaleY(1.05);
   }
 }
 
@@ -526,8 +565,8 @@
 
 /* ========== Chart Container Styling ========== */
 .charts-stack {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 6fr 4fr;
   gap: 8px;
   height: 100%;
   min-height: 0;
@@ -544,15 +583,23 @@
   width: 100%;
   max-width: 100%;
   min-height: 0;
+  height: 100%;
 }
 
 /* ========== Specific Chart Styling ========== */
 .main-chart {
-  flex: 3; /* Takes 75% of the space */
+  grid-row: 1;
 }
 
 .soil-chart {
-  flex: 1; /* Takes 25% of the space */
+  grid-row: 2;
+}
+
+.chart-container-area{
+  background: linear-gradient(135deg, rgba(72, 61, 139, 0.05) 0%, rgba(106, 90, 205, 0.05) 100%);
+  border: 1px solid rgba(72, 61, 139, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(72, 61, 139, 0.1), 0 0 15px rgba(72, 61, 139, 0.05);
 }
 
 /* ========== Responsive Design - Fixed Heights ========== */

@@ -96,7 +96,7 @@ const TableSkeleton = () => (
   </div>
 );
 
-const ChartSkeleton = ({ height = "400px", title = "Loading Chart Data..." }) => (
+const ChartSkeleton = ({ height = "400px", title = "Loading Chart Data...", type = "line" }) => (
   <div className="chart-skeleton" style={{ height }}>
     <div className="skeleton-chart-wrapper">
       {/* Title */}
@@ -122,14 +122,34 @@ const ChartSkeleton = ({ height = "400px", title = "Loading Chart Data..." }) =>
             ))}
           </div>
           
-          {/* Wave Animation */}
-          <div className="skeleton-wave-container">
-            <svg className="skeleton-wave" viewBox="0 0 100 40" preserveAspectRatio="none">
-              <path className="skeleton-wave-path wave-1" d="M0,20 Q25,10 50,20 T100,20" />
-              <path className="skeleton-wave-path wave-2" d="M0,25 Q25,15 50,25 T100,25" />
-              <path className="skeleton-wave-path wave-3" d="M0,30 Q25,20 50,30 T100,30" />
-            </svg>
-          </div>
+          {/* Animation based on chart type */}
+          {type === "area" ? (
+            <div className="skeleton-area-container">
+              <svg className="skeleton-area" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="areaGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#483D8B" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#483D8B" stopOpacity="0.2" />
+                  </linearGradient>
+                  <linearGradient id="areaGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#6A5ACD" stopOpacity="0.6" />
+                    <stop offset="100%" stopColor="#6A5ACD" stopOpacity="0.1" />
+                  </linearGradient>
+                </defs>
+                <path className="skeleton-area-path area-1" d="M0,35 Q25,25 50,30 T100,35 L100,40 L0,40 Z" fill="url(#areaGradient1)" />
+                <path className="skeleton-area-path area-2" d="M0,38 Q25,32 50,35 T100,38 L100,40 L0,40 Z" fill="url(#areaGradient2)" />
+              </svg>
+            </div>
+          ) : (
+            /* Wave Animation for line charts */
+            <div className="skeleton-wave-container">
+              <svg className="skeleton-wave" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <path className="skeleton-wave-path wave-1" d="M0,20 Q25,10 50,20 T100,20" />
+                <path className="skeleton-wave-path wave-2" d="M0,25 Q25,15 50,25 T100,25" />
+                <path className="skeleton-wave-path wave-3" d="M0,30 Q25,20 50,30 T100,30" />
+              </svg>
+            </div>
+          )}
         </div>
       </div>
       
@@ -537,9 +557,10 @@ const WMS = () => {
             )}
           </div>
 
+          {/* <div className="chart-container-area soil-chart"> */}
           <div className="chart-container soil-chart">
             {initialLoading ? (
-              <ChartSkeleton height={`${soilChartHeight}px`} title="Loading Soiling Data..." />
+              <ChartSkeleton height={`${soilChartHeight}px`} title="Loading Soiling Data..." type="area" />
             ) : (
               <HighchartsReact
                 highcharts={Highcharts}
